@@ -15,6 +15,7 @@
 
 const Guilds = require('./http/Guilds');
 const HTTPErrors = require('../utils/HTTPErrors');
+const ParsingError = require('./errors/ParsingError');
 
 class Guild {
 
@@ -61,6 +62,10 @@ class Guild {
         return await this.modify({ name }, reason);
     }
 
+    async setDescription (description, reason) {
+        return await this.modify({ description }, reason);
+    }
+
     async getIconURL (options) {
         let format = options.format || 'png';
         return `https://${client.options.cdnDomain}/icons/${this.id}/${this.icon}.${format.toLowerCase()}`;
@@ -92,6 +97,18 @@ class Guild {
         return this;
     }
 
+    toString () {
+        return `Guild{${this.id}}`;
+    }
+
+}
+
+Guild.fromString = function (client, str) {
+    if (!str.startsWith('Guild{') || !str.endsWith('}')) {
+        throw new ParsingError('invalid guild string provided');
+    }
+    let parsed = str.substring(6, str.length - 1);
+    return new Guild(client, parsed);
 }
 
 function translateGuild (guild) {

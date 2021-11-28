@@ -18,6 +18,8 @@ const ClientWebsocket = require('./websocket/ClientWebsocket');
 const AlreadyBoundWarning = require('./errors/AlreadyBoundWarning');
 const WS = require('ws');
 const Guild = require('./Guild');
+const ClientInitializationError = require('./errors/ClientInitializationError');
+const Intents = require('./Intents');
 
 class Client {
 
@@ -26,18 +28,35 @@ class Client {
     token = null;
     options = {};
 
+    caches = {
+        guilds: {},
+        users: {},
+        channels: {},
+        messages: {},
+        roles: {},
+    }
+
     constructor (options) {
+        options = options || {};
+
+        if (!options.intents) {
+            throw new ClientInitializationError('options.intents must be provided');
+        }
+        if (!(options.intents instanceof Intents)) {
+            throw new ClientInitializationError('options.intents must be an instance of Intents');
+        }
+
         this.options = {
-            cdnURL: options.cdnDomain || 'cdn.discord.com',
-            inviteURL: options.inviteDomain || 'discord.gg',
-            inviteURL: options.gatewayDomain || 'gateway.discord.gg',
+            intents: options.intents,
+            cdnDomain: options.cdnDomain || 'cdn.discord.com',
+            inviteDomain: options.inviteDomain || 'discord.gg',
+            gatewayDomain: options.gatewayDomain || 'gateway.discord.gg',
         }
     }
 
     async fetchGuild (id, force) {
         let guild = new Guild(this, id, true);
         guild = await guild.fetch();
-        console.log(guild);
         return guild;
     }
 
@@ -54,7 +73,7 @@ class Client {
 
     login (token) {
         this.token = token;
-        this.socket = new ClientWebsocket(this.options.gatewayDomain, 9, token);
+        this.socket = new ClientWebsocket(this, this.options.gatewayDomain, 9, token);
         this.socket.connect();
     }
 

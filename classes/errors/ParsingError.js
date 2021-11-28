@@ -13,14 +13,13 @@
     2.0.
 */
 
-const Client = require('./classes/Client');
-const Intents = require('./classes/Intents');
-let client = new Client({
-    intents: new Intents(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES),
-});
-client.login(require('./config.json').token);
+class ParsingError extends Error {
 
-(async () => {
-    let guild = await client.fetchGuild('867454041084526653');
-    console.log(guild);
-})();
+    constructor (message) {
+        super(message);
+        this.name = "ParsingError";
+    }
+
+}
+
+module.exports = ParsingError;
