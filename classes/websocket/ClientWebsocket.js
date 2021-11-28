@@ -18,6 +18,7 @@ const UnableToResumeWarning = require('../errors/UnableToResumeWarning');
 
 class ClientWebsocket {
 
+    client = null;
     WS = null;
     lastHeartbeat = 0;
     heartbeatInterval = null;
@@ -27,7 +28,8 @@ class ClientWebsocket {
     state = "IDLE";
     token = null;
 
-    constructor (domain, version, token) {
+    constructor (client, domain, version, token) {
+        this.client = client;
         this.domain = domain;
         this.version = version;
         this.url = new URL(`wss://${domain}/?v=${version}&encoding=json`);
@@ -89,7 +91,7 @@ class ClientWebsocket {
             op: 2,
             d: {
                 token: this.token,
-                intents: 1 << 0,
+                intents: this.client.options.intents.flags,
                 properties: {
                     "$os": "node.js",
                     "$browser": "birb",
