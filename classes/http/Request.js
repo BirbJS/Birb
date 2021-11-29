@@ -14,7 +14,8 @@
 */
 
 const Package = require('../../package.json');
-const fetch = require('node-fetch');
+const petitio = require('petitio');
+const HTTPErrors = require('../../utils/httpErrors');
 
 class Request {
 
@@ -28,45 +29,39 @@ class Request {
     constructor (client, method, path, body) {
         this.client = client;
         this.method = method;
-        this.url = `https://discord.com/api/v9/${path}`;
+        this.url = `https://discord.com/api/v9${path}`;
         this.body = body || null;
     }
 
     async make () {
-        let url = this.url;
-        let request = {
-            method: this.method,
-            headers: {
+        let req = petitio(this.url, this.method)
+            .timeout(5000)
+            .header({
                 'Authorization': `Bot ${this.client.token}`,
-                'User-Agent': `Birb/${Package.version} (+https://github.com/knokbak/Birb)`,
-            }
+                'User-Agent': `Birb/${Package.version} (+https://birb.js.org)`,
+            });
+
+        if (this.body) {
+            req.header('Content-Type', 'application/json');
+            req.body(this.body);
         }
 
         if (this.reason) {
-            request.headers['X-Audit-Log-Reason'] = this.reason;
+            req.header('X-Audit-Log-Reason', this.reason);
         }
 
-        if (this.body) {
-            request.body = this.body;
-            request.headers['Content-Type'] = 'application/json';
+        let res = await req.send();
+        let body = res.json();
+
+        if (res.statusCode > 299 || body.code > 299) {
+            if (HTTPErrors[res.statusCode || body.code]) {
+                throw HTTPErrors[`${res.statusCode || body.code}`](body);
+            } else {
+                throw HTTPErrors['500'](body);
+            }
         }
 
-        try {
-            let res = await new Promise((resolve, reject) => {
-                fetch(url, request)
-                    .then(async (res) => {
-                        resolve({
-                            status: res.status,
-                            body: await res.json(),
-                        })
-                    })
-                    .catch(reject);
-            });
-            this.response = res;
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return body;
     }
 
 }

@@ -14,60 +14,82 @@
 */
 
 const { WebSocket } = require('ws');
+const { Status } = require('../../utils/Constants');
 const UnableToResumeWarning = require('../errors/UnableToResumeWarning');
+const BaseWebsocket = require('./BaseWebsocket');
 
-class ClientWebsocket {
+class ClientWebsocket extends BaseWebsocket {
 
-    client = null;
     WS = null;
     lastHeartbeat = 0;
+    lastHeartbeatAcked = false;
     heartbeatInterval = null;
     schedulerLoop = null;
     lastSequenceIdentifier = null;
     sessionIdentifier = null;
-    state = "IDLE";
+    lastGatewayEnsure = null;
+    gatewayInfo = null;
+    expectedGuilds = null;
     token = null;
 
     constructor (client, domain, version, token) {
-        this.client = client;
-        this.domain = domain;
-        this.version = version;
-        this.url = new URL(`wss://${domain}/?v=${version}&encoding=json`);
+        super(client, domain || 'gateway.discord.gg', version);
         this.token = token;
         this.scheduler();
     }
 
-    connect () {
-        this.state = "CONNECTING";
+    async connect () {
+        this.status = Status.CONNECTING;
+        this.client.debug(`attempting zlib compression init...`);
+        this.init();
+        this.client.debug(`creating websocket...`);
         this._WS = new WebSocket(this.url);
         this._WS.on('message', this.onReceive.bind(this));
         this._WS.on('open', () => this._WS.ping());
     }
 
-    reconnect () {
-        this.state = "RECONNECTING";
+    async reconnect () {
+        this.status = Status.RECONNECTING;
+        this.client.debug(`attempting zlib compression init...`);
+        this.init();
+        this.client.debug(`creating websocket...`);
         this._WS = new WebSocket(this.url);
         this._WS.on('message', this.onReceive.bind(this));
         this._WS.on('open', () => this._WS.ping());
     }
 
     close () {
-        this.state = "IDLE";
+        this.status = Status.IDLE;
         this._WS.close();
+        this.client.debug(`gateway closed`);
     }
 
     terminate () {
-        this.state = "IDLE";
+        this.status = Status.IDLE;
         this._WS.terminate();
+        this.client.debug(`gateway terminated`);
     }
 
     resume () {
-        this.state = "RECONNECTING";
+        this.status = Status.RESUMING;
+        this.client.debug(`gateway resuming...`);
         this.identify();
     }
 
-    heartbeat () {
+    async heartbeat () {
+        if (this.lastHeartbeat && !this.lastHeartbeatAcked) {
+            this.client.debug(`heartbeat timeout, terminating connection...`);
+            this.lastHeartbeatAcked = true;
+            this.terminate();
+            await wait(5000);
+            this.client.debug(`attempting to reconnect...`);
+            this.reconnect();
+            return;
+        }
+
+        this.client.debug(`sending heartbeat [${this.lastSequenceIdentifier || null}]...`);
         this.lastHeartbeat = Date.now();
+        this.lastHeartbeatAcked = false;
         this.sendJSON({
             op: 1,
             d: this.lastSequenceIdentifier || null,
@@ -75,7 +97,8 @@ class ClientWebsocket {
     }
 
     identify () {
-        if (this.state === "RECONNECTING") {
+        if ([Status.RECONNECTING, Status.RESUMING].includes(this.status)) {
+            this.client.debug(`sending resume packet [${this.sessionIdentifier}]...`);
             this.sendJSON({
                 op: 6,
                 d: {
@@ -87,6 +110,8 @@ class ClientWebsocket {
             return;
         }
 
+        this.status = Status.IDENTIFYING;
+        this.client.debug(`sending identify packet...`);
         this.sendJSON({
             op: 2,
             d: {
@@ -97,24 +122,29 @@ class ClientWebsocket {
                     "$browser": "birb",
                     "$device": "birb",
                 },
-                compress: false,
+                compress: true,
             },
         });
     }
 
     async unableToResume () {
         console.warn(new UnableToResumeWarning());
+        this.client.debug(`failed to resume - waiting 5 seconds...`);
         await wait(5000);
-        this.state = "CONNECTING";
+        this.client.debug(`attempting to identify normally...`);
+        this.status = Status.CONNECTING;
         this.identify();
     }
 
     sendJSON (data) {
-        this._WS.send(JSON.stringify(data));
+        this.client.debug(`SEND: ${JSON.stringify(data)}`);
+        data = this.pack(data);
+        this._WS.send(data);
     }
 
     onReceive (body) {
-        body = JSON.parse(body);
+        body = this.process(body);
+        //console.log(body);
         let data = body.d || {};
 
         if (body.s) this.lastSequenceIdentifier = body.s;
@@ -136,7 +166,7 @@ class ClientWebsocket {
         
                 try {
                     let fn = require(`./handlers/${sanitized}.js`);
-                    fn(data);
+                    fn(this.client, this, data);
                 } catch (e) {}
 
                 break;
@@ -149,16 +179,22 @@ class ClientWebsocket {
             // Discord -> Client: hello (sent immediately after connecting, includes heartbeat info)
             case 10: {
                 this.lastHeartbeat = Date.now();
+                this.lastHeartbeatAcked = true;
                 this.heartbeatInterval = data.heartbeat_interval;
+                this.client.debug(`discord hello`);
+                this.client.debug(`heartbeat interval: ${this.heartbeatInterval}`);
                 this.identify();
                 break;
             }
             // Discord -> Client: heartbeat acknowledgement
             case 11: {
-                // TODO: handle this
+                this.client.debug(`discord heartbeat ack`);
+                this.client.debug(`RECEIVE: ${JSON.stringify(body)}`);
+                this.lastHeartbeatAcked = true;
                 break;
             }
             default: {
+                this.client.debug(`RECEIVE: ${JSON.stringify(body)}`);
                 break;
             }
         }
@@ -175,8 +211,12 @@ class ClientWebsocket {
         }, 50);
     }
 
-    setState (state) {
-        this.state = state;
+    setStatus (status) {
+        this.status = status;
+    }
+
+    setExpectedGuilds (guilds) {
+        this.expectedGuilds = guilds;
     }
 
     setSessionIdentifier (sessionIdentifier) {

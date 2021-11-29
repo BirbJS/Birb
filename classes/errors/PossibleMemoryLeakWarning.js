@@ -9,15 +9,17 @@
     at https://mozilla.org/MPL/2.0/.
 */
 
-class UnableToResumeWarning extends Error {
+class PossibleMemoryLeakWarning extends Error {
 
     constructor () {
-        super(
-            `The client is unable to resume its connection. Attempting to reauthenticate...`
-        );
-        this.name = "UnableToResumeWarning";
+        super('possible memory leak detected!\nHead to: https://birb.js.org/errors/PossibleMemoryLeakWarning');
+        this.name = "PossibleMemoryLeakWarning";
+    }
+
+    short () {
+        return `${this.name}: ${this.message}`;
     }
 
 }
 
-module.exports = UnableToResumeWarning;
+module.exports = PossibleMemoryLeakWarning;

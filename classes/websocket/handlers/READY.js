@@ -13,7 +13,20 @@
     2.0.
 */
 
-module.exports = (ws, data) => {
-    ws.setState("READY");
+const { Status } = require('../../../utils/Constants');
+
+module.exports = (client, ws, data) => {
+    client.debug(`RECEIVE: ${JSON.stringify(data)}`);
+    client.debug(`discord ready`);
+
+    ws.setStatus(Status.WAITING_FOR_GUILDS);
     ws.setSessionIdentifier(data.session_id);
+    ws.expectedGuilds = new Set(data.guilds.map(d => d.id));
+
+    if (!ws.expectedGuilds) {
+        client.debug(`we didn't need to receive any guilds; marking as ready`);
+        ws.setStatus(Status.READY);
+        client.emit('ready');
+        return;
+    }
 }
