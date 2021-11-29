@@ -16,7 +16,14 @@
 const { Status } = require('../../../utils/Constants');
 
 module.exports = (client, ws, data) => {
-    ws.setStatus(Status.READY);
-    client.debug(`RECEIVE: ${JSON.stringify(data)}`);
-    client.debug(`discord resumed`);
+    ws.setStatus(Status.WAITING_FOR_GUILDS);
+    if (ws.status === Status.WAITING_FOR_GUILDS) {
+        client.debug(`received guild: ${data.id}`);
+        ws.expectedGuilds.delete(data.id);
+        if (ws.expectedGuilds.size === 0) {
+            client.debug(`we've received all guilds; setting to ready`);
+            ws.setStatus(Status.READY);
+            client.emit('ready');
+        }
+    }
 }

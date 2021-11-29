@@ -79,16 +79,7 @@ class Guild {
     async fetch () {
         let request = new Guilds.Get(this.client, this.id);
         let result = await request.make();
-
-        if (result.status > 299 || result.body.code > 299) {
-            if (HTTPErrors[result.status || result.body.code]) {
-                throw HTTPErrors[`${result.status || result.body.code}`](result.body);
-            } else {
-                throw HTTPErrors['500'](result.body);
-            }
-        }
-
-        let translated = translateGuild(result.body);
+        let translated = translateGuild(result);
 
         for ( let key in translated ) {
             this[key] = translated[key];

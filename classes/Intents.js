@@ -18,6 +18,8 @@ const FLAGS = {
     DIRECT_MESSAGE_REACTIONS: 1 << 13,
     DIRECT_MESSAGE_TYPING: 1 << 14,
     GUILD_SCHEDULED_EVENTS: 1 << 15,
+    NOT_PRIVILEGED: 65277,
+    ALL: 65535,
 }
 
 class Intents {

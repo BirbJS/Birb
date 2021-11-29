@@ -9,13 +9,13 @@
     at https://mozilla.org/MPL/2.0/.
 */
 
-class IntentsError extends Error {
+class CacheWarning extends Error {
 
     constructor (message) {
         super(message);
-        this.name = "IntentsError";
+        this.name = "CacheWarning";
     }
 
 }
 
-module.exports = IntentsError;
+module.exports = CacheWarning;

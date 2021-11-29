@@ -9,13 +9,13 @@
     at https://mozilla.org/MPL/2.0/.
 */
 
-class IntentsError extends Error {
+class WebsocketError extends Error {
 
     constructor (message) {
         super(message);
-        this.name = "IntentsError";
+        this.name = "WebsocketError";
     }
 
 }
 
-module.exports = IntentsError;
+module.exports = WebsocketError;
