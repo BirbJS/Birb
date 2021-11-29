@@ -1,0 +1,4 @@
+*.js @knokbak
+package.json @knokbak
+package-lock.json @knokbak
+.gitignore @knokbak
