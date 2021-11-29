@@ -18,3 +18,4 @@ module.exports = {
     Guild: require("./classes/Guild"),
     Intents: require("./classes/Intents"),
 }
+//oop
