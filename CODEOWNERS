@@ -1,4 +1,5 @@
-* @birbjs/team
+/src/ @birbjs/team
+/.* @knokbak
 /.*/ @knokbak
 .gitignore @knokbak
 CONTRIBUTORS @knokbak

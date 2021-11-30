@@ -12,6 +12,10 @@ export default class Client {
         debug: false,
     }
 
+    constructor () {
+        console.log('e');
+    }
+
     debug (...message: string[]) {
         if (this.options.debug) {
             console.debug('[debug]', ...message);

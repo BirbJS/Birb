@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run build",
-    "files": "copyfiles package.json package-lock.json tsconfig.json LICENSE dist",
+    "test": "tsc && npm run files && node test.js",
+    "publish-the-awesomeness": "tsc && npm run files && node test.js && cd dist/ && npm publish --dry-run",
+    "files": "copyfiles package.json package-lock.json tsconfig.json .npmignore LICENSE dist",
     "build": "tsc && npm run files"
   },
   "repository": {

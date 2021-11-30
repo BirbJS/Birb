@@ -13,3 +13,7 @@ export {
     Websocket,
     InternalWebsocket,
 };
+
+export function _test () {
+    console.info('test passed; index.ts is valid');
+}
