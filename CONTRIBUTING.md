@@ -1,6 +1,14 @@
 # Contributing to Birb.JS
 We're open to outside contributors! But, to keep things from decending into chaos, we have some rules we need to go over.
 
+## Building
+Birb.JS is written in TypeScript. This means, beforing testing, you must build Birb.JS locally. To do this, follow these steps:
+1. Head to the root directory of Birb.JS (NOT in `/src`).
+2. Run `npm install --include=dev` to install all dependencies, including the dev dependencies.
+3. CHECK for vulnerabilities in the dependencies using `npm audit`.
+4. Run `npm run build` to build the Birb.JS library.
+You can now find the built version Birb.JS in `/dist`. This is what would be distributed on the NPM registry.
+
 ## Coding style
 Everyone has their own coding style. However, this can become an issue when opening source code to contributions. As a general rule of thumb, you should try match the repository's coding style as much as possible. We ask that you take a few minutes to read over some of the files to get a sense of this.
 
