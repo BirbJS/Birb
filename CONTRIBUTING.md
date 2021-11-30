@@ -7,6 +7,7 @@ Birb.JS is written in TypeScript. This means, beforing testing, you must build B
 2. Run `npm install --include=dev` to install all dependencies, including the dev dependencies.
 3. CHECK for vulnerabilities in the dependencies using `npm audit`.
 4. Run `npm run build` to build the Birb.JS library.
+
 You can now find the built version Birb.JS in `/dist`. This is what would be distributed on the NPM registry.
 
 ## Coding style
