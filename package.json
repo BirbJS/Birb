@@ -7,6 +7,7 @@
   "scripts": {
     "test": "tsc && npm run files && node test.js",
     "publish-the-awesomeness": "tsc && npm run files && node test.js && cd dist/ && npm publish --dry-run",
+    "publish-release": "tsc && npm run files && cd dist/ && npm publish --dry-run",
     "files": "copyfiles package.json package-lock.json tsconfig.json .npmignore LICENSE dist",
     "build": "tsc && npm run files"
   },
