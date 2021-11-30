@@ -1,4 +1,5 @@
 /src/ @birbjs/team
+/*.json @birbjs/team
 /.* @knokbak
 /.*/ @knokbak
 .gitignore @knokbak
