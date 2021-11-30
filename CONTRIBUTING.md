@@ -12,3 +12,15 @@ If you see something in a pull request that makes you go, "wait, what?", challen
 
 ## Trusted contributors
 Once you've contributed enough, you may be added as a trust contributor. This allows you to make decisions on whether or not to allow a pull request to be merged on to the main branch, along with 2 other users (or a repository admin).
+
+## Keeping Birb.JS open
+Every source code file must including this at the top for licensing reasons:
+```js
+/*
+ * Copyright (c) 2021, knokbak and contributors.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+```

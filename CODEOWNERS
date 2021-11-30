@@ -1,6 +1,5 @@
-*.js @knokbak
-*.ts @knokbak
-package.json @knokbak
-package-lock.json @knokbak
+* @birbjs/team
+/.*/ @knokbak
 .gitignore @knokbak
-/.github/ @knokbak
+CONTRIBUTORS @knokbak
+LICENSE @knokbak
