@@ -15,5 +15,5 @@ export {
 };
 
 export function _test () {
-    console.info('test passed; index.ts is valid');
+    console.info('test passed; index.ts is valid')
 }
