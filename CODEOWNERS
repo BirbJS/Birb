@@ -1,5 +1,7 @@
 /src/ @birbjs/team
-/*.json @birbjs/team
+package.json @birbjs/team
+package-lock.json @birbjs/team
+tsconfig.json @birbjs/team
 /.* @knokbak
 /.*/ @knokbak
 .gitignore @knokbak
