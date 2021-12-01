@@ -10,20 +10,51 @@
 
 import CacheError from '../errors/CacheError';
 import MemoryLeakWarning from '../errors/MemoryLeakWarning';
+import OptionError from '../errors/OptionError';
 import Pair from './Pair';
 
 export default class Cache {
 
     private cache = new Map<string, any>();
-    private options = {
+    private options: any = {
         maxSize: null,
         maxAge: null,
         checkInterval: 60,
         removeOldest: true,
     }
 
-    constructor (options: any) {
-        this.options = options ?? this.options;
+    constructor (options?: {
+        maxSize?: number,
+        maxAge?: number,
+        checkInterval?: number,
+        removeOldest?: boolean,
+    }) {
+        options = options ?? {};
+        if ('maxSize' in options) {
+            if (typeof options.maxSize !== 'number') {
+                throw new OptionError('maxSize [in options at 0] must be a number');
+            }
+            this.options.maxSize = options.maxSize ?? null;
+        }
+        if ('maxAge' in options) {
+            if (typeof options.maxAge !== 'number') {
+                throw new OptionError('maxAge [in options at 0] must be a number');
+            }
+            this.options.maxAge = options.maxAge ?? null;
+        }
+        if ('checkInterval' in options) {
+            if (typeof options.checkInterval !== 'number') {
+                throw new OptionError('checkInterval [in options at 0] must be a number');
+            }
+            this.options.checkInterval = options.checkInterval ?? 60;
+        }
+        if ('removeOldest' in options) {
+            if (typeof options.removeOldest !== 'boolean') {
+                throw new OptionError('removeOldest [in options at 0] must be a boolean');
+            }
+            this.options.removeOldest = options.removeOldest ?? true;
+        }
+
         setInterval(() => {
             for ( let [key, value] of this.cache.entries() ) {
                 if (this.options.maxAge && Date.now() - value.timestamp > this.options.maxAge) {
@@ -85,6 +116,16 @@ export default class Cache {
     remove (key: string): Cache {
         this.cache.delete(key);
         return this;
+    }
+
+    /**
+     * Get the amount of entries in the cache.
+     * 
+     * @returns {number} The size of the cache.
+     * @public
+     */
+    size (): number {
+        return this.cache.size;
     }
 
     /**

@@ -15,16 +15,17 @@ import Websocket from "../Websocket";
 export default async function GUILD_CREATE (ws: Websocket, data: any): Promise<void> {
     ws.client.debug(`received guild: ${data.id}`);
 
-    let guild = new Guild(ws.client, data);
-    ws.client.guilds.cache.set(guild.id, guild);
+    let guild = new Guild(ws.client, data)._set();
 
     if (ws.status === Status.WAITING_FOR_GUILDS) {
         ws.expectedGuilds.delete(data.id);
         ws.client.emit('guildAvailable', guild);
         if (ws.expectedGuilds.size === 0) {
-            ws.client.debug(`we've received all guilds; setting to ready`);
-            ws.setStatus(Status.READY);
-            ws.client.emit('ready');
+            setTimeout(() => {
+                ws.client.debug(`we've received all guilds; setting to ready`);
+                ws.setStatus(Status.READY);
+                ws.client.emit('ready');
+            }, 500);
         }
     } else {
         ws.client.emit('guildCreate', guild);

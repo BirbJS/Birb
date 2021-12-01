@@ -8,15 +8,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import BitsBlock from './blocks/BitsBlock';
-import { Intents as IntentFlags } from '../util/Constants';
+import Guild from "../../Guild";
+import Websocket from "../Websocket";
 
-export default class Intents extends BitsBlock {
+export default async function GUILD_UPDATE (ws: Websocket, data: any): Promise<void> {
+    ws.client.debug(`received guild update: ${data.id}`);
 
-    static FLAGS = IntentFlags;
-
-    constructor (...flags: number[]) {
-        super(...flags);
-    }
-
+    let guild = new Guild(ws.client, data)._set();
+    ws.client.emit('guildUpdate', guild);
 }

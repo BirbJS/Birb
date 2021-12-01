@@ -11,6 +11,7 @@
 import GuildError from '../errors/GuildError';
 import Client from './Client';
 import Color from '../util/Color';
+import Guild from './/Guild';
 
 export default class Role {
     
@@ -26,7 +27,7 @@ export default class Role {
     position: number | null = null;
     unicodeEmoji: string | null = null;
 
-    constructor (client: Client, data: any) {
+    constructor (client: Client, data: any, guild: Guild) {
         if (typeof data.id !== 'string') {
             throw new GuildError('invalid role data provided');
         }
@@ -41,7 +42,7 @@ export default class Role {
         }
         if ('color' in data) {
             let hex: string = Color.intToHex(data.color);
-            this.color = hex === '00' ? hex : '000000';
+            this.color = `#${hex === '00' ? '000000' : hex}`;
         }
         if ('hoist' in data) {
             this.hoist = data.hoist;
@@ -64,6 +65,17 @@ export default class Role {
         if ('unicode_emoji' in data) {
             this.unicodeEmoji = data.unicode_emoji;
         }
+    }
+
+    /**
+     * Set the Role's data to the cache.
+     * 
+     * @returns {Role} This Role instance.
+     * @public
+     */
+    _set (): Role {
+        this.client.guilds.cache.set(this.id, this);
+        return this;
     }
 
 }

@@ -8,15 +8,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import BitsBlock from './blocks/BitsBlock';
-import { Intents as IntentFlags } from '../util/Constants';
+import Client from '../Client';
+import Send from './channels/Send';
 
-export default class Intents extends BitsBlock {
-
-    static FLAGS = IntentFlags;
-
-    constructor (...flags: number[]) {
-        super(...flags);
+export default class HTTPChannel {
+    
+    static send (client: Client, channelId: string, data: any) {
+        let request = new Send(client, channelId, data);
+        return request.make();
     }
 
 }

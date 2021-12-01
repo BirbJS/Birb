@@ -9,6 +9,7 @@
  */
 
 import petitio, { HTTPMethod } from 'petitio';
+import DiscordAPIError from '../../errors/DiscordAPIError';
 import Client from '../Client';
 
 export default class Request {
@@ -44,15 +45,41 @@ export default class Request {
             req.header('X-Audit-Log-Reason', this.reason);
         }
 
-        let res = await req.send();
-        let body = res.json();
+        let res;
+        let body;
+        
+        try {
+            res = await req.send();
+            body = res.json();
+        } catch (err) {
+            console.error(err);
+            throw new DiscordAPIError(`failed to make ${this.method} request to ${this.url}`);
+        }
+
+        if (body && body.code !== undefined) {
+            console.log(require('util').inspect(body, { depth: null }));
+            throw new DiscordAPIError(`[${this.method}:${this.url}] ${body.code}: ${translateError(body.code, body.message)}`);
+        }
+
+        if (!res.statusCode || res.statusCode > 299) {
+            throw new DiscordAPIError(`encountered HTTP error ${res.statusCode} whilst sending ${this.method} request to ${this.url}`);
+        }
+
         return body;
     }
 
 }
 
-export class Errors {
-
-
-
+export function translateError (code: number, message?: string) {
+    if (!message) {
+        return 'internal Discord API Error (not your fault)';
+    }
+    switch (code) {
+        case 50013: {
+            return `Missing Permissions: your bot does not have permission to perform this action; ensure at least one of its roles has the permissions required`;
+        }
+        default: {
+            return message;
+        }
+    }
 }
