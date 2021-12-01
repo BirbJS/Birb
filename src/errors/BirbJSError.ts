@@ -10,12 +10,16 @@
 
 export default class BirbJSError extends Error {
 
-    url: string = null!;
+    url: string | null = null;
 
     constructor (name: string, message: string, url: string) {
         super(message + (url ? `\nHead to: ${url}` : ''));
         this.name = name || 'BirbJSError';
-        this.url = url || 'https://birb.js.org/errors';
+        this.url = url;
+    }
+
+    compact (): string {
+        return `${this.name}: ${this.message}`;
     }
 
 }

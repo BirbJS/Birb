@@ -18,6 +18,7 @@ import ShardingError from '../../errors/ShardingError';
 export default class Websocket extends InternalWebsocket {
 
     ws: WS = null!;
+    ping: number = 0;
     expectedGuilds: Set<string> = new Set();
     protected lastHeartbeat = 0;
     protected lastHeartbeatAcked = false;
@@ -55,6 +56,7 @@ export default class Websocket extends InternalWebsocket {
         this.ws = new WS(this.url);
         this.ws.on('message', this.onPacket.bind(this));
         this.ws.on('open', () => this.ws.ping());
+        this.ws.on('close', this.onClose.bind(this));
     }
 
     /**
@@ -134,17 +136,20 @@ export default class Websocket extends InternalWebsocket {
                     this.client.warn('received hello packet whilst not in connecting state; ignoring it');
                     return;
                 }
-                this.client.debug('received hello');
+                this.client.debug('discord hello');
                 this.client.debug(`heartbeat interval: ${data.heartbeat_interval}ms`);
                 this.heartbeatInterval = data.heartbeat_interval;
                 this.lastHeartbeatAcked = true;
                 this.lastHeartbeat = Date.now();
+                this.ping = 0;
                 this.identify();
                 break;
             }
             case PacketOperation.HEARTBEAT_ACK: {
                 this.client.debug('received heartbeat ack');
                 this.lastHeartbeatAcked = true;
+                this.ping = Date.now() - this.lastHeartbeat;
+                this.client.debug(`ping: ${this.ping}ms`);
                 break;
             }
             default: {
@@ -262,7 +267,7 @@ export default class Websocket extends InternalWebsocket {
             await wait(15000);
             this.reconnect();
         } else {
-            throw new WebsocketError('websocket closed; unable to reconnect');
+            console.error(new WebsocketError('websocket closed; unable to reconnect'));
         }
     }
 
@@ -319,7 +324,7 @@ export default class Websocket extends InternalWebsocket {
             op: PacketOperation.IDENTIFY,
             d: {
                 token: this.client.token,
-                intents: 1,
+                intents: this.client.options.intents.flags,
                 properties: {
                     '$os': process.platform,
                     '$browser': 'birb.js',
@@ -358,15 +363,16 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Close the websocket.
      * 
+     * @param {number} [code] The close code.
      * @returns {void}
      * @public
      */
-    close (): void {
+    close (code?: number): void {
         if (!this.isConnected()) {
             // don't throw an error, it'll cause chaos
             return;
         }
-        this.ws.close();
+        this.ws.close(code);
         this.cleanup();
     }
 
@@ -415,7 +421,7 @@ export default class Websocket extends InternalWebsocket {
      * @public
      */
     preventReconnect (value?: boolean): void {
-        this.doNotReconnect = value || true;
+        this.doNotReconnect = value ?? true;
     }
 
     /**
@@ -450,6 +456,7 @@ export default class Websocket extends InternalWebsocket {
         if (this.schedulerLoop) {
             clearInterval(this.schedulerLoop);
         }
+        this.ping = 0;
         this.lastHeartbeat = 0;
         this.lastHeartbeatAcked = false;
         this.heartbeatInterval = null;

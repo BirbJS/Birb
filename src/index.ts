@@ -48,6 +48,7 @@ import WebsocketProcessingError from './errors/WebsocketProcessingError';
 import WebsocketWarning from './errors/WebsocketWarning';
 
 import Color from './util/Color';
+
 import {
     NSFWLevel,
     MFALevel,
@@ -58,8 +59,12 @@ import {
     PacketOperation,
     GatewayCloseCode,
 } from './util/Constants';
+
 import {
     GuildResolvable,
+    RoleResolvable,
+    UserResolvable,
+    EventResolvable,
 } from './util/Types';
 
 export {
@@ -90,6 +95,7 @@ export {
     WebsocketWarning,
 
     Color,
+
     NSFWLevel,
     MFALevel,
     ExplicitContentFilterLevel,
@@ -98,7 +104,11 @@ export {
     Status,
     PacketOperation,
     GatewayCloseCode,
+
     GuildResolvable,
+    RoleResolvable,
+    UserResolvable,
+    EventResolvable,
 };
 
 export function _test () {

@@ -10,45 +10,60 @@
 
 import ClientError from '../errors/ClientError';
 import ClientWarning from '../errors/ClientWarning';
+import OptionError from '../errors/OptionError';
+import { EventResolvable } from '../util/Types';
 import GuildBlock from './blocks/GuildBlock';
+import UserBlock from './blocks/UserBlock';
+import ClientUser from './ClientUser';
 import Intents from './Intents';
 import Websocket from './websocket/Websocket';
 
 export default class Client {
 
+    private valid = true;
     token: string = null!;
     ws: Websocket = null!;
-    guilds: GuildBlock = null!;
+    me: ClientUser | null = null;
     options = {
-        intents: null!,
-        debug: true,
+        intents: <Intents>null!,
+        debug: false,
     }
 
+    readonly guilds: GuildBlock;
+    readonly users: UserBlock;
+    
     private events: any = {};
 
     constructor (options: any = {}) {
         if ('intents' in options) {
             if (!(options.intents instanceof Intents)) {
-                throw new ClientError('intents must be an instance of Intents\nMore info: https://birb.js.org/explained/intents');
+                throw new OptionError('intents must be an instance of Intents\nMore info: https://birb.js.org/explained/intents');
             }
             if (options.intents.isEmpty()) {
-                throw new ClientError('intents must have at least one flag set\nMore info: https://birb.js.org/explained/intents');
+                throw new OptionError('intents must have at least one flag set\nMore info: https://birb.js.org/explained/intents');
             }
         } else {
-            throw new ClientError('intents must be provided\nMore info: https://birb.js.org/explained/intents');
+            throw new OptionError('intents must be provided\nMore info: https://birb.js.org/explained/intents');
         }
         this.options = Object.assign(this.options, options);
         this.guilds = new GuildBlock(this);
+        this.users = new UserBlock(this, {
+            maxSize: 250000,
+            removeOldest: true,
+        });
     }
 
     /**
      * Add an event listener.
      * 
-     * @param {string} event The event name.
+     * @param {EventResolvable} event The event name.
      * @param {Function} listener The function to call when the event is emitted.
      * @returns {void}
      */
-    on (event: string, callback: Function): void {
+    listen (event: EventResolvable, callback: Function): void {
+        if (!this.valid) {
+            throw new ClientError('the client has been invalidated; please restart the process');
+        }
         if (this.events[event] !== undefined) {
             process.emitWarning(new ClientWarning('binding to an event multiple times is not supported: previous listener overwritten'));
         }
@@ -58,21 +73,24 @@ export default class Client {
     /**
      * Undind an event listener.
      * 
-     * @param {string} event The event name to unbind.
+     * @param {EventResolvable} event The event name to unbind.
      * @returns {void}
      */
-    unbind (event: string): void {
+    unbind (event: EventResolvable): void {
+        if (!this.valid) {
+            throw new ClientError('the client has been invalidated; please restart the process');
+        }
         delete this.events[event];
     }
 
     /**
      * Emit an event.
      * 
-     * @param {string} event The event name.
+     * @param {EventResolvable} event The event name.
      * @param {any} data The event data to pass to the listener.
      * @returns {void}
      */
-    emit (event: string, ...args: any[]): void {
+    emit (event: EventResolvable, ...args: any[]): void {
         if (this.events[event] === undefined) {
             return;
         }
@@ -86,6 +104,9 @@ export default class Client {
      * @returns {void}
      */
     connect (token: string): void {
+        if (!this.valid) {
+            throw new ClientError('the client has been invalidated; please restart the process');
+        }
         this.token = token;
         this.ws = new Websocket(this, 'gateway.discord.gg');
         this.ws.connect();
@@ -113,6 +134,21 @@ export default class Client {
         if (this.options.debug) {
             console.warn('[warn]', ...message);
         }
+    }
+
+    /**
+     * Invalidate the client, forcing the user to restart
+     * the process to use it. Once called, this cannot be
+     * undone (mostly because it would defeat the entire
+     * purpose of this function).
+     * 
+     * @returns {void}
+     * @public
+     */
+    _invalidate (): void {
+        this.valid = false;
+        this.events = {};
+        console.error(new ClientError('the Birb.JS client has been invalidated; please restart the process'));
     }
 
 }

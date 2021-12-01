@@ -8,15 +8,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import BitsBlock from './blocks/BitsBlock';
-import { Intents as IntentFlags } from '../util/Constants';
+import Client from './Client';
 
-export default class Intents extends BitsBlock {
+export default class Channel {
 
-    static FLAGS = IntentFlags;
+    client: Client = null!;
+    name: string = null!;
+    readonly id: string;
 
-    constructor (...flags: number[]) {
-        super(...flags);
+    constructor (client: Client, data: any) {
+        this.client = client;
+        this.id = data.id;
+        this.name = data.name;
     }
 
 }

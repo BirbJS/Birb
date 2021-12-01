@@ -8,8 +8,8 @@
     "test": "ls",
     "publish-the-awesomeness": "tsc && npm run files && node test.js && cd dist/ && npm publish --dry-run",
     "publish-release": "tsc && npm run files && cd dist/ && npm publish",
-    "files": "copyfiles package.json package-lock.json tsconfig.json .npmignore LICENSE dist",
-    "build": "tsc && npm run files"
+    "files": "copyfiles package.json package-lock.json tsconfig.json .npmignore LICENSE README.md dist",
+    "build": "tsc --build --verbose && npm run files"
   },
   "repository": {
     "type": "git",
@@ -26,11 +26,19 @@
     "copyfiles": "^2.4.1",
     "erlpack": "^0.1.3",
     "typescript": "^4.5.2",
+    "utf-8-validate": "^5.0.7",
+    "bufferutil": "^4.0.5",
     "zlib-sync": "^0.1.7"
   },
   "dependencies": {
     "@types/ws": "^8.2.1",
     "petitio": "^1.4.0",
     "ws": "^8.3.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.5",
+    "erlpack": "^0.1.3",
+    "utf-8-validate": "^5.0.7",
+    "zlib-sync": "^0.1.7"
   }
 }

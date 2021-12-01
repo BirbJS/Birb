@@ -8,15 +8,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import BitsBlock from './blocks/BitsBlock';
-import { Intents as IntentFlags } from '../util/Constants';
+import BirbJSError from './BirbJSError';
 
-export default class Intents extends BitsBlock {
-
-    static FLAGS = IntentFlags;
-
-    constructor (...flags: number[]) {
-        super(...flags);
+export default class DiscordAPIError extends BirbJSError {
+    
+    constructor (message: string) {
+        super('DiscordAPIError', message, 'https://birb.js.org/errors/DiscordAPIError');
     }
 
 }
