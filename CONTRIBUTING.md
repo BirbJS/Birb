@@ -28,8 +28,11 @@ Every source code file must including this at the top for licensing reasons:
 /*
  * Copyright (c) 2021, knokbak and contributors.
  *
+ * The Birb.JS Project: https://birb.js.org
+ * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 ```
+If, when you're modifying a file, realise that the year in the copyright notice is incorrect, please update it. *Do not create pull requests just to update copyright notice years. It doesn't help.*

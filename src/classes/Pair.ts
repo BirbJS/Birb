@@ -8,14 +8,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export default class BirbJSError extends Error {
+export default class Pair<Key, Value> {
 
-    url: string = null!;
+    key: Key;
+    value: Value;
 
-    constructor (name: string, message: string, url: string) {
-        super(message + (url ? `\nHead to: ${url}` : ''));
-        this.name = name || 'BirbJSError';
-        this.url = url || 'https://birb.js.org/errors';
+    constructor (key: Key, value: Value) {
+        this.key = key;
+        this.value = value;
     }
 
 }
