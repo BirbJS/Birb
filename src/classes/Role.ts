@@ -8,9 +8,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import GuildError from "../errors/GuildError";
-import Client from "./Client";
-import Color from "../util/Color";
+import GuildError from '../errors/GuildError';
+import Client from './Client';
+import Color from '../util/Color';
 
 export default class Role {
     

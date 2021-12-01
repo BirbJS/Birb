@@ -8,12 +8,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import Client from "../Client";
-import InternalWebsocket from "./InternalWebsocket";
-import { WebSocket as WS } from "ws";
-import { GatewayCloseCode, PacketOperation, Status } from "../../util/Constants";
-import WebsocketError from "../../errors/WebsocketError";
-import ShardingError from "../../errors/ShardingError";
+import Client from '../Client';
+import InternalWebsocket from './InternalWebsocket';
+import { WebSocket as WS } from 'ws';
+import { GatewayCloseCode, PacketOperation, Status } from '../../util/Constants';
+import WebsocketError from '../../errors/WebsocketError';
+import ShardingError from '../../errors/ShardingError';
 
 export default class Websocket extends InternalWebsocket {
 

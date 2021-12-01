@@ -8,10 +8,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import GuildError from "../errors/GuildError";
-import { NSFWLevel, MFALevel, NotificationLevel, VerificationLevel, ExplicitContentFilterLevel } from "../util/Constants";
-import Client from "./Client";
-import Role from "./Role";
+import GuildError from '../errors/GuildError';
+import { NSFWLevel, MFALevel, NotificationLevel, VerificationLevel, ExplicitContentFilterLevel } from '../util/Constants';
+import Client from './Client';
+import Role from './Role';
 
 export default class Guild {
     

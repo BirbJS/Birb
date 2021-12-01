@@ -8,9 +8,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import ClientWarning from "../errors/ClientWarning";
-import GuildBlock from "./blocks/GuildBlock";
-import Websocket from "./websocket/Websocket";
+import ClientError from '../errors/ClientError';
+import ClientWarning from '../errors/ClientWarning';
+import GuildBlock from './blocks/GuildBlock';
+import Intents from './Intents';
+import Websocket from './websocket/Websocket';
 
 export default class Client {
 
@@ -18,12 +20,23 @@ export default class Client {
     ws: Websocket = null!;
     guilds: GuildBlock = null!;
     options = {
+        intents: null!,
         debug: true,
     }
 
     private events: any = {};
 
     constructor (options: any = {}) {
+        if ('intents' in options) {
+            if (!(options.intents instanceof Intents)) {
+                throw new ClientError('intents must be an instance of Intents\nMore info: https://birb.js.org/explained/intents');
+            }
+            if (options.intents.isEmpty()) {
+                throw new ClientError('intents must have at least one flag set\nMore info: https://birb.js.org/explained/intents');
+            }
+        } else {
+            throw new ClientError('intents must be provided\nMore info: https://birb.js.org/explained/intents');
+        }
         this.options = Object.assign(this.options, options);
         this.guilds = new GuildBlock(this);
     }

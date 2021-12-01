@@ -8,8 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Status } from "../../..";
-import Websocket from "../Websocket";
+import { Status } from '../../../util/Constants';
+import Websocket from '../Websocket';
 
 export default async function READY (ws: Websocket, data: any): Promise<void> {
     ws.expectedGuilds = new Set(data.guilds.map((d: any) => d.id));
