@@ -8,14 +8,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export default class BirbJSError extends Error {
+import BirbJSError from './BirbJSError';
 
-    url: string = null!;
-
-    constructor (name: string, message: string, url: string) {
-        super(message + (url ? `\nHead to: ${url}` : ''));
-        this.name = name || 'BirbJSError';
-        this.url = url || 'https://birb.js.org/errors';
+export default class MemoryLeakWarning extends BirbJSError {
+    
+    constructor (message: string) {
+        super('MemoryLeakWarning', message, 'https://birb.js.org/errors/MemoryLeakWarning');
     }
 
 }

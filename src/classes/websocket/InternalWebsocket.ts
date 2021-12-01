@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2021, knokbak and contributors.
  *
+ * The Birb.JS Project: https://birb.js.org
+ * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,7 +11,7 @@
 let Zlib: any;
 let Erlpack: any;
 
-import { Status } from '../../constants/Status';
+import { Status } from '../../util/Constants';
 import WebsocketProcessingError from '../../errors/WebsocketProcessingError';
 import Client from '../Client';
 
@@ -25,18 +27,19 @@ try {
 export default class InternalWebsocket {
 
     client: Client = null!;
-    url: string = null!;
+    url: URL = null!;
+    domain: string = null!;
     status: Status = Status.IDLE;
     encoding: string = Erlpack ? 'etf' : 'json';
     buffer: any = null!;
 
-    constructor (client: Client, url: string) {
+    constructor (client: Client, domain: string) {
         this.client = client;
-        this.url = url;
-        this.init();
+        this.domain = domain;
+        this.url = this.generateURL();
     }
 
-    processPacket (data: any) {
+    protected processPacket (data: any) {
         let raw;
         if (data instanceof ArrayBuffer) {
             data = new Uint8Array(data);
@@ -63,7 +66,7 @@ export default class InternalWebsocket {
         return data;
     }
 
-    unpack (data: any, type?: string) {
+    protected unpack (data: any, type?: string) {
         if (this.encoding === 'json' || type === 'json') {
             if (typeof data !== 'string') {
                 data = (new TextDecoder()).decode(data);
@@ -76,7 +79,7 @@ export default class InternalWebsocket {
         return Erlpack.unpack(data);
     }
 
-    pack (data: any) {
+    protected pack (data: any) {
         if (Erlpack) {
             return Erlpack.pack(data);
         } else {
@@ -84,7 +87,7 @@ export default class InternalWebsocket {
         }
     }
 
-    init () {
+    protected init () {
         if (Zlib) {
             this.buffer = new Zlib.Inflate({
                 chunkSize: 65535,
@@ -92,6 +95,16 @@ export default class InternalWebsocket {
                 to: this.encoding === 'json' ? 'string' : '',
             });
         }
+    }
+
+    protected generateURL (): URL {
+        let params = new URLSearchParams();
+        params.set('v', '9');
+        params.set('encoding', this.encoding);
+        if (Zlib) {
+            params.set('compress', 'zlib-stream');
+        }
+        return new URL(`wss://${this.domain}/?${params.toString()}`);
     }
 
 }

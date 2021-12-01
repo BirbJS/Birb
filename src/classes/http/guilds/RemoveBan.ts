@@ -8,14 +8,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export default class BirbJSError extends Error {
+import Client from '../../Client';
+import Request from '../Request';
 
-    url: string = null!;
+export default class RemoveBan extends Request {
 
-    constructor (name: string, message: string, url: string) {
-        super(message + (url ? `\nHead to: ${url}` : ''));
-        this.name = name || 'BirbJSError';
-        this.url = url || 'https://birb.js.org/errors';
+    constructor (client: Client, guildId: string, userId: string, reason?: string) {
+        super(client, 'DELETE', `/guilds/${guildId}/bans/${userId}`);
+        this.reason = reason || null;
     }
 
 }
