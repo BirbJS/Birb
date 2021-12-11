@@ -15,7 +15,7 @@ export default class BeginPrune extends Request {
 
     constructor (client: Client, guildId: string, data: any, reason?: string) {
         super(client, 'POST', `/guilds/${guildId}/prune`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

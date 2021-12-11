@@ -74,7 +74,7 @@ export default class Cache {
      */
     get (key: string): any | null {
         let entry = this.cache.get(key);
-        return entry ? entry.v : null;
+        return entry?.v ?? null;
     }
 
     /**

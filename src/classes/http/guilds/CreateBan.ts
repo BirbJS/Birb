@@ -15,7 +15,7 @@ export default class CreateBan extends Request {
 
     constructor (client: Client, guildId: string, userId: string, data: any, reason?: string) {
         super(client, 'PUT', `/guilds/${guildId}/bans/${userId}`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

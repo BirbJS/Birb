@@ -77,9 +77,7 @@ export default class Client {
      * @returns {void}
      */
     unbind (event: EventResolvable): void {
-        if (!this.valid) {
-            throw new ClientError('the client has been invalidated; please restart the process');
-        }
+        if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
         delete this.events[event];
     }
 
@@ -91,9 +89,7 @@ export default class Client {
      * @returns {void}
      */
     emit (event: EventResolvable, ...args: any[]): void {
-        if (this.events[event] === undefined) {
-            return;
-        }
+        if (this.events[event] == undefined) return;
         this.events[event](...args);
     }
 
@@ -104,9 +100,7 @@ export default class Client {
      * @returns {void}
      */
     connect (token: string): void {
-        if (!this.valid) {
-            throw new ClientError('the client has been invalidated; please restart the process');
-        }
+        if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
         this.token = token;
         this.ws = new Websocket(this, 'gateway.discord.gg');
         this.ws.connect();
@@ -119,9 +113,7 @@ export default class Client {
      * @returns {void}
      */
     debug (...message: any[]): void {
-        if (this.options.debug) {
-            console.debug('[debug]', ...message);
-        }
+        if (this.options.debug) console.debug('[debug]', ...message);
     }
 
     /**
@@ -131,9 +123,7 @@ export default class Client {
      * @returns {void}
      */
     warn (...message: any[]): void {
-        if (this.options.debug) {
-            console.warn('[warn]', ...message);
-        }
+        if (this.options.debug) console.warn('[warn]', ...message);
     }
 
     /**

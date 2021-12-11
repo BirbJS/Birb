@@ -39,13 +39,10 @@ export default class GuildBlock extends CachedBlock {
                 bypassCache: false,
             }
         } else {
-            options.shouldCache = options.shouldCache ?? true;
-            options.bypassCache = options.bypassCache ?? false;
-            if (options.guild instanceof Guild) {
-                options.guild = options.guild.id;
-            } else {
-                options.guild = options.guild as string;
-            }
+            options.shouldCache ??= true;
+            options.bypassCache ??= false;
+            if (options.guild instanceof Guild) options.guild = options.guild.id;
+            else options.guild = options.guild as string;
         }
 
         if (!options.bypassCache) {
@@ -59,9 +56,7 @@ export default class GuildBlock extends CachedBlock {
         let guild = await HTTPGuild.get(this.client, options.guild as string);
         guild = new Guild(this.client, guild);
         console.log(guild);
-        if (options.shouldCache) {
-            this.cache.set(guild.id, guild);
-        }
+        if (options.shouldCache) this.cache.set(guild.id, guild);
 
         return guild;
     }

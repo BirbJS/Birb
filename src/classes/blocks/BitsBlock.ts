@@ -14,9 +14,7 @@ export default class BitsBlock {
 
     constructor (...flags: number[]) {
         if (flags) {
-            for ( let i = 0; i < flags.length; i++ ) {
-                this.add(flags[i]);
-            }
+            for ( let i = 0; i < flags.length; ++i ) this.add(flags[i]);
         }
     }
 
@@ -28,11 +26,9 @@ export default class BitsBlock {
      * @public
      */
     add (...flags: number[]): BitsBlock {
-        for ( let i = 0; i < flags.length; i++ ) {
+        for ( let i = 0; i < flags.length; ++i ) {
             let flag = flags[i];
-            if ( !this.has(flag) ) {
-                this.flags |= flag;
-            }
+            if ( !this.has(flag) ) this.flags |= flag;
         }
         return this;
     }
@@ -45,11 +41,9 @@ export default class BitsBlock {
      * @public
      */
     remove (...flags: number[]): BitsBlock {
-        for ( let i = 0; i < flags.length; i++ ) {
+        for ( let i = 0; i < flags.length; ++i ) {
             let flag = flags[i];
-            if ( this.has(flag) ) {
-                this.flags ^= flag;
-            }
+            if ( this.has(flag) ) this.flags ^= flag;
         }
         return this;
     }
@@ -72,7 +66,7 @@ export default class BitsBlock {
      * @public
      */
     isEmpty (): boolean {
-        return this.flags === 0;
+        return this.flags == 0;
     }
 
 }

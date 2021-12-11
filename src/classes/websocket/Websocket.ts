@@ -114,10 +114,8 @@ export default class Websocket extends InternalWebsocket {
                 let split = body.t.split('');
                 let permitted = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_';
 
-                for (let i = 0; i < split.length; i++) {
-                    if (permitted.includes(split[i])) {
-                        event += split[i];
-                    }
+                for (let i = 0; i < split.length; ++i) {
+                    if (permitted.includes(split[i])) event += split[i];
                 }
 
                 try {
@@ -181,10 +179,9 @@ export default class Websocket extends InternalWebsocket {
         this.cleanup();
         this.client.debug(`websocket closed with code ${code}`);
 
-        if (!this.isConnected()) {
+        if (!this.isConnected())
             // the disconnection was intentional
             return;
-        }
 
         this.status = Status.DISCONNECTED;
 
@@ -342,10 +339,10 @@ export default class Websocket extends InternalWebsocket {
      * @public
      */
     async heartbeat (): Promise<void> {
-        if (!this.isConnected()) {
+        if (!this.isConnected()) 
             // don't throw an error, it'll cause chaos
             return;
-        }
+
         if (this.lastHeartbeat && !this.lastHeartbeatAcked) {
             this.client.warn('heartbeat not acked (possible timeout?)');
             this.terminate();
@@ -356,7 +353,7 @@ export default class Websocket extends InternalWebsocket {
         this.lastHeartbeat = Date.now();
         this.send({
             op: PacketOperation.HEARTBEAT,
-            d: this.lastSequenceIdentifier || null,
+            d: this.lastSequenceIdentifier ?? null,
         });
     }
 
@@ -368,10 +365,10 @@ export default class Websocket extends InternalWebsocket {
      * @public
      */
     close (code?: number): void {
-        if (!this.isConnected()) {
+        if (!this.isConnected()) 
             // don't throw an error, it'll cause chaos
             return;
-        }
+
         this.ws.close(code);
         this.cleanup();
     }
@@ -385,10 +382,10 @@ export default class Websocket extends InternalWebsocket {
      * @public
      */
     terminate (): void {
-        if (!this.isConnected()) {
+        if (!this.isConnected())
             // don't throw an error, it'll cause chaos
             return;
-        }
+
         this.ws.terminate();
         this.cleanup();
     }
@@ -453,9 +450,9 @@ export default class Websocket extends InternalWebsocket {
      * @private
      */
     private cleanup (): void {
-        if (this.schedulerLoop) {
+        if (this.schedulerLoop)
             clearInterval(this.schedulerLoop);
-        }
+
         this.ping = 0;
         this.lastHeartbeat = 0;
         this.lastHeartbeatAcked = false;

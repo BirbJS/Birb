@@ -15,7 +15,7 @@ export default class CreateChannel extends Request {
 
     constructor (client: Client, guildId: string, data: any, reason?: string) {
         super(client, 'POST', `/guilds/${guildId}/channels`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

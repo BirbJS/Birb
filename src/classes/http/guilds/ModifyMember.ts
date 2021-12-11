@@ -15,7 +15,7 @@ export default class ModifyMember extends Request {
 
     constructor (client: Client, guildId: string, userId: string, data: any, reason?: string) {
         super(client, 'PATCH', `/guilds/${guildId}/members/${userId}`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

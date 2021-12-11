@@ -15,7 +15,7 @@ export default class ModifyWidget extends Request {
 
     constructor (client: Client, guildId: string, data: any, reason?: string) {
         super(client, 'PATCH', `/guilds/${guildId}/widget`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

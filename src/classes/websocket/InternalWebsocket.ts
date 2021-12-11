@@ -8,21 +8,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let Zlib: any;
-let Erlpack: any;
+let Zlib: typeof import('zlib-sync') | null;
+let Erlpack: typeof import('erlpack') | null;
 
 import { Status } from '../../util/Constants';
 import WebsocketProcessingError from '../../errors/WebsocketProcessingError';
 import Client from '../Client';
 
 try {
-    Zlib = require('zlib-sync');
-} catch (e) {}
+    Erlpack = require('erlpack');
+} catch {}
 
 try {
-    Erlpack = require('erlpack');
-    if (!Erlpack.pack) Erlpack = null;
-} catch (e) {}
+    Zlib = require('zlib-sync');
+} catch {}
 
 export default class InternalWebsocket {
 
@@ -52,9 +51,7 @@ export default class InternalWebsocket {
             this.buffer.push(data, isFull && Zlib.Z_SYNC_FLUSH);
             if (!isFull) return;
             raw = this.buffer.result;
-        } else {
-            raw = data;
-        }
+        } else raw = data;
 
         try {
             data = this.unpack(raw);
@@ -76,25 +73,20 @@ export default class InternalWebsocket {
         if (!Buffer.isBuffer(data)) {
             data = Buffer.from(new Uint8Array(data));
         }
-        return Erlpack.unpack(data);
+        return Erlpack!.unpack(data);
     }
 
     protected pack (data: any) {
-        if (Erlpack) {
-            return Erlpack.pack(data);
-        } else {
-            return JSON.stringify(data);
-        }
+        if (Erlpack) return Erlpack.pack(data);
+        else return JSON.stringify(data);
     }
 
     protected init () {
-        if (Zlib) {
+        if (Zlib) 
             this.buffer = new Zlib.Inflate({
                 chunkSize: 65535,
-                flush: Zlib.Z_SYNC_FLUSH,
-                to: this.encoding === 'json' ? 'string' : '',
+                to: this.encoding === 'json' ? 'string' : undefined,
             });
-        }
     }
 
     protected generateURL (): URL {

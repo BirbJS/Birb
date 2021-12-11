@@ -15,7 +15,7 @@ export default class ModifyWelcomeScreen extends Request {
 
     constructor (client: Client, guildId: string, data: any, reason?: string) {
         super(client, 'PATCH', `/guilds/${guildId}/welcome-screen`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }
