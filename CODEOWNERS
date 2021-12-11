@@ -6,4 +6,5 @@ tsconfig.json @birbjs/team
 /.*/ @OllieKillean
 .gitignore @OllieKillean
 CONTRIBUTORS @OllieKillean
+CODEOWNERS @OllieKillean
 LICENSE @OllieKillean
