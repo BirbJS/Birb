@@ -2,8 +2,8 @@
 package.json @birbjs/team
 package-lock.json @birbjs/team
 tsconfig.json @birbjs/team
-/.* @knokbak
-/.*/ @knokbak
-.gitignore @knokbak
-CONTRIBUTORS @knokbak
-LICENSE @knokbak
+/.* @OllieKillean
+/.*/ @OllieKillean
+.gitignore @OllieKillean
+CONTRIBUTORS @OllieKillean
+LICENSE @OllieKillean
