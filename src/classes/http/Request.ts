@@ -9,6 +9,7 @@
  */
 
 import petitio, { HTTPMethod } from 'petitio';
+import { inspect } from 'util';
 import DiscordAPIError from '../../errors/DiscordAPIError';
 import Client from '../Client';
 
@@ -41,9 +42,7 @@ export default class Request {
             req.body(this.body);
         }
 
-        if (this.reason) {
-            req.header('X-Audit-Log-Reason', this.reason);
-        }
+        if (this.reason) req.header('X-Audit-Log-Reason', this.reason);
 
         let res;
         let body;
@@ -57,7 +56,7 @@ export default class Request {
         }
 
         if (body && body.code !== undefined) {
-            console.log(require('util').inspect(body, { depth: null }));
+            console.log(inspect(body, { depth: null }));
             throw new DiscordAPIError(`[${this.method}:${this.url}] ${body.code}: ${translateError(body.code, body.message)}`);
         }
 
@@ -71,15 +70,8 @@ export default class Request {
 }
 
 export function translateError (code: number, message?: string) {
-    if (!message) {
-        return 'internal Discord API Error (not your fault)';
-    }
-    switch (code) {
-        case 50013: {
-            return `Missing Permissions: your bot does not have permission to perform this action; ensure at least one of its roles has the permissions required`;
-        }
-        default: {
-            return message;
-        }
-    }
+    if (!message) return 'internal Discord API Error (not your fault)';
+
+    if (code == 50013) return `Missing Permissions: your bot does not have permission to perform this action; ensure at least one of its roles has the permissions required`;
+    else return message;
 }

@@ -40,33 +40,23 @@ export default class UserBlock extends CachedBlock {
 
         if (!options.bypassCache) {
             const cached = this.cache.get(userId);
-            if (cached) {
-                return cached;
-            }
+            if (cached) return cached;
         }
 
         let user = await HTTPUser.get(this.client, userId);
         user = new User(this.client, user);
         
-        if (options.shouldCache) {
-            this.cache.set(user.id, user);
-        }
+        if (options.shouldCache) this.cache.set(user.id, user);
 
         return user;
     }
 
     resolve (user: UserResolvable, def?: any): User | null {
-        if (user instanceof BaseUser) {
-            return this.cache.get(user.id) || user;
-        } else if (typeof user === 'string') {
-            if (def) {
-                return this.cache.get(user) || new User(this.client, def);
-            } else {
-                return this.cache.get(user) || null;
-            }
-        } else {
-            return null;
-        }
+        if (user instanceof BaseUser) return this.cache.get(user.id) ?? user;
+        else if (typeof user === 'string') {
+            if (def) return this.cache.get(user) ?? new User(this.client, def);
+            else return this.cache.get(user) ?? null;
+        } else return null;
     }
 
 }

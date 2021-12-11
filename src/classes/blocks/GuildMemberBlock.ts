@@ -36,30 +36,23 @@ export default class GuildMemberBlock extends CachedBlock {
 
         if (!options.bypassCache) {
             const cached = this.cache.get(userId);
-            if (cached) {
-                return cached;
-            }
+            if (cached) return cached;
         }
 
         let member = await HTTPGuild.getMember(this.client, this.guild.id, userId);
         member = new GuildMember(this.client, member, this.guild);
         
-        if (options.shouldCache) {
-            member._set();
-        }
+        if (options.shouldCache) member._set();
 
         return member;
     }
 
     resolve (user: UserResolvable, guild: Guild, def?: any): GuildMember | null {
         if (user instanceof BaseUser) {
-            return this.cache.get(user.id) || user;
+            return this.cache.get(user.id) ?? user;
         } else if (typeof user === 'string') {
-            if (def) {
-                return this.cache.get(user) || new GuildMember(this.client, def, guild);
-            } else {
-                return this.cache.get(user) || null;
-            }
+            if (def) return this.cache.get(user) ?? new GuildMember(this.client, def, guild);
+            else return this.cache.get(user) ?? null;
         } else {
             return null;
         }

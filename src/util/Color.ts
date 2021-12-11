@@ -20,7 +20,7 @@ export default class Color {
      * @public
      */
     static hexToInt (hex: string): number {
-        return parseInt(hex, 16);
+        return Number.parseInt(hex, 16);
     }
 
 }

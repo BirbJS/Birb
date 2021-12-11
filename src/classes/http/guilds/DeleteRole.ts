@@ -15,7 +15,7 @@ export default class DeleteRole extends Request {
 
     constructor (client: Client, guildId: string, roleId: string, reason?: any) {
         super(client, 'DELETE', `/guilds/${guildId}/roles/${roleId}`);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

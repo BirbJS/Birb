@@ -15,7 +15,7 @@ export default class ModifyRole extends Request {
 
     constructor (client: Client, guildId: string, roleId: string, data: any, reason?: string) {
         super(client, 'PATCH', `/guilds/${guildId}/roles/${roleId}`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

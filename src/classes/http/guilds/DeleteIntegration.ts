@@ -15,7 +15,7 @@ export default class DeleteIntegration extends Request {
 
     constructor (client: Client, guildId: string, integrationId: string, reason?: any) {
         super(client, 'DELETE', `/guilds/${guildId}/integrations/${integrationId}`);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

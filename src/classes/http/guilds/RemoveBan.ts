@@ -15,7 +15,7 @@ export default class RemoveBan extends Request {
 
     constructor (client: Client, guildId: string, userId: string, reason?: string) {
         super(client, 'DELETE', `/guilds/${guildId}/bans/${userId}`);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }

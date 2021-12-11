@@ -15,7 +15,7 @@ export default class AddMemberRole extends Request {
 
     constructor (client: Client, guildId: string, userId: string, roleId: string, data: any, reason?: string) {
         super(client, 'PUT', `/guilds/${guildId}/members/${userId}/roles/${roleId}`, data);
-        this.reason = reason || null;
+        this.reason = reason ?? null;
     }
 
 }
