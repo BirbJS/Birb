@@ -1,18 +1,21 @@
 {
-  "name": "birb-root",
-  "version": "0.0.0",
-  "private": true,
-  "workspaces": ["packages/*"],
+  "name": "birb",
+  "version": "0.0.5",
+  "description": "A JavaScript wrapper for the Discord API.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "publish": "lerna publish",
-    "build": "lerna run build",
-    "version": "lerna version",
-    "bootstrap": "lerna bootstrap"
+    "test": "ls",
+    "build": "tsc --build --verbose"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BirbJS/Birb.git"
   },
+  "files": [
+    "dist",
+    "!src"
+  ],
   "author": "knokbak",
   "license": "MPL-2.0",
   "bugs": {

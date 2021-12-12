@@ -1,0 +1,16 @@
+{
+  "packages": [ "packages/*" ],
+  "version": "independent",
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+			"push": true,
+			"registry": "https://registry.npmjs.org/"
+		},
+		"version": {
+			"allowBranch": "main",
+			"push": true,
+			"message": "chore(release): publish"
+		}
+  }
+}
