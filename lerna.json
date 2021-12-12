@@ -4,11 +4,13 @@
   "useWorkspaces": true,
   "command": {
     "publish": {
+      "conventionalCommits": true,
 			"push": true,
 			"registry": "https://registry.npmjs.org/"
 		},
 		"version": {
 			"allowBranch": "main",
+      "conventionalCommits": true,
 			"push": true,
 			"message": "chore(release): publish"
 		}
