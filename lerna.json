@@ -10,6 +10,7 @@
 		"version": {
 			"allowBranch": "main",
 			"push": true,
+      "createRelease": "github",
 			"message": "chore(release): publish"
 		}
   }

@@ -14,13 +14,17 @@ Birb.JS is a Discord API wrapper for Node.JS. It’s built to be simple, yet pow
 ## Installation
 Birb.JS is listed on [npm](https://www.npmjs.com/package/birb)! You can install it by running `npm install birb --save`.
 
+### Addons
+- [@birbjs/framework](https://birb.js.org/framework) to automatically route commands and events to your JS/TS functions: `npm install @birbjs/framework --save`
+- [@birbjs/sharding](https://birb.js.org/sharding) to automatically shard your bot: `npm install @birbjs/sharding --save`
+
 ### Optional Dependencies
 These dependencies aren't required, but will allow Birb.JS to do things more efficiently.
 
 - [erlpack](https://npmjs.com/package/erlpack) for faster serialization of websocket data: `npm install erlpack --save`
 - [zlib-sync](https://npmjs.com/package/zlib-sync) for websocket compression: `npm install zlib-sync --save`
-- [bufferutil](https://npmjs.com/package/bufferutil) quicker masking and unmasking of websocket data and packets: `npm install bufferutil --save`
-- [utf-8-validate](https://npmjs.com/package/utf-8-validate) more efficient websocket data validation: `npm install utf-8-validate --save`
+- [bufferutil](https://npmjs.com/package/bufferutil) for quicker masking and unmasking of websocket data and packets: `npm install bufferutil --save`
+- [utf-8-validate](https://npmjs.com/package/utf-8-validate) for more efficient websocket data validation: `npm install utf-8-validate --save`
 
 Most of these dependencies require [node-gyp](https://github.com/nodejs/node-gyp) which some users may struggle to install (mostly due to very unhelpful errors). If you're on Windows and having issues, try running `npm install windows-build-tools --global` in an **administrator** command prompt. If you're on Ubuntu, try `sudo apt install build-tools`. *Remember that these are optional dependencies. If you're struggling, feel free to ignore them. Birb.JS will only use them if they are available.*
 

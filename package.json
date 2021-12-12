@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": ["packages/*"],
   "scripts": {
-    "lerna:publish": "lerna publish",
+    "lerna:publish": "lerna publish --yes --conventional-prerelease --ignore-scripts --no-push --no-git-tag-version",
     "lerna:build": "lerna run build",
     "lerna:version": "lerna version",
     "lerna:bootstrap": "lerna bootstrap"
