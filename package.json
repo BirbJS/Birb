@@ -4,10 +4,10 @@
   "private": true,
   "workspaces": ["packages/*"],
   "scripts": {
-    "publish": "lerna publish",
-    "build": "lerna run build",
-    "version": "lerna version",
-    "bootstrap": "lerna bootstrap"
+    "lerna:publish": "lerna publish",
+    "lerna:build": "lerna run build",
+    "lerna:version": "lerna version",
+    "lerna:bootstrap": "lerna bootstrap"
   },
   "repository": {
     "type": "git",
