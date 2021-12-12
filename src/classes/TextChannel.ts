@@ -20,10 +20,10 @@ export default class TextChannel extends TextBasedChannel {
         removeOldest?: boolean,
     }) {
         super(client, data, options);
-        this._build(data);
+        this.build(data);
     }
 
-    _build (data: any) {
+    private build (data: any) {
         
     }
 

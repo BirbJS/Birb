@@ -29,10 +29,10 @@ export default class Message {
     constructor (client: Client, data: any) {
         this.client = client;
         this.id = data.id;
-        this._build(data);
+        this.build(data);
     }
 
-    _build (data: any): void {
+    private build (data: any): void {
         this.baseAuthor = data.author || null;
 
         if ('content' in data) {
@@ -71,7 +71,7 @@ export default class Message {
         return this;
     }
 
-    _set (): Message {
+    private set (): Message {
         if (this.guild) {
             this.guild.channels.cache.get(this.channel.id).messages.cache.set(this.id, this);
         }

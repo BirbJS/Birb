@@ -33,10 +33,10 @@ export default class Role {
         }
         this.client = client;
         this.id = data.id;
-        this._build(data);
+        this.build(data);
     }
 
-    _build (data: any): void {
+    private build (data: any): void {
         if ('name' in data) {
             this.name = data.name;
         }
@@ -73,7 +73,7 @@ export default class Role {
      * @returns {Role} This Role instance.
      * @public
      */
-    _set (): Role {
+    private set (): Role {
         this.client.guilds.cache.set(this.id, this);
         return this;
     }

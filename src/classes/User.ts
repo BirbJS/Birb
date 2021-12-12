@@ -20,10 +20,10 @@ export default class User extends BaseUser {
 
     constructor (client: Client, data: any) {
         super(client, data);
-        this._build(data);
+        this.build(data);
     }
 
-    _build (data: any) {
+    private build (data: any) {
         this.username = data.username ?? 'Unknown';
         this.discriminator = data.discriminator ?? '0000';
         this.tag = `${this.username}#${this.discriminator}`;

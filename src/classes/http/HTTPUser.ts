@@ -12,6 +12,7 @@ import Client from '../Client';
 import GetCurrent from './users/GetCurrent';
 import Get from './users/Get';
 import CreateDM from './users/CreateDM';
+import LeaveGuild from './users/LeaveGuild';
 
 export default class HTTPUser {
     
@@ -27,6 +28,11 @@ export default class HTTPUser {
     
     static createDM (client: Client, userId: string) {
         let request = new CreateDM(client, userId);
+        return request.make();
+    }
+
+    static leaveGuild (client: Client, guildId: string) {
+        let request = new LeaveGuild(client, guildId);
         return request.make();
     }
 

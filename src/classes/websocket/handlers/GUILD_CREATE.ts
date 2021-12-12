@@ -15,7 +15,7 @@ import Websocket from "../Websocket";
 export default async function GUILD_CREATE (ws: Websocket, data: any): Promise<void> {
     ws.client.debug(`received guild: ${data.id}`);
 
-    let guild = new Guild(ws.client, data)._set();
+    let guild = new Guild(ws.client, data)['set']();
 
     if (ws.status === Status.WAITING_FOR_GUILDS) {
         ws.expectedGuilds.delete(data.id);

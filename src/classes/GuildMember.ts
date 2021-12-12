@@ -36,10 +36,10 @@ export default class GuildMember {
         this.client = client;
         this.id = data.user.id;
         this.guild = guild;
-        this._build(data);
+        this.build(data);
     }
 
-    _build (data: any) {
+    private build (data: any) {
         this.roles = new GuildMemberRoleBlock(this.client);
         if (data.roles) {
             for ( let i = 0; i < data.roles.length; i++ ) {
@@ -76,56 +76,89 @@ export default class GuildMember {
         }
     }
 
+    /**
+     * Check if this GuildMember is in timeout.
+     * 
+     * @returns {boolean} Whether this GuildMember is in timeout.
+     */
     isInTimeout (): boolean {
         return this.timedOutUntil !== null && this.timedOutUntil > new Date();
     }
 
-    async edit (data: {
-        nick?: string,
-        mute?: boolean,
-        deaf?: boolean,
-        communication_disabled_until?: string | null,
-    }, reason?: string): Promise<void> {
-        await HTTPGuild.modifyMember(this.client, this.guild.id, this.id, data, reason);
-    }
-
+    /**
+     * Set this GuildMember's muted status.
+     * 
+     * @param {boolean} deafen The new muted status.
+     * @param {String} [reason] The reason for modifying this GuildMember.
+     * @returns {Promise<void>} A Promise that voids when the GuildMember has been changed.
+     */
     async setMute (mute: boolean, reason?: string): Promise<void> {
-        await this.edit({
+        await this.modify({
             mute: mute,
         }, reason);
     }
 
+    /**
+     * Set this GuildMember's deafened status.
+     * 
+     * @param {boolean} deafen The new deafened status.
+     * @param {String} [reason] The reason for modifying this GuildMember.
+     * @returns {Promise<void>} A Promise that voids when the GuildMember has been changed.
+     */
     async setDeafen (deafen: boolean, reason?: string): Promise<void> {
-        await this.edit({
+        await this.modify({
             deaf: deafen,
         }, reason);
     }
 
+    /**
+     * Set this GuildMember's nickname.
+     * 
+     * @param {number} nickname The new nickname.
+     * @param {String} [reason] The reason for modifying this GuildMember.
+     * @returns {Promise<void>} A Promise that voids when the GuildMember has been changed.
+     */
     async setNick (nickname: string, reason?: string): Promise<void> {
-        await this.edit({
+        await this.modify({
             nick: nickname,
         }, reason);
     }
 
-    async timeout (expires: Date | null, reason?: string): Promise<void> {
-        let set: string | null = null;
-        if (expires) {
-            if (expires < new Date()) {
-                throw new OptionError('the expiry date must be in the future');
-            }
-            if (expires.getTime() - new Date().getTime() > 60000 * 60 * 24 * 24) {
-                throw new OptionError('the expiry date must be within 24 days');
-            }
-            set = expires.toISOString().slice(0, -2);
-        }
+    /**
+     * Kick the GuildMember.
+     * 
+     * @param {String} [reason] The reason for kicking this GuildMember.
+     * @returns {Promise<void>} A Promise that voids when the GuildMember has been changed.
+     */
+    async kick (reason?: string): Promise<void> {
+        await HTTPGuild.removeMember(this.client, this.guild.id, this.id, reason);
+    }
 
-        await this.edit({
-            communication_disabled_until: set,
+    /**
+     * Ban the GuildMember.
+     * 
+     * @param {number} [daysToPrune=0] The amount of days of messages to prune.
+     * @param {String} [reason] The reason for banning this GuildMember.
+     * @returns {Promise<void>} A Promise that voids when the GuildMember has been changed.
+     */
+    async ban (daysToPrune: number, reason?: string): Promise<void> {
+        await HTTPGuild.createBan(this.client, this.guild.id, this.id, {
+            delete_message_days: daysToPrune || 0,
         }, reason);
     }
 
-    async clearTimeout (reason?: string): Promise<void> {
-        await this.timeout(null, reason);
+    /**
+     * Modify the GuildMember.
+     * 
+     * @param {Object} data The data to send to the Discord API.
+     * @param {String} [reason] The reason for modifying this GuildMember.
+     * @returns {Promise<void>} A Promise that voids when the GuildMember has been changed.
+     */
+    async modify (data: Object, reason?: string): Promise<void> {
+        if (data === undefined) {
+            throw new OptionError('data [at 0] must be provided');
+        }
+        await HTTPGuild.modifyMember(this.client, this.guild.id, this.id, data, reason);
     }
 
     async _waitForFull (): Promise<GuildMember> {
@@ -141,7 +174,7 @@ export default class GuildMember {
         return this;
     }
 
-    _set (): GuildMember {
+    private set (): GuildMember {
         this.guild.members.cache.set(this.id, this);
         return this;
     }

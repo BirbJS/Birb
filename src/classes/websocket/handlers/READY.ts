@@ -30,6 +30,7 @@ export default async function READY (ws: Websocket, data: any): Promise<void> {
     ws.expectedGuilds = new Set(data.guilds.map((d: any) => d.id));
     ws.setSessionIdentifier(data.session_id);
     ws.setStatus(Status.WAITING_FOR_GUILDS);
+    ws.client.emit('waitingForGuilds');
 
     if (!ws.expectedGuilds) {
         ws.client.debug('we didn\'t need to receive any guilds; marking as ready');

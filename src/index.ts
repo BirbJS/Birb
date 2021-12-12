@@ -21,10 +21,14 @@
  *  - Do not modify this comment.
  */
 
+import { Snowflake } from '@birbjs/snowflake';
+
 import BitsBlock from './classes/blocks/BitsBlock';
 import GuildBlock from './classes/blocks/GuildBlock';
 
 import HTTPGuild from './classes/http/HTTPGuild';
+import HTTPChannel from './classes/http/HTTPChannel';
+import HTTPUser from './classes/http/HTTPUser';
 import Request from './classes/http/Request';
 
 import Websocket from './classes/websocket/Websocket';
@@ -68,10 +72,16 @@ import {
 } from './util/Types';
 
 export {
+    // external libs first ...
+    Snowflake,
+
+    // ... and now the rest ...
     BitsBlock,
     GuildBlock,
 
     HTTPGuild,
+    HTTPChannel,
+    HTTPUser,
     Request,
 
     Websocket,
