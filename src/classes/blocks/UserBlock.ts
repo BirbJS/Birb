@@ -45,8 +45,7 @@ export default class UserBlock extends CachedBlock {
 
         let user = await HTTPUser.get(this.client, userId);
         user = new User(this.client, user);
-        
-        if (options.shouldCache) this.cache.set(user.id, user);
+        if (options.shouldCache) user['set']();
 
         return user;
     }

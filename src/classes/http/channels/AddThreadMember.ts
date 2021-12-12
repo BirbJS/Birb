@@ -11,10 +11,10 @@
 import Client from '../../Client';
 import Request from '../Request';
 
-export default class LeaveGuild extends Request {
+export default class AddThreadMember extends Request {
 
-    constructor (client: Client, guildId: string) {
-        super(client, 'DELETE', `/users/@me/guilds/${guildId}`);
+    constructor (client: Client, channelId: string, userId: string) {
+        super(client, 'PUT', `/channels/${channelId}/thread-members/${userId}`);
     }
 
 }

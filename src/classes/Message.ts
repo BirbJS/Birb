@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Guild } from '..';
+import { Guild, HTTPChannel } from '..';
 import BaseUser from './BaseUser';
 import Client from './Client';
 import GuildMember from './GuildMember';
@@ -53,15 +53,36 @@ export default class Message {
         }
 
         if (!this.webhookId && !data.author.system) {
-            this.author = this.client.users.resolve(data.author.id) || null;
+            this.author = this.client.users.resolve(data.author.id, data.author ?? null) || null;
         }
         if (this.guild) {
             this.channel = this.guild.channels.cache.get(data.channel_id);
         }
     }
 
-    async _waitForAuthor (): Promise<Message> {
-        if (!this.webhookId && !this.baseAuthor.system) {
+    async crosspost (): Promise<void> {
+        await HTTPChannel.crossPostMessage(this.client, this.channel.id, this.id);
+    }
+
+    async delete (): Promise<void> {
+        await HTTPChannel.deleteMessage(this.client, this.channel.id, this.id);
+    }
+
+    async reply (content: string): Promise<Message> {
+        await this.waitForAuthor();
+        const msg = await HTTPChannel.createMessage(this.client, this.channel.id, {
+            content: content,
+            message_reference: {
+                message_id: this.id,
+                channel_id: this.channel.id,
+                fail_if_not_exists: false,
+            },
+        });
+        return new Message(this.client, msg);
+    }
+
+    private async waitForAuthor (): Promise<Message> {
+        if (!this.author && !this.webhookId && !this.baseAuthor.system) {
             if (this.client.me && this.baseAuthor.id === this.client.me.id) {
                 this.author = this.client.me;
             } else {

@@ -14,6 +14,6 @@ import Websocket from "../Websocket";
 export default async function MESSAGE_CREATE (ws: Websocket, data: any): Promise<void> {
     ws.client.debug(`received message create: ${data.id}`);
 
-    let message = (await (new Message(ws.client, data))._waitForAuthor())['set']();
+    let message = (await (new Message(ws.client, data))['waitForAuthor']())['set']();
     ws.client.emit('message', message);
 }

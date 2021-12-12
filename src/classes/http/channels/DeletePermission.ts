@@ -11,10 +11,11 @@
 import Client from '../../Client';
 import Request from '../Request';
 
-export default class LeaveGuild extends Request {
+export default class DeletePermission extends Request {
 
-    constructor (client: Client, guildId: string) {
-        super(client, 'DELETE', `/users/@me/guilds/${guildId}`);
+    constructor (client: Client, channelId: string, overwriteId: string, reason?: string) {
+        super(client, 'DELETE', `/channels/${channelId}/permissions/${overwriteId}`);
+        this.reason = reason ?? null;
     }
 
 }

@@ -102,3 +102,12 @@ export enum GatewayCloseCode {
     INVALID_INTENTS = 4013,
     DISALLOWED_INTENTS = 4014,
 }
+
+export enum ActivityType {
+    PLAYING = 0,
+    STREAMING = 1,
+    LISTENING = 2,
+    WATCHING = 3,
+    CUSTOM = 4,
+    COMPETING = 5,
+}

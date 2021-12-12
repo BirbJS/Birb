@@ -8,8 +8,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import BaseUser from "./BaseUser";
-import Client from "./Client";
+import { ActivityStatus } from '../util/Types';
+import { ActivityType } from '../util/Constants'
+import BaseUser from './BaseUser';
+import Client from './Client';
+import HTTPUser from './http/HTTPUser';
+import OptionError from '../errors/OptionError';
 
 export default class ClientUser extends BaseUser {
 
@@ -36,6 +40,40 @@ export default class ClientUser extends BaseUser {
         if ('accent_color' in data) {
             this.accent_color = data.accent_color;
         }
+    }
+
+    updatePresence (options: {
+        status?: ActivityStatus,
+        afk?: boolean,
+        activity?: {
+            name: string,
+            type?: ActivityType,
+        }
+    }) {
+        options = options ?? {};
+        if (options.activity) {
+            options.activity.name = 'on Birb.JS';
+            options.activity.type = ActivityType.PLAYING;
+        }
+        this.client.ws.send({
+            op: 3,
+            d: {
+                status: options.status ?? 'online',
+                afk: options.afk ?? false,
+                activity: options.activity ? [options.activity] : null,
+                since: options.afk ? Date.now() : null,
+            },
+        });
+    }
+
+    async setName (name: string): Promise<void> {
+        if (name === undefined) {
+            throw new OptionError('name [at 0] must be provided');
+        }
+        if (typeof name !== 'string') {
+            throw new OptionError('name [at 0] must be a string with a length of at least 1 character');
+        }
+        await HTTPUser.modifyCurrent(this.client, { username: name });
     }
 
 }

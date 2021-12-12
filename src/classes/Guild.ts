@@ -378,7 +378,7 @@ export default class Guild {
      * Set the Guild's data to the cache.
      * 
      * @returns {Guild} This Guild instance.
-     * @public
+     * @private
      */
     private set (): Guild {
         this.client.guilds.cache.set(this.id, this);

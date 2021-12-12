@@ -11,8 +11,9 @@
 import Client from './Client';
 import MessageBlock from './blocks/MessageBlock';
 import Channel from './Channel';
+import GuildChannel from './GuildChannel';
 
-export default class TextBasedChannel extends Channel {
+export default class TextBasedChannel extends GuildChannel {
 
     readonly messages: MessageBlock;
 

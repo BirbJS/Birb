@@ -111,9 +111,20 @@ export default class User extends BaseUser {
         if (!this.dmChannel) {
             this.dmChannel = await HTTPUser.createDM(this.client, this.id);
         }
-        let message = await HTTPChannel.send(this.client, this.dmChannel.id, { content });
-        message = (await new Message(this.client, message))._waitForAuthor();
+        let message = await HTTPChannel.createMessage(this.client, this.dmChannel.id, { content });
+        message = (await new Message(this.client, message))['waitForAuthor']();
         return message;
+    }
+
+    /**
+     * Set the User's data to the cache.
+     * 
+     * @returns {User} This User instance.
+     * @private
+     */
+    private set (): User {
+        this.client.users.cache.set(this.id, this);
+        return this;
     }
 
 }
