@@ -28,8 +28,9 @@ jobs:
           TAG=$([[ ${{ github.event_name }} == 'push' ]] && echo 'dev')
 
           # Bump and publish
-          npx lerna version --conventional-commits --conventional-prerelease --ignore-scripts --create-release github --preid "${TAG}.$(git rev-parse --verify --short HEAD)" --allow-branch main
+          npx lerna version --yes --conventional-commits --conventional-prerelease --ignore-scripts --create-release github --preid "${TAG}.$(git rev-parse --verify --short HEAD)" --allow-branch main
           npx lerna publish --yes --conventional-prerelease --ignore-scripts --no-verify-access --no-git-tag-version --no-push --pre-dist-tag ${TAG} --preid "${TAG}.$(git rev-parse --verify --short HEAD)" --allow-branch main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+# uh oh https://github.com/BirbJS/Birb/runs/4500336857?check_suite_focus=true
