@@ -20,3 +20,4 @@ export type RoleResolvable = Role | string;
 export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
+export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';

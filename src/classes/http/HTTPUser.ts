@@ -13,6 +13,7 @@ import GetCurrent from './users/GetCurrent';
 import Get from './users/Get';
 import CreateDM from './users/CreateDM';
 import LeaveGuild from './users/LeaveGuild';
+import ModifyCurrent from './users/ModifyCurrent';
 
 export default class HTTPUser {
     
@@ -33,6 +34,11 @@ export default class HTTPUser {
 
     static leaveGuild (client: Client, guildId: string) {
         let request = new LeaveGuild(client, guildId);
+        return request.make();
+    }
+
+    static modifyCurrent (client: Client, data: any) {
+        let request = new ModifyCurrent(client, data);
         return request.make();
     }
 

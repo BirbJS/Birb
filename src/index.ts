@@ -21,7 +21,7 @@
  *  - Do not modify this comment.
  */
 
-import { Snowflake } from '@birbjs/snowflake';
+import { Snowflake } from '@sapphire/snowflake';
 
 import BitsBlock from './classes/blocks/BitsBlock';
 import GuildBlock from './classes/blocks/GuildBlock';

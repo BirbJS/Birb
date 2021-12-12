@@ -11,10 +11,10 @@
 import Client from '../../Client';
 import Request from '../Request';
 
-export default class LeaveGuild extends Request {
+export default class ModifyCurrent extends Request {
 
-    constructor (client: Client, guildId: string) {
-        super(client, 'DELETE', `/users/@me/guilds/${guildId}`);
+    constructor (client: Client, data: any) {
+        super(client, 'PATCH', `/users/@me`, data);
     }
 
 }

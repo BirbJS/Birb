@@ -11,10 +11,11 @@
 import Client from '../../Client';
 import Request from '../Request';
 
-export default class LeaveGuild extends Request {
+export default class StartThreadWithMessage extends Request {
 
-    constructor (client: Client, guildId: string) {
-        super(client, 'DELETE', `/users/@me/guilds/${guildId}`);
+    constructor (client: Client, channelId: string, messageId: string, data: any, reason?: string) {
+        super(client, 'POST', `/channels/${channelId}/messages/${messageId}/threads`, data);
+        this.reason = reason ?? null;
     }
 
 }

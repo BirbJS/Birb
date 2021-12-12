@@ -71,7 +71,7 @@ export default class Role {
      * Set the Role's data to the cache.
      * 
      * @returns {Role} This Role instance.
-     * @public
+     * @private
      */
     private set (): Role {
         this.client.guilds.cache.set(this.id, this);

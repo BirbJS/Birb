@@ -11,10 +11,11 @@
 import Client from '../../Client';
 import Request from '../Request';
 
-export default class LeaveGuild extends Request {
+export default class PinMessage extends Request {
 
-    constructor (client: Client, guildId: string) {
-        super(client, 'DELETE', `/users/@me/guilds/${guildId}`);
+    constructor (client: Client, channelId: string, messageId: string, reason?: string) {
+        super(client, 'PUT', `/channels/${channelId}/pins/${messageId}`);
+        this.reason = reason ?? null;
     }
 
 }
