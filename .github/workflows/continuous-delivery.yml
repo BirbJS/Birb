@@ -18,7 +18,7 @@ jobs:
         run: npm ci
       - name: Build all packages
         run: |
-          npm run lerna:bootstrap
+          npx lerna exec -- npm ci
           npm run lerna:build
       - name: Publish to NPM
         run: |
