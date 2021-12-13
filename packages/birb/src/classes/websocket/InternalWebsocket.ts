@@ -8,8 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let Zlib: typeof import('zlib-sync') | null;
-let Erlpack: typeof import('erlpack') | null;
+let Zlib: any;
+let Erlpack: any;
 
 import { Status } from '../../util/Constants';
 import WebsocketProcessingError from '../../errors/WebsocketProcessingError';
@@ -17,11 +17,15 @@ import Client from '../Client';
 
 try {
     Erlpack = require('erlpack');
-} catch {}
+} catch {
+    Erlpack = null;
+}
 
 try {
     Zlib = require('zlib-sync');
-} catch {}
+} catch {
+    Zlib = null;
+}
 
 export default class InternalWebsocket {
 
