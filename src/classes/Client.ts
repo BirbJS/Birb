@@ -8,6 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+let Sharding: any;
+
 import ClientError from '../errors/ClientError';
 import ClientWarning from '../errors/ClientWarning';
 import OptionError from '../errors/OptionError';
@@ -18,12 +20,19 @@ import ClientUser from './ClientUser';
 import Intents from './Intents';
 import Websocket from './websocket/Websocket';
 
+try {
+    Sharding = require('@birbjs/sharding');
+} catch (e) {
+    Sharding = null;
+}
+
 export default class Client {
 
     private valid = true;
     token: string = null!;
     ws: Websocket = null!;
     me: ClientUser | null = null;
+    shard: any = null;
     options = {
         intents: <Intents>null!,
         debug: false,
@@ -34,7 +43,11 @@ export default class Client {
     
     private events: any = {};
 
-    constructor (options: any = {}) {
+    constructor (options: {
+        intents: Intents,
+        debug?: boolean,
+    }) {
+        options = options || {};
         if ('intents' in options) {
             if (!(options.intents instanceof Intents)) {
                 throw new OptionError('intents must be an instance of Intents\nMore info: https://birb.js.org/explained/intents');
@@ -51,16 +64,23 @@ export default class Client {
             maxSize: 250000,
             removeOldest: true,
         });
+
+        if (Sharding && process.env.BIRB_IS_SHARD == 'true') {
+            this.warn('sharding is enabled');
+            this.debug(`shard id: ${process.env.BIRB_SHARD_NUMBER}`);
+            this.debug(`total shards: ${process.env.BIRB_TOTAL_SHARDS}`);
+            this.shard = new Sharding.Shard(this);
+        }
     }
 
     /**
      * Add an event listener.
      * 
-     * @param {EventResolvable} event The event name.
+     * @param {EventResolvable | string} event The event name.
      * @param {Function} listener The function to call when the event is emitted.
      * @returns {void}
      */
-    listen (event: EventResolvable, callback: Function): void {
+    listen (event: EventResolvable | string, callback: Function): void {
         if (!this.valid) {
             throw new ClientError('the client has been invalidated; please restart the process');
         }
@@ -73,10 +93,10 @@ export default class Client {
     /**
      * Undind an event listener.
      * 
-     * @param {EventResolvable} event The event name to unbind.
+     * @param {EventResolvable | string} event The event name to unbind.
      * @returns {void}
      */
-    unbind (event: EventResolvable): void {
+    unbind (event: EventResolvable | string): void {
         if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
         delete this.events[event];
     }
@@ -84,13 +104,13 @@ export default class Client {
     /**
      * Emit an event.
      * 
-     * @param {EventResolvable} event The event name.
+     * @param {EventResolvable | string} event The event name.
      * @param {any} data The event data to pass to the listener.
      * @returns {void}
      */
-    emit (event: EventResolvable, ...args: any[]): void {
-        if (this.events[event] == undefined) return;
-        this.events[event](...args);
+    emit (event: EventResolvable | string, ...args: any[]): any {
+        if (this.events[event] == undefined || !this.valid) return;
+        return this.events[event](...args);
     }
 
     /**
@@ -127,17 +147,23 @@ export default class Client {
     }
 
     /**
+     * Only registers the provided event if it isn't
+     * already registered.
+     */
+    private listenIfNotRegistered (event: EventResolvable, callback: Function): void {
+        if (this.events[event] == undefined) this.listen(event, callback);
+    }
+
+    /**
      * Invalidate the client, forcing the user to restart
      * the process to use it. Once called, this cannot be
      * undone (mostly because it would defeat the entire
      * purpose of this function).
-     * 
-     * @returns {void}
-     * @public
      */
-    _invalidate (): void {
-        this.valid = false;
+    private invalidate (): void {
         this.events = {};
+        this.valid = false;
+        Object.freeze(this.valid);
         console.error(new ClientError('the Birb.JS client has been invalidated; please restart the process'));
     }
 
