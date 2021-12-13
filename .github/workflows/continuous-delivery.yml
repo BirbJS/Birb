@@ -1,20 +1,12 @@
-name: Node.js Package
+name: Continuous Delivery
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16
-      - run: npm ci
   publish:
-    needs: [build]
+    name: Publish to NPM
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,11 +14,12 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - name: Publish to NPM and Github
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build all packages
+        run: npm run build
+      - name: Publish to NPM
         run: |
-          # Run Install
-          npm ci
-
           # Tag release
           TAG=$([[ ${{ github.event_name }} == 'push' ]] && echo 'dev')
 
