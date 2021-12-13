@@ -1,6 +1,6 @@
 {
     "name": "birb",
-    "version": "0.0.6",
+    "version": "1.0.0-pre.1",
     "description": "A JavaScript wrapper for the Discord API.",
     "main": "index.js",
     "types": "index.d.ts",
