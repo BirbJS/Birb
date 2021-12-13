@@ -17,7 +17,7 @@ export default async function READY (ws: Websocket, data: any): Promise<void> {
     if (!data.user.bot) {
         console.error(new StopDoingBadThingsError('self-bots (non-bot automated accounts) are banned from accessing the Discord API Gateway by Discord and are not supported by the Birb.JS library; to use Birb.JS you must use a bot account otherwise you may have your account BANNED by Discord; use a bot token instead\nMore info: https://support.discord.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-').compact());
         ws.preventReconnect(true);
-        ws.client._invalidate();
+        ws.client['invalidate']();
         // we close instead of terminating for discord's sake
         ws.close(1008);
         return;
