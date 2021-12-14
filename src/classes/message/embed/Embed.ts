@@ -1,0 +1,239 @@
+/*
+ * Copyright (c) 2021, knokbak and contributors.
+ *
+ * The Birb.JS Project: https://birb.js.org
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+import Color from '../../../util/Color';
+import BaseComponent from '../BaseComponent';
+import EmbedAuthor from './EmbedAuthor';
+import EmbedField from './EmbedField';
+import EmbedFooter from './EmbedFooter';
+import EmbedMedia from './EmbedMedia';
+
+export default class Embed extends BaseComponent {
+
+    title: string | null = null;
+    description: string | null = null;
+    url: string | null = null;
+    timestamp: Date | null = null;
+    color: string | null = null;
+    footer: EmbedFooter | null = null;
+    image: EmbedMedia | null = null;
+    thumbnail: EmbedMedia | null = null;
+    video: EmbedMedia | null = null;
+    author: EmbedAuthor | null = null;
+    fields: EmbedField[] = [];
+
+    constructor () {
+        super();
+    }
+
+    /**
+     * Set the title of this embed.
+     * 
+     * @param {string} title The new title of this embed.
+     * @returns {Embed} This embed.
+     */
+    setTitle (title: string): Embed {
+        this.title = title;
+        return this;
+    }
+
+    /**
+     * Set the description of this embed.
+     * 
+     * @param {string} description The new description of this embed.
+     * @returns {Embed} This embed.
+     */
+    setDescription (description: string): Embed {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Set the URL of this embed.
+     * 
+     * @param {string} url The new URL of this embed.
+     * @returns {Embed} This embed.
+     */
+    setUrl (url: string): Embed {
+        this.url = url;
+        return this;
+    }
+
+    /**
+     * Set the timestamp of this embed.
+     * 
+     * @param {Date | number} timestamp The new timestamp of this embed.
+     * @returns {Embed} This embed.
+     */
+    setTimestamp (timestamp: Date | number): Embed {
+        if (typeof timestamp == 'number') timestamp = new Date(timestamp);
+        this.timestamp = timestamp;
+        return this;
+    }
+
+    /**
+     * Set the HEX color of this embed.
+     * 
+     * @param {string} color The new HEX color of this embed.
+     * @returns {Embed} This embed.
+     */
+    setColor (color: string): Embed {
+        this.color = color;
+        return this;
+    }
+
+    /**
+     * Set the footer of this embed.
+     * 
+     * @param {string} text The text of the footer.
+     * @param {string} [iconUrl] A public-facing URL to an image for the footer.
+     * @returns {Embed} This embed.
+     */
+    setFooter (text: string, iconUrl?: string): Embed {
+        this.footer = new EmbedFooter(text, iconUrl);
+        return this;
+    }
+
+    /**
+     * Set the image for this embed.
+     * 
+     * @param {string} url A public-facing URL to an image for the embed.
+     * @param {number} [height] An optional height for the image.
+     * @param {number} [width] An optional width for the image.
+     * @returns {Embed} This embed.
+     */
+    setImage (url: string, height?: number, width?: number): Embed {
+        this.image = new EmbedMedia(url, height, width);
+        return this;
+    }
+
+    /**
+     * Set the thumbnail for this embed.
+     * 
+     * @param {string} url A public-facing URL to an image for the embed.
+     * @param {number} [height] An optional height for the image.
+     * @param {number} [width] An optional width for the image.
+     * @returns {Embed} This embed.
+     */
+    setThumbnail (url: string, height?: number, width?: number): Embed {
+        this.thumbnail = new EmbedMedia(url, height, width);
+        return this;
+    }
+
+    /**
+     * Set the video for this embed.
+     * 
+     * @param {string} url A public-facing URL to a video for the embed.
+     * @param {number} [height] An optional height for the video.
+     * @param {number} [width] An optional width for the video.
+     * @returns {Embed} This embed.
+     */
+    setVideo (url: string, height?: number, width?: number): Embed {
+        this.video = new EmbedMedia(url, height, width);
+        return this;
+    }
+
+    /**
+     * Set the author of this embed.
+     * 
+     * @param {string} name The name of the author.
+     * @param {string} [url] A public-facing URL for the author.
+     * @param {string} [iconUrl] A public-facing URL to an image for the author.
+     * @returns {Embed} This embed.
+     */
+    setAuthor (name: string, url?: string, iconUrl?: string): Embed {
+        this.author = new EmbedAuthor(name, url, iconUrl);
+        return this;
+    }
+
+    /**
+     * Add a field to this embed.
+     * 
+     * @param {string} name The name of the field.
+     * @param {string} value The field's value.
+     * @param {boolean} [inline=false] Whether or not this field should be displayed inline.
+     * @returns {Embed} This embed.
+     */
+    addField (name: string, value: string, inline?: boolean): Embed {
+        this.fields.push(new EmbedField(name, value, inline));
+        return this;
+    }
+
+    /**
+     * Add multiple fields to this embed.
+     * 
+     * @param {Object[]} fields The fields to add to this embed.
+     * @param {string} fields.name The name of the field.
+     * @param {string} fields.value The field's value.
+     * @param {boolean} [fields.inline=false] Whether or not the field should be displayed inline.
+     * @returns {Embed} This embed.
+     */
+    addFields (fields: {
+        name: string,
+        value: string,
+        inline?: boolean
+    }[]): Embed {
+        for (let field of fields) this.addField(field.name, field.value, field.inline);
+        return this;
+    }
+
+    /**
+     * Remove a field from this embed.
+     * 
+     * @param {number} index The array index of the field to remove.
+     * @returns {Embed} This embed.
+     */
+    removeField (index: number): Embed {
+        this.fields.splice(index, 1);
+        return this;
+    }
+
+    /**
+     * Set the fields of this embed.
+     * 
+     * @param {Object[]} fields The new fields of this embed.
+     * @param {string} fields.name The name of the field.
+     * @param {string} fields.value The field's value.
+     * @param {boolean} [fields.inline=false] Whether or not the field should be displayed inline.
+     * @returns {Embed} This embed.
+     */
+    setFields (fields: {
+        name: string,
+        value: string,
+        inline?: boolean
+    }[]): Embed {
+        this.fields = [];
+        for ( let i = 0; i < fields.length; ++i ) {
+            this.fields.push(new EmbedField(fields[i].name, fields[i].value, fields[i].inline));
+        }
+        return this;
+    }
+
+    /**
+     * Format this class into an API-acceptable object.
+     */
+    format () {
+        return {
+            title: this.title,
+            type: 'rich',
+            description: this.description,
+            url: this.url,
+            timestamp: this.timestamp?.toISOString(),
+            color: this.color ? Color.hexToInt(this.color): null,
+            footer: this.footer?.format(),
+            image: this.image?.format(),
+            thumbnail: this.thumbnail?.format(),
+            video: this.video?.format(),
+            author: this.author?.format(),
+            fields: this.fields.map(field => field.format())
+        }
+    }
+
+}
