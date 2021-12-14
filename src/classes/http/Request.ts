@@ -34,7 +34,7 @@ export default class Request {
             .timeout(5000)
             .header({
                 'Authorization': `Bot ${this.client.token}`,
-                'User-Agent': `DiscordBot (https://birb.js.org, ${require('../../package.json').version})`,
+                'User-Agent': `DiscordBot (https://birb.js.org, ${require('../../package.json').version}, ${process.platform})`,
             });
 
         if (this.body) {
@@ -57,12 +57,16 @@ export default class Request {
 
         if (body && body.code !== undefined) {
             console.log(inspect(body, { depth: null }));
+            this.client.warn(`[${this.method}:${this.url}] ${body.code} -> ${inspect(body)}`);
             throw new DiscordAPIError(`[${this.method}:${this.url}] ${body.code}: ${translateError(body.code, body.message)}`);
         }
 
         if (!res.statusCode || res.statusCode > 299) {
+            this.client.warn(`[${this.method}:${this.url}] ${res.statusCode}`);
             throw new DiscordAPIError(`encountered HTTP error ${res.statusCode} whilst sending ${this.method} request to ${this.url}`);
         }
+
+        this.client.debug(`[${this.method}:${this.url}] -> ${JSON.stringify(body ?? '<no body>')}`);
 
         return body;
     }

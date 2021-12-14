@@ -98,9 +98,8 @@ export default class Websocket extends InternalWebsocket {
             return;
         }
 
-        if (this.client.options.debug) {
-            this.client.debug(`RECV: ${JSON.stringify(body)}`);
-        }
+        this.client.debug(`RECV: ${JSON.stringify(body)}`);
+        this.client.emit('packetReceive', body);
         
         let data = body.d || {};
 
@@ -277,6 +276,7 @@ export default class Websocket extends InternalWebsocket {
      */
     send (data: Object): void {
         this.client.debug(`SEND: ${JSON.stringify(data)}`);
+        this.client.emit('packetSend', data);
 
         try {
             data = this.pack(data);

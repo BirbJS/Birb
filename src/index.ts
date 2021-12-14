@@ -24,7 +24,16 @@
 import { Snowflake } from '@sapphire/snowflake';
 
 import BitsBlock from './classes/blocks/BitsBlock';
+import CachedBlock from './classes/blocks/CachedBlock';
+import ChannelBlock from './classes/blocks/ChannelBlock';
 import GuildBlock from './classes/blocks/GuildBlock';
+import GuildMemberBlock from './classes/blocks/GuildMemberBlock';
+import GuildMemberRoleBlock from './classes/blocks/GuildMemberRoleBlock';
+import MessageBlock from './classes/blocks/MessageBlock';
+import RoleBlock from './classes/blocks/RoleBlock';
+import UserBlock from './classes/blocks/UserBlock';
+
+import Permissions from './classes/Permissions';
 
 import HTTPGuild from './classes/http/HTTPGuild';
 import HTTPChannel from './classes/http/HTTPChannel';
@@ -37,7 +46,7 @@ import Cache from './classes/Cache';
 import Client from './classes/Client';
 import Guild from './classes/Guild';
 import Intents from './classes/Intents';
-import Pair from './classes/Pair';
+import Pair from './util/Pair';
 import Role from './classes/Role';
 
 import BirbJSError from './errors/BirbJSError';
@@ -52,6 +61,7 @@ import WebsocketProcessingError from './errors/WebsocketProcessingError';
 import WebsocketWarning from './errors/WebsocketWarning';
 
 import Color from './util/Color';
+import Addons from './util/Addons';
 
 import {
     NSFWLevel,
@@ -62,6 +72,7 @@ import {
     Status,
     PacketOperation,
     GatewayCloseCode,
+    ActivityType,
 } from './util/Constants';
 
 import {
@@ -72,12 +83,19 @@ import {
 } from './util/Types';
 
 export {
-    // external libs first ...
     Snowflake,
 
-    // ... and now the rest ...
     BitsBlock,
+    CachedBlock,
+    ChannelBlock,
     GuildBlock,
+    GuildMemberBlock,
+    GuildMemberRoleBlock,
+    MessageBlock,
+    RoleBlock,
+    UserBlock,
+
+    Permissions,
 
     HTTPGuild,
     HTTPChannel,
@@ -105,6 +123,7 @@ export {
     WebsocketWarning,
 
     Color,
+    Addons,
 
     NSFWLevel,
     MFALevel,
@@ -114,6 +133,7 @@ export {
     Status,
     PacketOperation,
     GatewayCloseCode,
+    ActivityType,
 
     GuildResolvable,
     RoleResolvable,

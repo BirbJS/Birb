@@ -34,6 +34,18 @@ export default class BitsBlock {
     }
 
     /**
+     * Sets the flags of the block.
+     * 
+     * @param {number} flags The flags to set.
+     * @returns {BitsBlock} The updated block.
+     * @public
+     */
+    set (flags: number): BitsBlock {
+        this.flags = flags;
+        return this;
+    }
+
+    /**
      * Removes a flag (bit) from the block.
      * 
      * @param {number} flags The flags to remove.
@@ -67,6 +79,16 @@ export default class BitsBlock {
      */
     isEmpty (): boolean {
         return this.flags == 0;
+    }
+
+    /**
+     * Returns a new BitsBlock with the flags of this
+     * block.
+     * 
+     * @returns {BitsBlock} The new block.
+     */
+    clone (): BitsBlock {
+        return new BitsBlock(this.flags);
     }
 
 }

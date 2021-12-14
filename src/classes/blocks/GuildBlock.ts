@@ -48,14 +48,12 @@ export default class GuildBlock extends CachedBlock {
         if (!options.bypassCache) {
             const cached = this.cache.get(options.guild as string);
             if (cached) {
-                console.log(cached);
                 return cached;
             }
         }
 
         let guild = await HTTPGuild.get(this.client, options.guild as string);
         guild = new Guild(this.client, guild);
-        console.log(guild);
         if (options.shouldCache) this.cache.set(guild.id, guild);
 
         return guild;
