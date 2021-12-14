@@ -9,20 +9,20 @@
  */
 
 import Client from '../Client';
-import Cache from '../Cache';
 import CachedBlock from './CachedBlock';
 import { UserResolvable } from '../../util/Types';
 import BaseUser from '../BaseUser';
 import GuildMember from '../GuildMember';
 import Guild from '../Guild';
 import HTTPGuild from '../http/HTTPGuild';
+import CGCache from '../cache/CGCache';
 
 export default class GuildMemberBlock extends CachedBlock {
 
     guild: Guild = null!;
 
     constructor (client: Client, guild: Guild, options?: any) {
-        super(client, new Cache(options));
+        super(client, new CGCache(client, guild, options));
         this.guild = guild;
     }
 

@@ -16,6 +16,7 @@ import HTTPGuild from './http/HTTPGuild';
 import Permissions from './Permissions';
 import OptionError from '../errors/OptionError';
 import RolePermissionsBlock from './blocks/RolePermissionsBlock';
+import { RoleResolvable } from '../util/Types';
 
 export default class Role {
     
@@ -90,14 +91,14 @@ export default class Role {
      * @param {string} [reason] The reason for modifying this Role.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async setName (name: string, reason?: string): Promise<Role> {
+    setName (name: string, reason?: string): Promise<Role> {
         if (name === undefined) {
             throw new OptionError('name [at 0] must be provided');
         }
         if (typeof name !== 'string') {
             throw new OptionError('name [at 0] must be a string with a length of at least 1 character');
         }
-        return await this.modify({ name }, reason);
+        return this.modify({ name }, reason);
     }
 
     /**
@@ -107,14 +108,14 @@ export default class Role {
      * @param {string} [reason] The reason for modifying this Role.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async setPosition (position: number, reason?: string): Promise<Role> {
+    setPosition (position: number, reason?: string): Promise<Role> {
         if (position === undefined) {
             throw new OptionError('position [at 0] must be provided');
         }
         if (typeof position !== 'number' || position < 0) {
             throw new OptionError('position [at 0] must be a positive number');
         }
-        return await HTTPGuild.modifyRolePositions(this.client, this.guild.id, [{ id: this.id, position }], reason);
+        return HTTPGuild.modifyRolePositions(this.client, this.guild.id, [{ id: this.id, position }], reason);
     }
 
     /**
@@ -124,7 +125,7 @@ export default class Role {
      * @param {string} [reason] The reason for modifying this Role.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async move (velocity: number, reason?: string): Promise<Role> {
+    move (velocity: number, reason?: string): Promise<Role> {
         if (velocity === undefined) {
             throw new OptionError('velocity [at 0] must be provided');
         }
@@ -132,7 +133,7 @@ export default class Role {
             throw new OptionError('velocity [at 0] must be a number');
         }
         let position = this.position != null ? this.position + velocity : 1;
-        return await this.setPosition(position, reason);
+        return this.setPosition(position, reason);
     }
 
     /**
@@ -142,14 +143,14 @@ export default class Role {
      * @param {string} [reason] The reason for modifying this Role.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async setColor (color: number | string, reason?: string): Promise<Role> {
+    setColor (color: number | string, reason?: string): Promise<Role> {
         if (color === undefined) {
             throw new OptionError('color [at 0] must be provided');
         }
         if (typeof color == 'number') {
-            return await this.modify({ color }, reason);
+            return this.modify({ color }, reason);
         } else if (typeof color == 'string') {
-            return await this.modify({ color: Color.hexToInt(color) }, reason);
+            return this.modify({ color: Color.hexToInt(color) }, reason);
         } else {
             throw new OptionError('color [at 0] must be a number or string');
         }
@@ -162,14 +163,14 @@ export default class Role {
      * @param {string} [reason] The reason for modifying this Role.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async setIsMentionable (mentionable: boolean, reason?: string): Promise<Role> {
+    setIsMentionable (mentionable: boolean, reason?: string): Promise<Role> {
         if (mentionable === undefined) {
             throw new OptionError('mentionable [at 0] must be provided');
         }
         if (typeof mentionable !== 'boolean') {
             throw new OptionError('mentionable [at 0] must be a boolean');
         }
-        return await this.modify({ mentionable }, reason);
+        return this.modify({ mentionable }, reason);
     }
 
     /**
@@ -180,14 +181,14 @@ export default class Role {
      * @param {string} [reason] The reason for modifying this Role.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async setIsHoisted (hoisted: boolean, reason?: string): Promise<Role> {
+    setIsHoisted (hoisted: boolean, reason?: string): Promise<Role> {
         if (hoisted === undefined) {
             throw new OptionError('hoisted [at 0] must be provided');
         }
         if (typeof hoisted !== 'boolean') {
             throw new OptionError('hoisted [at 0] must be a boolean');
         }
-        return await this.modify({ hoist: hoisted }, reason);
+        return this.modify({ hoist: hoisted }, reason);
     }
 
     /**
@@ -201,6 +202,15 @@ export default class Role {
         let res = await HTTPGuild.modifyRole(this.client, this.guild.id, this.id, data, reason);
         this.build(res);
         return this.set();
+    }
+
+    /**
+     * Convert this Role into a mention (string).
+     * 
+     * @returns {string} A string that mentions this role.
+     */
+    toString (): string {
+        return `<@&${this.id}>`;
     }
 
     /**
@@ -232,6 +242,16 @@ export default class Role {
     private set (): Role {
         this.client.guilds.cache.set(this.id, this);
         return this;
+    }
+
+    private static toIdOnly (role: RoleResolvable): string {
+        if (typeof role === 'string') {
+            return role;
+        } else if (role instanceof Role) {
+            return role.id;
+        } else {
+            throw new TypeError(`Expected a string or Role, received ${typeof role}`);
+        }
     }
 
 }

@@ -40,9 +40,17 @@ import HTTPChannel from './classes/http/HTTPChannel';
 import HTTPUser from './classes/http/HTTPUser';
 import Request from './classes/http/Request';
 
+import BaseComponent from './classes/message/BaseComponent';
+import Embed from './classes/message/embed/Embed';
+import EmbedAuthor from './classes/message/embed/EmbedAuthor';
+import EmbedChild from './classes/message/embed/EmbedChild';
+import EmbedField from './classes/message/embed/EmbedField';
+import EmbedFooter from './classes/message/embed/EmbedFooter';
+import EmbedMedia from './classes/message/embed/EmbedMedia';
+
 import Websocket from './classes/websocket/Websocket';
 
-import Cache from './classes/Cache';
+import Cache from './classes/cache/Cache';
 import Client from './classes/Client';
 import Guild from './classes/Guild';
 import Intents from './classes/Intents';
@@ -101,6 +109,14 @@ export {
     HTTPChannel,
     HTTPUser,
     Request,
+
+    BaseComponent,
+    Embed,
+    EmbedAuthor,
+    EmbedChild,
+    EmbedField,
+    EmbedFooter,
+    EmbedMedia,
 
     Websocket,
 

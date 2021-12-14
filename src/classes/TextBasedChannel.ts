@@ -10,10 +10,13 @@
 
 import Client from './Client';
 import MessageBlock from './blocks/MessageBlock';
-import Channel from './Channel';
 import GuildChannel from './GuildChannel';
+import { MessageContent } from '../util/Types';
+import Message from './Message';
+import HTTPChannel from './http/HTTPChannel';
+import { Guild } from '..';
 
-export default class TextBasedChannel extends GuildChannel {
+export default abstract class TextBasedChannel extends GuildChannel {
 
     readonly messages: MessageBlock;
 
@@ -22,9 +25,17 @@ export default class TextBasedChannel extends GuildChannel {
         maxAge?: number,
         checkInterval?: number,
         removeOldest?: boolean,
-    }) {
-        super(client, data);
-        this.messages = new MessageBlock(client, options);
+    }, guild?: Guild) {
+        super(client, data, guild);
+        this.messages = new MessageBlock(client, this.guild, options);
+    }
+
+    async send (message: MessageContent): Promise<Message> {
+        let data = Message['buildApiMessage'](this.client, message);
+        let created = await HTTPChannel.createMessage(this.client, this.id, data);
+        let msg = await (new Message(this.client, created))['waitForAuthor']();
+        this.messages.cache.set(msg.id, msg);
+        return msg;
     }
 
 }

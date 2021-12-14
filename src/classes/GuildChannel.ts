@@ -10,20 +10,27 @@
 
 import Channel from './Channel';
 import Guild from './Guild';
+import Client from './Client';
+import ChannelPermissionsBlock from './blocks/ChannelPermissionsBlock';
 
-export default class GuildChannel extends Channel {
+export default abstract class GuildChannel extends Channel {
 
     guild: Guild = null!;
+    permissions: ChannelPermissionsBlock = null!;
 
-    /**
-     * Set the GuildChannel's data to the cache.
-     * 
-     * @returns {GuildChannel} This GuildChannel instance.
-     * @protected
-     */
-    protected set (): GuildChannel {
-        this.guild.channels.cache.set(this.id, this);
-        return this;
+    constructor (client: Client, data: any, guild?: Guild) {
+        super(client, data);
+        this.guild = guild ?? client.guilds.cache.get(data.guild_id);
+        this.permissions = new ChannelPermissionsBlock(client, this, data.permission_overwrites);
     }
+
+    protected setOverwrite (overwrite: {
+        id: string,
+        type: 'role' | 'member',
+    }) {
+
+    }
+
+    abstract modify (data: any, reason?: string): Promise<GuildChannel>;
 
 }

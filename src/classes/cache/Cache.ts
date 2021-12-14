@@ -8,13 +8,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import CacheError from '../errors/CacheError';
-import MemoryLeakWarning from '../errors/MemoryLeakWarning';
-import OptionError from '../errors/OptionError';
-import Pair from '../util/Pair';
+import CacheError from '../../errors/CacheError';
+import MemoryLeakWarning from '../../errors/MemoryLeakWarning';
+import OptionError from '../../errors/OptionError';
+import Pair from '../../util/Pair';
+import Client from '../Client';
 
-export default class Cache {
+export default abstract class Cache {
 
+    abstract client: Client;
     private cache = new Map<string, any>();
     private options: any = {
         maxSize: null,
@@ -56,10 +58,15 @@ export default class Cache {
         }
 
         setInterval(() => {
-            for ( let [key, value] of this.cache.entries() ) {
-                if (this.options.maxAge && Date.now() - value.timestamp > this.options.maxAge) {
-                    this.remove(key);
+            if (this.options.maxAge) {
+                let removed = 0;
+                for ( let [key, value] of this.cache.entries() ) {
+                    if (Date.now() - value.t > this.options.maxAge) {
+                        this.remove(key);
+                        removed++;
+                    }
                 }
+                if (removed > 0) this.client.debug(`garbage collected ${removed} entries from a cache`);
             }
         }, this.options.checkInterval * 1000);
     }
@@ -74,6 +81,7 @@ export default class Cache {
      */
     get (key: string): any | null {
         let entry = this.cache.get(key);
+        if (entry?.v) this.rebuild(entry.v);
         return entry?.v ?? null;
     }
 
@@ -91,6 +99,7 @@ export default class Cache {
             v: value,
         }
         this.makeSpace(options);
+        push = this.strip(push);
         this.cache.set(key, push);
         return this;
     }
@@ -139,7 +148,7 @@ export default class Cache {
     entries (): { [key: string]: any } {
         let entries: any = {};
         for ( let [key, value] of this.cache.entries() ) {
-            entries[key] = value.v;
+            entries[key] = this.rebuild(value.v);
         }
         return entries;
     }
@@ -194,5 +203,8 @@ export default class Cache {
             }
         }
     }
+
+    abstract strip (data: any): any;
+    abstract rebuild (data: any): any;
 
 }

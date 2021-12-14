@@ -9,13 +9,14 @@
  */
 
 import Client from '../Client';
-import Cache from '../Cache';
 import CachedBlock from './CachedBlock';
+import CGCache from '../cache/CGCache';
+import Guild from '../Guild';
 
 export default class ChannelBlock extends CachedBlock {
 
-    constructor (client: Client, options?: any) {
-        super(client, new Cache(options));
+    constructor (client: Client, guild: Guild, options?: any) {
+        super(client, new CGCache(client, guild, options));
     }
 
 }

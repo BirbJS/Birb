@@ -9,13 +9,13 @@
  */
 
 import Client from '../Client';
-import Cache from '../Cache';
 import CachedBlock from './CachedBlock';
+import CCache from '../cache/CCache';
 
 export default class GuildMemberRoleBlock extends CachedBlock {
 
     constructor (client: Client, options?: any) {
-        super(client, new Cache(options));
+        super(client, new CCache(client, options));
     }
 
 }
