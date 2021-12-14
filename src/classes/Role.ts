@@ -11,19 +11,24 @@
 import GuildError from '../errors/GuildError';
 import Client from './Client';
 import Color from '../util/Color';
-import Guild from './/Guild';
+import Guild from './Guild';
+import HTTPGuild from './http/HTTPGuild';
+import Permissions from './Permissions';
+import OptionError from '../errors/OptionError';
+import RolePermissionsBlock from './blocks/RolePermissionsBlock';
 
 export default class Role {
     
     client: Client = null!;
-    id: string = null!;
+    readonly id: string;
+    guild: Guild = null!;
     name: string | null = null;
     color: string | null = null;
     hoist: boolean | null = null;
     icon: string | null = null;
     managed: boolean | null = null;
     mentionable: boolean | null = null;
-    permissions: string | null = null;
+    permissions: RolePermissionsBlock = null!;
     position: number | null = null;
     unicodeEmoji: string | null = null;
 
@@ -33,6 +38,7 @@ export default class Role {
         }
         this.client = client;
         this.id = data.id;
+        this.guild = guild;
         this.build(data);
     }
 
@@ -57,7 +63,7 @@ export default class Role {
             this.mentionable = data.mentionable;
         }
         if ('permissions' in data) {
-            this.permissions = data.permissions;
+            this.permissions = new RolePermissionsBlock(this.client, this, parseInt(data.permissions) ?? 0);
         }
         if ('position' in data) {
             this.position = data.position;
@@ -65,6 +71,156 @@ export default class Role {
         if ('unicode_emoji' in data) {
             this.unicodeEmoji = data.unicode_emoji;
         }
+    }
+
+    /**
+     * Delete this Role.
+     * 
+     * @param {string} [reason] The reason for deleting this Role.
+     * @returns {Promise<void>} A Promise that voids when the Role has been deleted.
+     */
+    async delete (reason?: string): Promise<void> {
+        await HTTPGuild.deleteRole(this.client, this.guild.id, this.id, reason);
+    }
+
+    /**
+     * Set the name of this Role.
+     * 
+     * @param {string} name The name to set this Role to.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async setName (name: string, reason?: string): Promise<Role> {
+        if (name === undefined) {
+            throw new OptionError('name [at 0] must be provided');
+        }
+        if (typeof name !== 'string') {
+            throw new OptionError('name [at 0] must be a string with a length of at least 1 character');
+        }
+        return await this.modify({ name }, reason);
+    }
+
+    /**
+     * Set the position of this Role.
+     * 
+     * @param {number} position The position to set this Role to.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async setPosition (position: number, reason?: string): Promise<Role> {
+        if (position === undefined) {
+            throw new OptionError('position [at 0] must be provided');
+        }
+        if (typeof position !== 'number' || position < 0) {
+            throw new OptionError('position [at 0] must be a positive number');
+        }
+        return await HTTPGuild.modifyRolePositions(this.client, this.guild.id, [{ id: this.id, position }], reason);
+    }
+
+    /**
+     * Move this Role's position.
+     * 
+     * @param {number} velocity The velocity to apply to this Role's position. Provide a positive integer to move this Role up, and a negative integer to move this Role down.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async move (velocity: number, reason?: string): Promise<Role> {
+        if (velocity === undefined) {
+            throw new OptionError('velocity [at 0] must be provided');
+        }
+        if (typeof velocity !== 'number') {
+            throw new OptionError('velocity [at 0] must be a number');
+        }
+        let position = this.position != null ? this.position + velocity : 1;
+        return await this.setPosition(position, reason);
+    }
+
+    /**
+     * Set the color of this Role.
+     * 
+     * @param {number | string} color The new color for this Role. Accepts HEX color codes (e.g. ffffff for white) or an RGB integer.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async setColor (color: number | string, reason?: string): Promise<Role> {
+        if (color === undefined) {
+            throw new OptionError('color [at 0] must be provided');
+        }
+        if (typeof color == 'number') {
+            return await this.modify({ color }, reason);
+        } else if (typeof color == 'string') {
+            return await this.modify({ color: Color.hexToInt(color) }, reason);
+        } else {
+            throw new OptionError('color [at 0] must be a number or string');
+        }
+    }
+
+    /**
+     * Set if this Role can be mentioned.
+     * 
+     * @param {boolean} mentionable Whether or not this Role can be mentioned.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async setIsMentionable (mentionable: boolean, reason?: string): Promise<Role> {
+        if (mentionable === undefined) {
+            throw new OptionError('mentionable [at 0] must be provided');
+        }
+        if (typeof mentionable !== 'boolean') {
+            throw new OptionError('mentionable [at 0] must be a boolean');
+        }
+        return await this.modify({ mentionable }, reason);
+    }
+
+    /**
+     * Set if this members of this Role should be hoisted
+     * on the member list.
+     * 
+     * @param {boolean} hoisted Whether or not this Role should be hoisted on the member list.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async setIsHoisted (hoisted: boolean, reason?: string): Promise<Role> {
+        if (hoisted === undefined) {
+            throw new OptionError('hoisted [at 0] must be provided');
+        }
+        if (typeof hoisted !== 'boolean') {
+            throw new OptionError('hoisted [at 0] must be a boolean');
+        }
+        return await this.modify({ hoist: hoisted }, reason);
+    }
+
+    /**
+     * Modify this Role.
+     * 
+     * @param {Object} data The data to modify this Role with.
+     * @param {string} [reason] The reason for modifying this Role.
+     * @returns {Promise<Role>} A Promise that resolves to the modified Role.
+     */
+    async modify (data: any, reason?: string): Promise<Role> {
+        let res = await HTTPGuild.modifyRole(this.client, this.guild.id, this.id, data, reason);
+        this.build(res);
+        return this.set();
+    }
+
+    /**
+     * Handle updates from the Discord Gateway.
+     * 
+     * @param {Client} client The client that received the update.
+     * @param {any} data The data to handle.
+     * @param {Guild} guild The Guild this Role belongs to.
+     * @returns {Role} A reference to this Role.
+     */
+    private static handleUpdate (client: Client, data: any, guild: Guild): Role {
+        let role: Role = guild.roles.cache.get(data.id);
+        if (role) {
+            role.build(data);
+            guild.roles.cache.set(data.id, role);
+            return role;
+        }
+        role = new Role(client, data, guild);
+        guild.roles.cache.set(data.id, role);
+        return role;
     }
 
     /**

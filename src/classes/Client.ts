@@ -38,8 +38,8 @@ export default class Client {
         debug: false,
     }
 
-    readonly guilds: GuildBlock;
-    readonly users: UserBlock;
+    guilds: GuildBlock = null!;
+    users: UserBlock = null!;
     
     private events: any = {};
 
@@ -61,7 +61,7 @@ export default class Client {
         this.options = Object.assign(this.options, options);
         this.guilds = new GuildBlock(this);
         this.users = new UserBlock(this, {
-            maxSize: 250000,
+            maxSize: 150000,
             removeOldest: true,
         });
 
@@ -116,12 +116,22 @@ export default class Client {
     /**
      * Connect to the Discord gateway.
      * 
+     * ⚠️ **DON'T SHARE YOUR GOD DAMN TOKEN!** There is no
+     * reason anyone should need it, with the exception of
+     * your development team. ANYONE with your token can
+     * gain FULL and UNRESTRICTED ACCESS to the entirety of
+     * your bot, INCLUDING ANY PERMISSIONS IT HAS BEEN
+     * GRANTED. Bot takeovers have happened far too often
+     * in the past: don't let your bot join the list.
+     * 
      * @param {string} token Your bot's token.
      * @returns {void}
      */
     connect (token: string): void {
         if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
         this.token = token;
+        Object.freeze(this.token);
+        Object.freeze(this.options);
         this.ws = new Websocket(this, 'gateway.discord.gg');
         this.ws.connect();
     }

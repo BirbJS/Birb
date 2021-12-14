@@ -48,19 +48,16 @@ export default class ClientUser extends BaseUser {
         activity?: {
             name: string,
             type?: ActivityType,
-        }
+        } | null
     }) {
         options = options ?? {};
-        if (options.activity) {
-            options.activity.name = 'on Birb.JS';
-            options.activity.type = ActivityType.PLAYING;
-        }
+        if (!options.activity) options.activity = null;
         this.client.ws.send({
             op: 3,
             d: {
                 status: options.status ?? 'online',
                 afk: options.afk ?? false,
-                activity: options.activity ? [options.activity] : null,
+                activities: options.activity ? [options.activity] : null,
                 since: options.afk ? Date.now() : null,
             },
         });

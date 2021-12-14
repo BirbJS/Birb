@@ -11,7 +11,7 @@
 import CacheError from '../errors/CacheError';
 import MemoryLeakWarning from '../errors/MemoryLeakWarning';
 import OptionError from '../errors/OptionError';
-import Pair from './Pair';
+import Pair from '../util/Pair';
 
 export default class Cache {
 
