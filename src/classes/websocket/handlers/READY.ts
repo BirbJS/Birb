@@ -32,7 +32,7 @@ export default async function READY (ws: Websocket, data: any): Promise<void> {
     ws.setStatus(Status.WAITING_FOR_GUILDS);
     ws.client.emit('waitingForGuilds');
 
-    if (!ws.expectedGuilds) {
+    if (!ws.expectedGuilds.size) {
         ws.client.debug('we didn\'t need to receive any guilds; marking as ready');
         ws.setStatus(Status.READY);
         ws.client.emit('ready');
