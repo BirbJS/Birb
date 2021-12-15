@@ -119,10 +119,8 @@ export default class Message {
         });
     }
 
-    async edit (content: MessageContent): Promise<Message> {
-        return this.modify({
-            content: content,
-        });
+    async edit (message: MessageContent): Promise<Message> {
+        return this.modify(Message.buildApiMessage(this.client, message));
     }
     
     async modify (data: any): Promise<Message> {
