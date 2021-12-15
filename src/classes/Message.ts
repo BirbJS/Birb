@@ -11,13 +11,13 @@
 import Guild from './Guild';
 import HTTPChannel from './http/HTTPChannel';
 import Role from './Role';
-import { MessageContent } from '../util/Types';
 import BaseUser from './BaseUser';
 import Client from './Client';
 import GuildMember from './GuildMember';
 import TextBasedChannel from './TextBasedChannel';
-import { UserResolvable, RoleResolvable } from '../util/Types';
+import { UserResolvable, RoleResolvable, MessageContent } from '../util/Types';
 import Embed from './message/embed/Embed';
+import { MessageFlags } from '../util/Constants';
 import User from './User';
 
 export default class Message {
@@ -30,6 +30,7 @@ export default class Message {
     author: BaseUser | null = null;
     member: GuildMember | null = null;
     channel: TextBasedChannel = null!;
+    flags: number = 0;
     private baseAuthor: any = null;
 
     constructor (client: Client, data: any) {
@@ -110,6 +111,24 @@ export default class Message {
             auto_archive_duration: options.autoArchiveDelay ?? null,
             rate_limit_per_user: options.slowmode ?? 0,
         }, options.reason);
+    }
+
+    async supressEmbeds (): Promise<Message> {
+        return this.modify({
+            flags: this.flags | MessageFlags.SUPPRESS_EMBEDS,
+        });
+    }
+
+    async edit (content: MessageContent): Promise<Message> {
+        return this.modify({
+            content: content,
+        });
+    }
+    
+    async modify (data: any): Promise<Message> {
+        let res = await HTTPChannel.editMessage(this.client, this.channel.id, this.id, data);
+        this.build(res);
+        return this.set();
     }
 
     private async parse (data: any): Promise<Message> {
