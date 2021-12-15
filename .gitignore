@@ -1,3 +1,4 @@
 node_modules/
 dist/
 TESTING.js
+.DS_Store
