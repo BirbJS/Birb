@@ -12,6 +12,7 @@ import BaseUser from '../classes/BaseUser';
 import Channel from '../classes/Channel';
 import ClientUser from '../classes/ClientUser';
 import Guild from '../classes/Guild';
+import Embed from '../classes/message/embed/Embed';
 import Role from '../classes/Role';
 import User from '../classes/User';
 
@@ -21,3 +22,16 @@ export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
+
+export type MessageContent = string | Embed | {
+    content?: string;
+    embeds?: [ Embed ],
+    tts?: boolean;
+    nonce?: string;
+    mentionRepliedUser?: boolean;
+    allowedMentions?: {
+        parse?: [ 'users' | 'roles' | 'everyone' ];
+        users?: [ UserResolvable ];
+        roles?: [ RoleResolvable ];
+    }
+}

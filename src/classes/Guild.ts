@@ -80,26 +80,26 @@ export default class Guild {
         this.boostTier = data.premium_tier;
         this.afkTimeout = data.afk_timeout;
 
-        this.roles = new RoleBlock(this.client);
+        this.roles = new RoleBlock(this.client, this);
         for ( let i = 0; i < data.roles.length; i++ ) {
             this.roles.cache.set(data.roles[i].id, new Role(this.client, data.roles[i], this));
-        }
-
-        this.channels = new ChannelBlock(this.client);
-        for ( let i = 0; i < data.channels.length; i++ ) {
-            switch (data.channels[i].type) {
-                case 0:
-                    this.channels.cache.set(data.channels[i].id, new TextChannel(this.client, data.channels[i], {
-                        maxSize: 100,
-                        maxAge: 300,
-                    }));
-                    break;
-            }
         }
 
         this.members = new GuildMemberBlock(this.client, this);
         for ( let i = 0; i < data.members.length; i++ ) {
             this.members.cache.set(data.members[i].id, new GuildMember(this.client, data.members[i], this));
+        }
+
+        this.channels = new ChannelBlock(this.client, this);
+        for ( let i = 0; i < data.channels.length; i++ ) {
+            switch (data.channels[i].type) {
+                case 0:
+                    this.channels.cache.set(data.channels[i].id, new TextChannel(this.client, data.channels[i], {
+                        maxSize: 100,
+                        maxAge: 120,
+                    }, this));
+                    break;
+            }
         }
 
         if ('icon' in data) {
@@ -372,6 +372,15 @@ export default class Guild {
      */
     async leave (): Promise<void> {
         await HTTPUser.leaveGuild(this.client, this.id);
+    }
+
+    /**
+     * Convert this Guild into a a string (the name).
+     * 
+     * @returns {string} The name of this Guild.
+     */
+    toString (): string {
+        return this.name;
     }
 
     /**

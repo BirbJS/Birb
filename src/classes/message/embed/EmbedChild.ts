@@ -8,14 +8,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import Client from '../Client';
-import CachedBlock from './CachedBlock';
-import CCache from '../cache/CCache';
+export default class EmbedChild {
 
-export default class GuildMemberRoleBlock extends CachedBlock {
-
-    constructor (client: Client, options?: any) {
-        super(client, new CCache(client, options));
+    constructor () {
+        
     }
 
 }

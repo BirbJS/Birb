@@ -9,6 +9,7 @@
  */
 
 import Client from './Client';
+import TextChannel from './TextChannel';
 
 export default class Channel {
 
@@ -20,6 +21,12 @@ export default class Channel {
         this.client = client;
         this.id = data.id;
         this.name = data.name;
+    }
+
+    protected init () {
+        if (this instanceof TextChannel) {
+            return this
+        }
     }
 
 }

@@ -10,7 +10,7 @@
 
 import Client from "./Client";
 
-export default abstract class BaseUser {
+export default class BaseUser {
     
     client: Client = null!;
     readonly id: string;
@@ -27,6 +27,17 @@ export default abstract class BaseUser {
     constructor (client: Client, data: any) {
         this.client = client;
         this.id = data.id;
+    }
+
+    /**
+     * Whether or not this instance is a full or partial
+     * user. A partial user is a user that is only
+     * guaranteed to have `id` set on them.
+     * 
+     * @returns {boolean} `true` if this is a partial user, `false` otherwise.
+     */
+    isPartial (): boolean {
+        return false;
     }
 
 }

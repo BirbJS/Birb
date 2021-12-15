@@ -1,5 +1,5 @@
 import Client from '../Client';
-import Cache from '../Cache';
+import Cache from '../cache/Cache';
 
 export default abstract class CachedBlock {
 

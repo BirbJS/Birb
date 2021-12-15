@@ -10,7 +10,6 @@
 
 import Permissions from '../Permissions';
 import Client from '../Client';
-import Role from '../Role';
 
 export default class PermissionsBlock {
 

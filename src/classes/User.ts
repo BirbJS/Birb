@@ -8,11 +8,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import { UserResolvable } from "..";
 import BaseUser from "./BaseUser";
 import Client from "./Client";
 import HTTPChannel from "./http/HTTPChannel";
 import HTTPUser from "./http/HTTPUser";
 import Message from "./Message";
+import PartialUser from "./PartialUser";
 
 export default class User extends BaseUser {
 
@@ -117,6 +119,15 @@ export default class User extends BaseUser {
     }
 
     /**
+     * Convert this User into a mention (string).
+     * 
+     * @returns {string} A string that mentions this user.
+     */
+    toString (): string {
+        return `<@${this.id}>`;
+    }
+
+    /**
      * Set the User's data to the cache.
      * 
      * @returns {User} This User instance.
@@ -125,6 +136,30 @@ export default class User extends BaseUser {
     private set (): User {
         this.client.users.cache.set(this.id, this);
         return this;
+    }
+
+    /**
+     * Either fetch a User from the cache or return a
+     * PartialUser instance to avoid fetching from the API.
+     * 
+     * @param {Client} client The client to use.
+     * @param {Object} data The data on the user (`id` is required).
+     * @returns {User | PartialUser} The User or PartialUser.
+     */
+    private static retrieveOrBuildPartial (client: Client, data: any): User | PartialUser {
+        let cached = client.users.cache.get(data.id);
+        if (cached) return cached;
+        return new PartialUser(client, data);
+    }
+
+    private static toIdOnly (user: UserResolvable): string {
+        if (typeof user === 'string') {
+            return user;
+        } else if (user instanceof User) {
+            return user.id;
+        } else {
+            throw new TypeError(`Expected a string or User, received ${typeof user}`);
+        }
     }
 
 }

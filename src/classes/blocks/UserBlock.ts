@@ -9,18 +9,19 @@
  */
 
 import Client from '../Client';
-import Cache from '../Cache';
+import Cache from '../cache/Cache';
 import CachedBlock from './CachedBlock';
 import ClientUser from '../ClientUser';
 import HTTPUser from '../http/HTTPUser';
 import User from '../User';
 import { UserResolvable } from '../../util/Types';
 import BaseUser from '../BaseUser';
+import CCache from '../cache/CCache';
 
 export default class UserBlock extends CachedBlock {
 
     constructor (client: Client, options?: any) {
-        super(client, new Cache(options));
+        super(client, new CCache(client, options));
     }
 
     async fetchMe (): Promise<ClientUser> {
