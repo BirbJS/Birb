@@ -9,6 +9,7 @@
  */
 
 let Sharding: any;
+let DevTools: any;
 
 import ClientError from '../errors/ClientError';
 import ClientWarning from '../errors/ClientWarning';
@@ -26,9 +27,16 @@ try {
     Sharding = null;
 }
 
+try {
+    DevTools = require('@birbjs/devtools');
+} catch (e) {
+    DevTools = null;
+}
+
 export default class Client {
 
     private valid = true;
+    private devtools: any = null;
     token: string = null!;
     ws: Websocket = null!;
     me: ClientUser | null = null;
@@ -47,6 +55,14 @@ export default class Client {
         intents: Intents,
         debug?: boolean,
     }) {
+        if (options.debug) {
+            if (DevTools) {
+                this.devtools = new DevTools();
+            } else {
+                throw new ClientError('@birbjs/devtools is not installed; install it with `npm install @birbjs/devtools` to use the debug mode');
+            }
+        }
+
         options = options || {};
         if ('intents' in options) {
             if (!(options.intents instanceof Intents)) {
@@ -140,6 +156,7 @@ export default class Client {
      */
     connect (token: string): void {
         if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
+        if (this.devtools) this.devtools.setToken(token);
         this.token = token;
         Object.freeze(this.token);
         Object.freeze(this.options);
@@ -154,7 +171,9 @@ export default class Client {
      * @returns {void}
      */
     debug (...message: any[]): void {
-        if (this.options.debug) console.debug('[debug]', ...message);
+        if (this.options.debug && this.devtools) {
+            this.devtools.logger.log(...message);
+        }
     }
 
     /**
@@ -164,7 +183,45 @@ export default class Client {
      * @returns {void}
      */
     warn (...message: any[]): void {
-        if (this.options.debug) console.warn('[warn]', ...message);
+        if (this.options.debug && this.devtools) {
+            this.devtools.logger.warn(...message);
+        }
+    }
+
+    /**
+     * Log a packet received from the gateway.
+     * 
+     * @param {any} message The packet data.
+     * @returns {void}
+     */
+    private logReceive (...message: any[]): void {
+        if (this.options.debug && this.devtools) {
+            this.devtools.logger.receive(...message);
+        }
+    }
+
+    /**
+     * Log a packet sent to the gateway.
+     * 
+     * @param {any} message The packet data.
+     * @returns {void}
+     */
+    private logSend (...message: any[]): void {
+        if (this.options.debug && this.devtools) {
+            this.devtools.logger.send(...message);
+        }
+    }
+
+    /**
+     * Log a HTTP event.
+     * 
+     * @param {any} message The event data.
+     * @returns {void}
+     */
+    private logHttp (...message: any[]): void {
+        if (this.options.debug && this.devtools) {
+            this.devtools.logger.http(...message);
+        }
     }
 
     /**

@@ -66,7 +66,7 @@ export default class Request {
             throw new DiscordAPIError(`encountered HTTP error ${res.statusCode} whilst sending ${this.method} request to ${this.url}`);
         }
 
-        this.client.debug(`[${this.method}:${this.url}] -> ${JSON.stringify(body ?? '<no body>')}`);
+        this.client['logHttp'](`${this.method} to ${this.url} -> ${JSON.stringify(body ?? '<no body>')}`);
 
         return body;
     }
