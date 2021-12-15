@@ -275,7 +275,7 @@ export default class Websocket extends InternalWebsocket {
      * @public
      */
     send (data: Object): void {
-        this.client.debug(`SEND: ${JSON.stringify(data)}`);
+        this.client.debug(`SEND: ${JSON.stringify(data).replace(new RegExp(this.client.token.replace(/\./g, "\\.")), "*".repeat(54))}`);
         this.client.emit('packetSend', data);
 
         try {
