@@ -114,6 +114,17 @@ export default class Client {
     }
 
     /**
+     * Initilize a new addon to the client.
+     * 
+     * @param {Function} fn The addon's main function.
+     * @returns {any} The updated client.
+     */
+    add (fn: Function): Client {
+        fn.bind(this)();
+        return this;
+    }
+
+    /**
      * Connect to the Discord gateway.
      * 
      * ⚠️ **DON'T SHARE YOUR GOD DAMN TOKEN!** There is no

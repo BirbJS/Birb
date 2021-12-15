@@ -11,7 +11,9 @@
 import Channel from './Channel';
 import Guild from './Guild';
 import Client from './Client';
+import HTTPChannel from './http/HTTPChannel';
 import ChannelPermissionsBlock from './blocks/ChannelPermissionsBlock';
+import PermissionsBlock from './blocks/PermissionsBlock';
 
 export default abstract class GuildChannel extends Channel {
 
@@ -24,11 +26,11 @@ export default abstract class GuildChannel extends Channel {
         this.permissions = new ChannelPermissionsBlock(client, this, data.permission_overwrites);
     }
 
-    protected setOverwrite (overwrite: {
+    protected async setOverwrites (overwrite: {
         id: string,
         type: 'role' | 'member',
-    }) {
-
+    }[]): Promise<void> {
+        
     }
 
     abstract modify (data: any, reason?: string): Promise<GuildChannel>;

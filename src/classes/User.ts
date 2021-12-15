@@ -17,15 +17,14 @@ import Message from "./Message";
 import PartialUser from "./PartialUser";
 
 export default class User extends BaseUser {
-
     dmChannel: any = null;
 
-    constructor (client: Client, data: any) {
+    constructor(client: Client, data: any) {
         super(client, data);
         this.build(data);
     }
 
-    private build (data: any) {
+    private build(data: any) {
         this.username = data.username ?? 'Unknown';
         this.discriminator = data.discriminator ?? '0000';
         this.tag = `${this.username}#${this.discriminator}`;
@@ -46,21 +45,18 @@ export default class User extends BaseUser {
 
     /**
      * Generate a link to the user's avatar.
-     * 
+     *
      * @param {Object} [options] The options to use when generating the URL.
      * @param {string} [options.format=png] The image format to use for the URL.
      * @param {boolean} [options.dynamic=false] Whether or not a GIF should be returned autoamtically if the user's avatar is animated.
      * @returns {string} The URL to the user's avatar.
      * @public
      */
-    getAvatarURL (options?: {
-        format?: 'png' | 'webp' | 'jpg' | 'gif',
-        dynamic?: boolean,
-    }): string {
+    getAvatar(options?: { format?: 'png' | 'webp' | 'jpg' | 'gif'; dynamic?: boolean }): string {
         options = options ?? {};
         options = {
             format: options.format || 'png',
-            dynamic: options.dynamic ?? false,
+            dynamic: options.dynamic ?? false
         };
 
         if (!this.avatar) {
@@ -75,28 +71,62 @@ export default class User extends BaseUser {
     }
 
     /**
+     * Generate a link to the user's avatar.
+     *
+     * @param {Object} [options] The options to use when generating the URL.
+     * @param {string} [options.format=png] The image format to use for the URL.
+     * @param {boolean} [options.dynamic=false] Whether or not a GIF should be returned autoamtically if the user's banner is animated.
+     * @returns {string} The URL to the user's banner.
+     * @public
+     */
+    getBanner(options?: { format?: 'png' | 'webp' | 'jpg' | 'gif'; dynamic?: boolean }): string {
+        options = options ?? {};
+        options = {
+            format: options.format || 'png',
+            dynamic: options.dynamic ?? false
+        };
+
+        if (!this.banner) {
+            return `https://cdn.discord.com/banners/${this.id}/${parseInt(this.discriminator) % 5}.png`;
+        }
+
+        if (options.dynamic && this.banner.startsWith('a_')) {
+            return `https://cdn.discord.com/banners/${this.id}/${this.banner}.gif`;
+        } else {
+            return `https://cdn.discord.com/banners/${this.id}/${this.banner}.${options.format}`;
+        }
+    }
+
+    /**
+     * Supress embeds for this message.
+     *
+     * @returns {Promise<Message>} The updated message
+     * @public
+     */
+    supressEmbeds(): void {
+        
+    }
+
+    /**
      * Determine if the user's avatar is default.
-     * 
+     *
      * @returns {boolean} Whether or not the user's avatar is default.
      * @public
      */
-    hasDefaultAvatar (): boolean {
+    hasDefaultAvatar(): boolean {
         return this.avatar === null;
     }
 
     /**
      * Fetch this user again.
-     * 
+     *
      * @param {Object} [options] The options to use when fetching the user.
      * @param {boolean} [options.shouldCache=true] Whether or not to cache the result.
      * @param {boolean} [options.bypassCache=true] Whether or not to bypass the cache.
      * @returns {Promise<User>} A promise that resolves with the updated user.
      * @public
      */
-    async fetch (options?: {
-        shouldCache?: boolean | undefined,
-        bypassCache?: boolean | undefined,
-    }): Promise<User> {
+    async fetch(options?: { shouldCache?: boolean | undefined; bypassCache?: boolean | undefined }): Promise<User> {
         options = options ?? {};
         options.bypassCache = options.bypassCache ?? true;
         return this.client.users.fetch(this.id, options);
@@ -104,12 +134,12 @@ export default class User extends BaseUser {
 
     /**
      * Send a message to the user.
-     * 
+     *
      * @param {string} [content] The content of the message.
      * @returns {Promise<Message>} A promise that resolves with the new message.
      * @public
      */
-    async send (content: string): Promise<Message> {
+    async send(content: string): Promise<Message> {
         if (!this.dmChannel) {
             this.dmChannel = await HTTPUser.createDM(this.client, this.id);
         }
@@ -120,20 +150,20 @@ export default class User extends BaseUser {
 
     /**
      * Convert this User into a mention (string).
-     * 
+     *
      * @returns {string} A string that mentions this user.
      */
-    toString (): string {
+    toString(): string {
         return `<@${this.id}>`;
     }
 
     /**
      * Set the User's data to the cache.
-     * 
+     *
      * @returns {User} This User instance.
      * @private
      */
-    private set (): User {
+    private set(): User {
         this.client.users.cache.set(this.id, this);
         return this;
     }
@@ -141,18 +171,18 @@ export default class User extends BaseUser {
     /**
      * Either fetch a User from the cache or return a
      * PartialUser instance to avoid fetching from the API.
-     * 
+     *
      * @param {Client} client The client to use.
      * @param {Object} data The data on the user (`id` is required).
      * @returns {User | PartialUser} The User or PartialUser.
      */
-    private static retrieveOrBuildPartial (client: Client, data: any): User | PartialUser {
+    private static retrieveOrBuildPartial(client: Client, data: any): User | PartialUser {
         let cached = client.users.cache.get(data.id);
         if (cached) return cached;
         return new PartialUser(client, data);
     }
 
-    private static toIdOnly (user: UserResolvable): string {
+    private static toIdOnly(user: UserResolvable): string {
         if (typeof user === 'string') {
             return user;
         } else if (user instanceof User) {
@@ -161,5 +191,4 @@ export default class User extends BaseUser {
             throw new TypeError(`Expected a string or User, received ${typeof user}`);
         }
     }
-
 }
