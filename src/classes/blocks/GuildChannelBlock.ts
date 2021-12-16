@@ -8,14 +8,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import RefrenceCache from '../cache/RefrenceCache';
 import Client from '../Client';
-import CachedBlock from './CachedBlock';
-import CCache from '../cache/CCache';
 
-export default class ChannelBlock extends CachedBlock {
+export default class GuildChannelBlock {
 
-    constructor (client: Client, options?: any) {
-        super(client, new CCache(client, options));
+    client: Client = null!;
+    cache: RefrenceCache = null!;
+
+    constructor (client: Client) {
+        this.client = client;
+        this.cache = new RefrenceCache(client, 'channels');
     }
 
 }

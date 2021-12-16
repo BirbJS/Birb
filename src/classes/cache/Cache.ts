@@ -86,6 +86,30 @@ export default abstract class Cache {
     }
 
     /**
+     * Find a value in the cache. If the key is not found
+     * in the cache, `null` is returned.
+     * 
+     * @param {string} key The key to get the value for.
+     * @returns {any | null} The value for the key, or `null` if the key is not found.
+     * @public
+     */
+    find (fn: ((e: any) => boolean)): any | null {
+        return this.array().find(fn);
+    }
+
+    /**
+     * Filter values in the cache. If the key is not found
+     * in the cache, an empty array is returned.
+     * 
+     * @param {string} key The key to get the value for.
+     * @returns {any[]} The value for the key, or [] if the key is not found.
+     * @public
+     */
+    filter (fn: ((e: any) => boolean)): any[] {
+        return this.array().filter(fn);
+    }
+
+    /**
      * Set a value in the cache.
      * 
      * @param {string} key The key of the entry.
@@ -154,6 +178,20 @@ export default abstract class Cache {
     }
 
     /**
+     * Get an array of the entries in the cache as `Pair`s.
+     * 
+     * @returns {any[]} The array.
+     * @public
+     */
+    arrayPair (): any[] {
+        let entries = [];
+        for ( let [key, value] of this.cache.entries() ) {
+            entries.push(new Pair(key, value.v));
+        }
+        return entries;
+    }
+
+    /**
      * Get an array of the entries in the cache.
      * 
      * @returns {Pair<string, any>[]} The array.
@@ -161,8 +199,8 @@ export default abstract class Cache {
      */
     array (): Pair<string, any>[] {
         let entries = [];
-        for ( let [key, value] of this.cache.entries() ) {
-            entries.push(new Pair(key, value.v));
+        for ( let [, value] of this.cache.entries() ) {
+            entries.push(value.v);
         }
         return entries;
     }
