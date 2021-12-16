@@ -8,21 +8,35 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { ReadStream, createReadStream } from 'fs';
+import { readFileSync } from 'fs';
 
 export default class MessageAttachment {
 
-    stream: ReadStream = null!;
-    filename: string | null = null;
+    id: string | null = null;
+    buffer: Buffer | null = null;
+    url: string | null = null;
+    proxyUrl: string | null = null;
+    filename: string = null!;
 
-    constructor (file: ReadStream | string, filename?: string) {
-        if (typeof file === 'string') file = createReadStream(file);
-        this.stream = file;
-        this.filename = filename ?? null;
+    constructor (file: Buffer | string | null = null, filename: string | null = null, id?: string, url?: string, proxyUrl?: string) {
+        let fiddle: Buffer | string | null = file;
+        this.filename = filename ?? (typeof fiddle == 'string' ? fiddle.split('/').pop() : null) ?? `unknown-${Date.now()}.attchmnt`;
+        if (typeof file === 'string') file = readFileSync(file);
+        this.buffer = file;
+        this.id = id || null;
+        this.url = url || null;
+        this.proxyUrl = proxyUrl || null;
     }
 
-    getStream (): ReadStream {
-        return this.stream;
+    getBuffer (): Buffer | null {
+        return this.buffer;
+    }
+
+    private static fromApiMessage (attachments?: any[] | null): MessageAttachment[] {
+        if (!attachments || attachments.length < 1) return [];
+        return attachments.map((attach) => 
+            new MessageAttachment(null, attach.filename, attach.id, attach.url, attach.proxy_url)
+        );
     }
 
 }

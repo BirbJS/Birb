@@ -32,6 +32,7 @@ export default class Message {
     author: BaseUser | null = null;
     member: GuildMember | null = null;
     channel: TextBasedChannel = null!;
+    attachments: MessageAttachment[] = [];
     flags: number = 0;
     private baseAuthor: any = null;
 
@@ -47,11 +48,15 @@ export default class Message {
         if ('content' in data) {
             this.content = data.content;
         }
+        if ('attachments' in data) {
+            this.attachments = MessageAttachment['fromApiMessage'](data.attachments);
+        }
         if ('webhook_id' in data) {
             this.webhookId = data.webhook_id;
         }
         if ('guild_id' in data) {
             this.guild = this.client.guilds.cache.get(data.guild_id) || null;
+            if (this.guild) this.channel = this.guild.channels.cache.get(data.channel_id);
         }
         if ('member' in data) {
             try {
@@ -60,16 +65,12 @@ export default class Message {
                 this.member = this.guild?.members.resolve(this.baseAuthor.id, this.guild, data.member) || null;
             } catch (err) {}
         }
-
         if (!this.webhookId && !data.author.system) {
             if (data.author.id == this.client.me?.id) {
                 this.author = this.client.me;
             } else {
                 this.author = this.client.users.resolve(data.author.id, data.author ?? null) || null;
             }
-        }
-        if (this.guild) {
-            this.channel = this.guild.channels.cache.get(data.channel_id);
         }
     }
 
@@ -126,7 +127,7 @@ export default class Message {
     }
     
     async modify (data: any): Promise<Message> {
-        let res = await HTTPChannel.editMessage(this.client, this.channel.id, this.id, data);
+        let res = await HTTPChannel.editMessage(this.client, this.channel.id, this.id, data, this);
         this.build(res);
         return this.set();
     }
@@ -149,9 +150,7 @@ export default class Message {
     }
 
     private set (): Message {
-        if (this.guild) {
-            this.guild.channels.cache.get(this.channel.id).messages.cache.set(this.id, this);
-        }
+        if (this.guild) this.guild.channels.cache.get(this.channel.id).messages.cache.set(this.id, this);
         return this;
     }
 

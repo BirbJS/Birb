@@ -45,7 +45,7 @@ import StartThreadWithoutMessage from './channels/StartThreadWithoutMessage';
 import TriggerTypingIndicator from './channels/TriggerTypingIndicator';
 import UnpinMessage from './channels/UnpinMessage';
 import MessageAttachment from '../message/MessageAttachment';
-import { ReadStream } from 'fs';
+import Message from '../Message';
 
 export default class HTTPChannel {
     
@@ -67,7 +67,7 @@ export default class HTTPChannel {
     static createMessage (client: Client, channelId: string, data: any) {
         let request = new CreateMessage(client, channelId, data);
         if (data.attachments) {
-            let attachements: ReadStream[] = data.attachments.map((a: MessageAttachment) => a.getStream());
+            let attachements: MessageAttachment[] = data.attachments ?? [];
             delete data.attachments;
             return request.make(attachements);
         }
@@ -129,8 +129,24 @@ export default class HTTPChannel {
         return request.make();
     }
 
-    static editMessage (client: Client, channelId: string, messageId: string, data: any) {
+    static editMessage (client: Client, channelId: string, messageId: string, data: any, original?: Message) {
         let request = new EditMessage(client, channelId, messageId, data);
+        if (data.attachments) {
+            if (original) {
+                let attachments = [];
+                for ( let i = 0; i < original.attachments.length; ++i ) {
+                    let attachment = original.attachments[i];
+                    if (data.attachments.find((x: MessageAttachment) => x.id === attachment.id)) {
+                        attachments.push({ id: attachment.id });
+                    }
+                }
+                data.attachmenets = attachments;
+                return request.make(data.attachments ?? []);
+            }
+            let attachements: MessageAttachment[] = data.attachments ?? [];
+            delete data.attachments;
+            return request.make(attachements);
+        }
         return request.make();
     }
 
