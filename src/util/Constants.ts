@@ -112,7 +112,7 @@ export enum ActivityType {
     COMPETING = 5,
 }
 
-export enum MessageType {
+export enum MessageTypes {
     DEFAULT = 0,
     RECIPIENT_ADD = 1,
     RECIPIENT_REMOVE = 2,
@@ -138,7 +138,7 @@ export enum MessageType {
     CONTEXT_MENU_COMMAND = 23,
 }
 
-export enum SystemMessageType {
+export enum SystemMessageTypes {
     RECIPIENT_ADD = 1,
     RECIPIENT_REMOVE = 2,
     CALL = 3,
