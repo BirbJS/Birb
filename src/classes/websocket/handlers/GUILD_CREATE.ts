@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Status } from "../../..";
+import { Status } from "../../../util/Constants";
 import Guild from "../../Guild";
 import Websocket from "../Websocket";
 

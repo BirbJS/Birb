@@ -12,7 +12,8 @@ import BaseUser from '../classes/BaseUser';
 import Channel from '../classes/Channel';
 import ClientUser from '../classes/ClientUser';
 import Guild from '../classes/Guild';
-import Embed from '../classes/message/embed/Embed';
+import Embed from '../classes/message/embed/MessageEmbed';
+import MessageAttachment from '../classes/message/MessageAttachment';
 import Role from '../classes/Role';
 import User from '../classes/User';
 
@@ -29,6 +30,7 @@ export type MessageContent = string | Embed | {
     tts?: boolean;
     nonce?: string;
     mentionRepliedUser?: boolean;
+    attachments?: [ MessageAttachment ],
     allowedMentions?: {
         parse?: [ 'users' | 'roles' | 'everyone' ];
         users?: [ UserResolvable ];

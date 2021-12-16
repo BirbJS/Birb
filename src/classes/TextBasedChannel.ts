@@ -14,7 +14,7 @@ import GuildChannel from './GuildChannel';
 import { MessageContent } from '../util/Types';
 import Message from './Message';
 import HTTPChannel from './http/HTTPChannel';
-import { Guild } from '..';
+import Guild from './Guild';
 
 export default abstract class TextBasedChannel extends GuildChannel {
 
@@ -31,7 +31,7 @@ export default abstract class TextBasedChannel extends GuildChannel {
     }
 
     async send (message: MessageContent): Promise<Message> {
-        let data = Message['buildApiMessage'](this.client, message);
+        let data = Message['buildApiMessage'](message);
         let created = await HTTPChannel.createMessage(this.client, this.id, data);
         let msg = await (new Message(this.client, created))['waitForAuthor']();
         this.messages.cache.set(msg.id, msg);

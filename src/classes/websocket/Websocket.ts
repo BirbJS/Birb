@@ -38,7 +38,6 @@ export default class Websocket extends InternalWebsocket {
      */
     constructor (client: Client, domain: string) {
         super(client, domain);
-        this.scheduler();
     }
 
     /**
@@ -54,6 +53,7 @@ export default class Websocket extends InternalWebsocket {
         this.status = Status.CONNECTING;
         this.preventReconnect(false);
         this.init();
+        this.scheduler();
         this.ws = new WS(this.url);
         this.ws.on('message', this.onPacket.bind(this));
         this.ws.on('open', () => this.ws.ping());
@@ -79,6 +79,7 @@ export default class Websocket extends InternalWebsocket {
         }
         this.status = Status.RECONNECTING;
         this.init();
+        this.scheduler();
         this.ws = new WS(this.url);
         this.ws.on('message', this.onPacket.bind(this));
         this.ws.on('open', () => this.onOpen.bind(this));
@@ -160,10 +161,9 @@ export default class Websocket extends InternalWebsocket {
                 break;
             }
             case PacketOperation.HEARTBEAT_ACK: {
-                this.client.debug('received heartbeat ack');
                 this.lastHeartbeatAcked = true;
                 this.ping = Date.now() - this.lastHeartbeat;
-                this.client.debug(`ping: ${this.ping}ms`);
+                this.client.debug(`discord acked our heartbeat; took them: ${this.ping}ms`);
                 break;
             }
             default: {

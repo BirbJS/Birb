@@ -21,15 +21,17 @@ export default class Request {
     body: any = null!;
     reason: string | null = null;
     response: any | null = null;
+    upload: boolean = false;
 
-    constructor (client: Client, method: HTTPMethod, path: string, body?: any) {
+    constructor (client: Client, method: HTTPMethod, path: string, body?: any, upload: boolean = false) {
         this.client = client;
         this.method = method;
         this.url = `https://discord.com/api/v9${path}`;
         this.body = body ?? null;
+        this.upload = upload;
     }
 
-    async make () {
+    async make (files?: any[]) {
         let req = petitio(this.url, this.method)
             .timeout(5000)
             .header({
@@ -37,7 +39,13 @@ export default class Request {
                 'User-Agent': `DiscordBot (https://birb.js.org, ${require('../../package.json').version}, ${process.platform})`,
             });
 
-        if (this.body) {
+        if (this.upload && files && files.length > 0) {
+            let form = new FormData();
+            for ( let i = 0; i < files.length; ++i ) form.append(`files[${i}]`, files[i]);
+            if (this.body) form.append('payload_json', this.body ? JSON.stringify(this.body) : '{}');
+            req.header('Content-Type', 'multipart/form-data');
+            req.body(form);
+        } else if (this.body) {
             req.header('Content-Type', 'application/json; charset=utf-8');
             req.body(this.body);
         }

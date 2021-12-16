@@ -44,6 +44,8 @@ import StartThreadWithMessage from './channels/StartThreadWithMessage';
 import StartThreadWithoutMessage from './channels/StartThreadWithoutMessage';
 import TriggerTypingIndicator from './channels/TriggerTypingIndicator';
 import UnpinMessage from './channels/UnpinMessage';
+import MessageAttachment from '../message/MessageAttachment';
+import { ReadStream } from 'fs';
 
 export default class HTTPChannel {
     
@@ -64,6 +66,11 @@ export default class HTTPChannel {
     
     static createMessage (client: Client, channelId: string, data: any) {
         let request = new CreateMessage(client, channelId, data);
+        if (data.attachments) {
+            let attachements: ReadStream[] = data.attachments.map((a: MessageAttachment) => a.getStream());
+            delete data.attachments;
+            return request.make(attachements);
+        }
         return request.make();
     }
     

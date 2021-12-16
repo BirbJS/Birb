@@ -8,7 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Guild, HTTPChannel } from '..';
+import Guild from './Guild';
+import HTTPChannel from './http/HTTPChannel';
 import Client from './Client';
 import TextBasedChannel from './TextBasedChannel';
 

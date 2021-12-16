@@ -16,7 +16,7 @@ try {
     _Sharding = null;
 }
 
-export default class Access {
+export default class Addons {
 
     Sharding: any = null;
 

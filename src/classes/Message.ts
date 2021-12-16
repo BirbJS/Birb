@@ -16,9 +16,11 @@ import Client from './Client';
 import GuildMember from './GuildMember';
 import TextBasedChannel from './TextBasedChannel';
 import { UserResolvable, RoleResolvable, MessageContent } from '../util/Types';
-import Embed from './message/embed/Embed';
+import Embed from './message/embed/MessageEmbed';
 import { MessageFlags } from '../util/Constants';
 import User from './User';
+import MessageAttachment from './message/MessageAttachment';
+import { ReadStream } from 'fs';
 
 export default class Message {
     
@@ -81,7 +83,7 @@ export default class Message {
 
     async reply (message: MessageContent): Promise<Message> {
         await this.waitForAuthor();
-        let data = Message.buildApiMessage(this.client, message);
+        let data = Message.buildApiMessage(message);
         data.message_reference = {
             message_id: this.id,
             channel_id: this.channel.id,
@@ -120,7 +122,7 @@ export default class Message {
     }
 
     async edit (message: MessageContent): Promise<Message> {
-        return this.modify(Message.buildApiMessage(this.client, message));
+        return this.modify(Message.buildApiMessage(message, true));
     }
     
     async modify (data: any): Promise<Message> {
@@ -153,25 +155,42 @@ export default class Message {
         return this;
     }
 
-    private static buildApiMessage (client: Client, data: MessageContent): any {
+    private static buildApiMessage (data: MessageContent, edit: boolean = false): any {
         if (typeof data === 'string') {
             return { content: data };
         }
         if (data instanceof Embed) {
             return { embeds: [ data.format() ] };
         }
-        return {
-            content: data.content ?? null,
-            embeds: data.embeds?.map(e => e.format()) ?? [],
-            tts: data.tts ?? false,
-            nonce: data.nonce ?? null,
-            allowed_mentions: {
-                parse: data.allowedMentions?.parse ?? null,
-                users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? null,
-                roles: data.allowedMentions?.roles?.map((r: RoleResolvable) => Role['toIdOnly'](r)) ?? null,
-                replied_user: data.mentionRepliedUser ?? false,
-            },
-        };
+        if (edit) {
+            return {
+                content: data.content ?? undefined,
+                embeds: data.embeds?.map(e => e.format()) ?? undefined,
+                tts: data.tts ?? undefined,
+                nonce: data.nonce ?? undefined,
+                attachments: data.attachments ?? [],
+                allowed_mentions: {
+                    parse: data.allowedMentions?.parse ?? undefined,
+                    users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? undefined,
+                    roles: data.allowedMentions?.roles?.map((r: RoleResolvable) => Role['toIdOnly'](r)) ?? undefined,
+                    replied_user: data.mentionRepliedUser ?? undefined,
+                },
+            };
+        } else {
+            return {
+                content: data.content ?? null,
+                embeds: data.embeds?.map(e => e.format()) ?? [],
+                tts: data.tts ?? false,
+                nonce: data.nonce ?? null,
+                attachments: data.attachments ?? [],
+                allowed_mentions: {
+                    parse: data.allowedMentions?.parse ?? null,
+                    users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? null,
+                    roles: data.allowedMentions?.roles?.map((r: RoleResolvable) => Role['toIdOnly'](r)) ?? null,
+                    replied_user: data.mentionRepliedUser ?? false,
+                },
+            };
+        }
     }
 
 }

@@ -15,7 +15,7 @@ import EmbedField from './EmbedField';
 import EmbedFooter from './EmbedFooter';
 import EmbedMedia from './EmbedMedia';
 
-export default class Embed extends BaseComponent {
+export default class MessageEmbed extends BaseComponent {
 
     title: string | null = null;
     description: string | null = null;
@@ -37,9 +37,9 @@ export default class Embed extends BaseComponent {
      * Set the title of this embed.
      * 
      * @param {string} title The new title of this embed.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setTitle (title: string): Embed {
+    setTitle (title: string): MessageEmbed {
         this.title = title;
         return this;
     }
@@ -48,9 +48,9 @@ export default class Embed extends BaseComponent {
      * Set the description of this embed.
      * 
      * @param {string} description The new description of this embed.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setDescription (description: string): Embed {
+    setDescription (description: string): MessageEmbed {
         this.description = description;
         return this;
     }
@@ -59,9 +59,9 @@ export default class Embed extends BaseComponent {
      * Set the URL of this embed.
      * 
      * @param {string} url The new URL of this embed.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setUrl (url: string): Embed {
+    setUrl (url: string): MessageEmbed {
         this.url = url;
         return this;
     }
@@ -70,9 +70,9 @@ export default class Embed extends BaseComponent {
      * Set the timestamp of this embed.
      * 
      * @param {Date | number} timestamp The new timestamp of this embed.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setTimestamp (timestamp: Date | number): Embed {
+    setTimestamp (timestamp: Date | number): MessageEmbed {
         if (typeof timestamp == 'number') timestamp = new Date(timestamp);
         this.timestamp = timestamp;
         return this;
@@ -82,9 +82,9 @@ export default class Embed extends BaseComponent {
      * Set the HEX color of this embed.
      * 
      * @param {string} color The new HEX color of this embed.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setColor (color: string): Embed {
+    setColor (color: string): MessageEmbed {
         this.color = color;
         return this;
     }
@@ -94,9 +94,9 @@ export default class Embed extends BaseComponent {
      * 
      * @param {string} text The text of the footer.
      * @param {string} [iconUrl] A public-facing URL to an image for the footer.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setFooter (text: string, iconUrl?: string): Embed {
+    setFooter (text: string, iconUrl?: string): MessageEmbed {
         this.footer = new EmbedFooter(text, iconUrl);
         return this;
     }
@@ -107,9 +107,9 @@ export default class Embed extends BaseComponent {
      * @param {string} url A public-facing URL to an image for the embed.
      * @param {number} [height] An optional height for the image.
      * @param {number} [width] An optional width for the image.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setImage (url: string, height?: number, width?: number): Embed {
+    setImage (url: string, height?: number, width?: number): MessageEmbed {
         this.image = new EmbedMedia(url, height, width);
         return this;
     }
@@ -120,9 +120,9 @@ export default class Embed extends BaseComponent {
      * @param {string} url A public-facing URL to an image for the embed.
      * @param {number} [height] An optional height for the image.
      * @param {number} [width] An optional width for the image.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setThumbnail (url: string, height?: number, width?: number): Embed {
+    setThumbnail (url: string, height?: number, width?: number): MessageEmbed {
         this.thumbnail = new EmbedMedia(url, height, width);
         return this;
     }
@@ -133,9 +133,9 @@ export default class Embed extends BaseComponent {
      * @param {string} url A public-facing URL to a video for the embed.
      * @param {number} [height] An optional height for the video.
      * @param {number} [width] An optional width for the video.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setVideo (url: string, height?: number, width?: number): Embed {
+    setVideo (url: string, height?: number, width?: number): MessageEmbed {
         this.video = new EmbedMedia(url, height, width);
         return this;
     }
@@ -146,9 +146,9 @@ export default class Embed extends BaseComponent {
      * @param {string} name The name of the author.
      * @param {string} [url] A public-facing URL for the author.
      * @param {string} [iconUrl] A public-facing URL to an image for the author.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    setAuthor (name: string, url?: string, iconUrl?: string): Embed {
+    setAuthor (name: string, url?: string, iconUrl?: string): MessageEmbed {
         this.author = new EmbedAuthor(name, url, iconUrl);
         return this;
     }
@@ -159,9 +159,9 @@ export default class Embed extends BaseComponent {
      * @param {string} name The name of the field.
      * @param {string} value The field's value.
      * @param {boolean} [inline=false] Whether or not this field should be displayed inline.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    addField (name: string, value: string, inline?: boolean): Embed {
+    addField (name: string, value: string, inline?: boolean): MessageEmbed {
         this.fields.push(new EmbedField(name, value, inline));
         return this;
     }
@@ -173,13 +173,13 @@ export default class Embed extends BaseComponent {
      * @param {string} fields.name The name of the field.
      * @param {string} fields.value The field's value.
      * @param {boolean} [fields.inline=false] Whether or not the field should be displayed inline.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
     addFields (fields: {
         name: string,
         value: string,
         inline?: boolean
-    }[]): Embed {
+    }[]): MessageEmbed {
         for (let field of fields) this.addField(field.name, field.value, field.inline);
         return this;
     }
@@ -188,9 +188,9 @@ export default class Embed extends BaseComponent {
      * Remove a field from this embed.
      * 
      * @param {number} index The array index of the field to remove.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
-    removeField (index: number): Embed {
+    removeField (index: number): MessageEmbed {
         this.fields.splice(index, 1);
         return this;
     }
@@ -202,13 +202,13 @@ export default class Embed extends BaseComponent {
      * @param {string} fields.name The name of the field.
      * @param {string} fields.value The field's value.
      * @param {boolean} [fields.inline=false] Whether or not the field should be displayed inline.
-     * @returns {Embed} This embed.
+     * @returns {MessageEmbed} This embed.
      */
     setFields (fields: {
         name: string,
         value: string,
         inline?: boolean
-    }[]): Embed {
+    }[]): MessageEmbed {
         this.fields = [];
         for ( let i = 0; i < fields.length; ++i ) {
             this.fields.push(new EmbedField(fields[i].name, fields[i].value, fields[i].inline));
