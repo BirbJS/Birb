@@ -20,6 +20,7 @@ Birb.JS comes with a few optional addons made by the Birb.JS team. Please view t
 - [@birbjs/framework](https://birb.js.org/addons/framework) is a framework to make the development of Discord bots easier and more efficient. It includes an in-built command handler, permission system, event manager and built-in slash command support: `npm install @birbjs/framework --save`
 - [@birbjs/sharding](https://birb.js.org/addons/sharding) is a sharding utility for Birb.JS that makes it easier to shard your Discord bot: `npm install @birbjs/sharding --save`
 - [@birbjs/cluster](https://birb.js.org/addons/cluster) is a clustering utility for Birb.JS that is built for larger Discord bots that need to split shards across multiple seperate servers: `npm install @birbjs/cluster --save`
+- [@birbjs/devtools](https://birb.js.org/addons/devtools) is a tool for the developers, contributors and maintainers of Birb.JS (it includes some important features like debugging and log-keeping): `npm install @birbjs/devtools --save-dev`
 
 ### Optional Dependencies
 These dependencies aren't required, but will allow Birb.JS to do things more efficiently.

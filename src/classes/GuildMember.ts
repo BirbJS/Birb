@@ -12,7 +12,7 @@ import Guild from './Guild';
 import BaseUser from './BaseUser';
 import GuildMemberRoleBlock from './blocks/GuildMemberRoleBlock';
 import Client from './Client';
-import { HTTPGuild } from '..';
+import HTTPGuild from './http/HTTPGuild';
 import OptionError from '../errors/OptionError';
 
 export default class GuildMember {

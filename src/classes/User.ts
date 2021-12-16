@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { UserResolvable } from "..";
+import { UserResolvable } from "../util/Types";
 import BaseUser from "./BaseUser";
 import Client from "./Client";
 import HTTPChannel from "./http/HTTPChannel";

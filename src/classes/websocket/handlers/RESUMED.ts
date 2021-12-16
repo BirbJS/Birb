@@ -8,22 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let _Sharding: any;
+import Websocket from '../Websocket';
 
-try {
-    _Sharding = require('@birbjs/sharding');
-} catch (e) {
-    _Sharding = null;
-}
-
-export default class Addons {
-
-    Sharding: any = null;
-
-    constructor () {
-        if (_Sharding) {
-            this.Sharding = _Sharding;
-        }
-    }
-
+export default async function RESUMED (ws: Websocket, data: any): Promise<void> {
+    ws['lastResume'] = Date.now();
 }

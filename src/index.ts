@@ -26,135 +26,168 @@ import { Snowflake } from '@sapphire/snowflake';
 import BitsBlock from './classes/blocks/BitsBlock';
 import CachedBlock from './classes/blocks/CachedBlock';
 import ChannelBlock from './classes/blocks/ChannelBlock';
+import ChannelPermissionsBlock from './classes/blocks/ChannelPermissionsBlock';
 import GuildBlock from './classes/blocks/GuildBlock';
 import GuildMemberBlock from './classes/blocks/GuildMemberBlock';
 import GuildMemberRoleBlock from './classes/blocks/GuildMemberRoleBlock';
 import MessageBlock from './classes/blocks/MessageBlock';
+import PermissionsBlock from './classes/blocks/PermissionsBlock';
 import RoleBlock from './classes/blocks/RoleBlock';
+import RolePermissionsBlock from './classes/blocks/RolePermissionsBlock';
 import UserBlock from './classes/blocks/UserBlock';
 
-import Permissions from './classes/Permissions';
+import Cache from './classes/cache/Cache';
+import CCache from './classes/cache/CCache';
+import CGCache from './classes/cache/CGCache';
 
-import HTTPGuild from './classes/http/HTTPGuild';
 import HTTPChannel from './classes/http/HTTPChannel';
+import HTTPGuild from './classes/http/HTTPGuild';
 import HTTPUser from './classes/http/HTTPUser';
 import Request from './classes/http/Request';
 
-import BaseComponent from './classes/message/BaseComponent';
-import Embed from './classes/message/embed/Embed';
 import EmbedAuthor from './classes/message/embed/EmbedAuthor';
 import EmbedChild from './classes/message/embed/EmbedChild';
 import EmbedField from './classes/message/embed/EmbedField';
 import EmbedFooter from './classes/message/embed/EmbedFooter';
 import EmbedMedia from './classes/message/embed/EmbedMedia';
+import MessageEmbed from './classes/message/embed/MessageEmbed';
 
+import BaseComponent from './classes/message/BaseComponent';
+import MessageAttachment from './classes/message/MessageAttachment';
+
+import InternalWebsocket from './classes/websocket/InternalWebsocket';
 import Websocket from './classes/websocket/Websocket';
 
-import Cache from './classes/cache/Cache';
+import BaseUser from './classes/BaseUser';
+import Channel from './classes/Channel';
 import Client from './classes/Client';
+import ClientUser from './classes/ClientUser';
 import Guild from './classes/Guild';
+import GuildChannel from './classes/GuildChannel';
+import GuildMember from './classes/GuildMember';
 import Intents from './classes/Intents';
-import Pair from './util/Pair';
+import Message from './classes/Message';
+import PartialUser from './classes/PartialUser';
+import PermissionOverwrite from './classes/PermissionOverwrite';
+import Permissions from './classes/Permissions';
 import Role from './classes/Role';
+import RolePermissionOverwrite from './classes/RolePermissionOverwrite';
+import TextBasedChannel from './classes/TextBasedChannel';
+import TextChannel from './classes/TextChannel';
+import ThreadChannel from './classes/ThreadChannel';
+import User from './classes/User';
+import UserPermissionOverwrite from './classes/UserPermissionOverwrite';
 
-import BirbJSError from './errors/BirbJSError';
-import CacheError from './errors/CacheError';
-import ClientError from './errors/ClientError';
-import ClientWarning from './errors/ClientWarning';
-import GuildError from './errors/GuildError';
-import MemoryLeakWarning from './errors/MemoryLeakWarning';
-import ShardingError from './errors/ShardingError';
-import WebsocketError from './errors/WebsocketError';
-import WebsocketProcessingError from './errors/WebsocketProcessingError';
-import WebsocketWarning from './errors/WebsocketWarning';
-
-import Color from './util/Color';
 import Addons from './util/Addons';
-
+import Color from './util/Color';
 import {
+    Intents as IntentFlags,
     NSFWLevel,
     MFALevel,
     ExplicitContentFilterLevel,
     NotificationLevel,
     VerificationLevel,
-    Status,
+    Status as WebsocketStatus,
     PacketOperation,
     GatewayCloseCode,
     ActivityType,
+    MessageFlags,
 } from './util/Constants';
-
+import Pair from './util/Pair';
 import {
     GuildResolvable,
     RoleResolvable,
+    ChannelResolvable,
     UserResolvable,
     EventResolvable,
+    ActivityStatus,
+    MessageContent,
 } from './util/Types';
+import Validator from './util/Validator';
 
 export {
+    
     Snowflake,
 
     BitsBlock,
     CachedBlock,
     ChannelBlock,
+    ChannelPermissionsBlock,
     GuildBlock,
     GuildMemberBlock,
     GuildMemberRoleBlock,
     MessageBlock,
+    PermissionsBlock,
     RoleBlock,
+    RolePermissionsBlock,
     UserBlock,
 
-    Permissions,
+    Cache,
+    CCache,
+    CGCache,
 
-    HTTPGuild,
     HTTPChannel,
+    HTTPGuild,
     HTTPUser,
     Request,
 
-    BaseComponent,
-    Embed,
     EmbedAuthor,
     EmbedChild,
     EmbedField,
     EmbedFooter,
     EmbedMedia,
+    MessageEmbed,
+
+    BaseComponent,
+    MessageAttachment,
 
     Websocket,
+    InternalWebsocket,
 
-    Cache,
+    BaseUser,
+    Channel,
     Client,
+    ClientUser,
     Guild,
+    GuildChannel,
+    GuildMember,
     Intents,
-    Pair,
+    Message,
+    PartialUser,
+    PermissionOverwrite,
+    Permissions,
     Role,
+    RolePermissionOverwrite,
+    TextBasedChannel,
+    TextChannel,
+    ThreadChannel,
+    User,
+    UserPermissionOverwrite,
 
-    BirbJSError,
-    CacheError,
-    ClientError,
-    ClientWarning,
-    GuildError,
-    MemoryLeakWarning,
-    ShardingError,
-    WebsocketError,
-    WebsocketProcessingError,
-    WebsocketWarning,
-
-    Color,
     Addons,
-
+    Color,
+    IntentFlags,
     NSFWLevel,
     MFALevel,
     ExplicitContentFilterLevel,
     NotificationLevel,
     VerificationLevel,
-    Status,
+    WebsocketStatus,
     PacketOperation,
     GatewayCloseCode,
     ActivityType,
+    MessageFlags,
 
     GuildResolvable,
     RoleResolvable,
+    ChannelResolvable,
     UserResolvable,
     EventResolvable,
+    ActivityStatus,
+    MessageContent,
+
+    Validator,
+
 };
 
 export function _test () {

@@ -16,9 +16,11 @@ import Client from './Client';
 import GuildMember from './GuildMember';
 import TextBasedChannel from './TextBasedChannel';
 import { UserResolvable, RoleResolvable, MessageContent } from '../util/Types';
-import Embed from './message/embed/Embed';
+import Embed from './message/embed/MessageEmbed';
 import { MessageFlags } from '../util/Constants';
 import User from './User';
+import MessageAttachment from './message/MessageAttachment';
+import { ReadStream } from 'fs';
 
 export default class Message {
     
@@ -30,6 +32,7 @@ export default class Message {
     author: BaseUser | null = null;
     member: GuildMember | null = null;
     channel: TextBasedChannel = null!;
+    attachments: MessageAttachment[] = [];
     flags: number = 0;
     private baseAuthor: any = null;
 
@@ -45,11 +48,15 @@ export default class Message {
         if ('content' in data) {
             this.content = data.content;
         }
+        if ('attachments' in data) {
+            this.attachments = MessageAttachment['fromApiMessage'](data.attachments);
+        }
         if ('webhook_id' in data) {
             this.webhookId = data.webhook_id;
         }
         if ('guild_id' in data) {
             this.guild = this.client.guilds.cache.get(data.guild_id) || null;
+            if (this.guild) this.channel = this.guild.channels.cache.get(data.channel_id);
         }
         if ('member' in data) {
             try {
@@ -58,16 +65,12 @@ export default class Message {
                 this.member = this.guild?.members.resolve(this.baseAuthor.id, this.guild, data.member) || null;
             } catch (err) {}
         }
-
         if (!this.webhookId && !data.author.system) {
             if (data.author.id == this.client.me?.id) {
                 this.author = this.client.me;
             } else {
                 this.author = this.client.users.resolve(data.author.id, data.author ?? null) || null;
             }
-        }
-        if (this.guild) {
-            this.channel = this.guild.channels.cache.get(data.channel_id);
         }
     }
 
@@ -81,7 +84,7 @@ export default class Message {
 
     async reply (message: MessageContent): Promise<Message> {
         await this.waitForAuthor();
-        let data = Message.buildApiMessage(this.client, message);
+        let data = Message.buildApiMessage(message);
         data.message_reference = {
             message_id: this.id,
             channel_id: this.channel.id,
@@ -120,11 +123,11 @@ export default class Message {
     }
 
     async edit (message: MessageContent): Promise<Message> {
-        return this.modify(Message.buildApiMessage(this.client, message));
+        return this.modify(Message.buildApiMessage(message, true));
     }
     
     async modify (data: any): Promise<Message> {
-        let res = await HTTPChannel.editMessage(this.client, this.channel.id, this.id, data);
+        let res = await HTTPChannel.editMessage(this.client, this.channel.id, this.id, data, this);
         this.build(res);
         return this.set();
     }
@@ -147,31 +150,46 @@ export default class Message {
     }
 
     private set (): Message {
-        if (this.guild) {
-            this.guild.channels.cache.get(this.channel.id).messages.cache.set(this.id, this);
-        }
+        if (this.guild) this.guild.channels.cache.get(this.channel.id).messages.cache.set(this.id, this);
         return this;
     }
 
-    private static buildApiMessage (client: Client, data: MessageContent): any {
+    private static buildApiMessage (data: MessageContent, edit: boolean = false): any {
         if (typeof data === 'string') {
             return { content: data };
         }
         if (data instanceof Embed) {
             return { embeds: [ data.format() ] };
         }
-        return {
-            content: data.content ?? null,
-            embeds: data.embeds?.map(e => e.format()) ?? [],
-            tts: data.tts ?? false,
-            nonce: data.nonce ?? null,
-            allowed_mentions: {
-                parse: data.allowedMentions?.parse ?? null,
-                users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? null,
-                roles: data.allowedMentions?.roles?.map((r: RoleResolvable) => Role['toIdOnly'](r)) ?? null,
-                replied_user: data.mentionRepliedUser ?? false,
-            },
-        };
+        if (edit) {
+            return {
+                content: data.content ?? undefined,
+                embeds: data.embeds?.map(e => e.format()) ?? undefined,
+                tts: data.tts ?? undefined,
+                nonce: data.nonce ?? undefined,
+                attachments: data.attachments ?? undefined,
+                allowed_mentions: {
+                    parse: data.allowedMentions?.parse ?? undefined,
+                    users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? undefined,
+                    roles: data.allowedMentions?.roles?.map((r: RoleResolvable) => Role['toIdOnly'](r)) ?? undefined,
+                    replied_user: data.mentionRepliedUser ?? undefined,
+                },
+            };
+        } else {
+            return {
+                content: data.content ?? null,
+                embeds: data.embeds?.map(e => e.format()) ?? [],
+                tts: data.tts ?? false,
+                nonce: data.nonce ?? null,
+                attachments: data.attachments ?? [],
+                allowed_mentions: {
+                    parse: data.allowedMentions?.parse ?? null,
+                    users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? null,
+                    roles: data.allowedMentions?.roles?.map((r: RoleResolvable) => Role['toIdOnly'](r)) ?? null,
+                    replied_user: data.mentionRepliedUser ?? false,
+                },
+            };
+        }
     }
 
 }
