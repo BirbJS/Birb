@@ -14,6 +14,6 @@ import Websocket from "../Websocket";
 export default async function GUILD_UPDATE (ws: Websocket, data: any): Promise<void> {
     ws.client.debug(`received guild update: ${data.id}`);
 
-    let guild = new Guild(ws.client, data)['set']();
+    const guild = Object.assign(ws.client.guilds.cache.get(data.id) as Guild, data as Guild)['set']()
     ws.client.emit('guildUpdate', guild);
 }
