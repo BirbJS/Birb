@@ -167,7 +167,7 @@ export default class Message {
                 embeds: data.embeds?.map(e => e.format()) ?? undefined,
                 tts: data.tts ?? undefined,
                 nonce: data.nonce ?? undefined,
-                attachments: data.attachments ?? [],
+                attachments: data.attachments ?? undefined,
                 allowed_mentions: {
                     parse: data.allowedMentions?.parse ?? undefined,
                     users: data.allowedMentions?.users?.map((u: UserResolvable) => User['toIdOnly'](u)) ?? undefined,
