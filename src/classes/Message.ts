@@ -31,6 +31,7 @@ export default class Message {
     guild: Guild | null = null;
     author: BaseUser | null = null;
     member: GuildMember | null = null;
+    readonly system: boolean;
     channel: TextBasedChannel = null!;
     attachments: MessageAttachment[] = [];
     flags: number = 0;
@@ -44,6 +45,7 @@ export default class Message {
 
     private build (data: any): void {
         this.baseAuthor = data.author || null;
+        this.system = false
 
         if ('content' in data) {
             this.content = data.content;
@@ -71,6 +73,8 @@ export default class Message {
             } else {
                 this.author = this.client.users.resolve(data.author.id, data.author ?? null) || null;
             }
+        } else {
+            this.system = true
         }
     }
 
