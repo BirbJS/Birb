@@ -11,6 +11,7 @@
 let Sharding: any;
 let DevTools: any;
 
+import { ChannelBlock, HTTPChannel, HTTPGuild, HTTPUser } from '..';
 import ClientError from '../errors/ClientError';
 import ClientWarning from '../errors/ClientWarning';
 import OptionError from '../errors/OptionError';
@@ -46,7 +47,14 @@ export default class Client {
         debug: false,
     }
 
+    readonly api = {
+        channels: HTTPChannel,
+        guilds: HTTPGuild,
+        users: HTTPUser,
+    }
+
     guilds: GuildBlock = null!;
+    channels: ChannelBlock = null!;
     users: UserBlock = null!;
     
     private events: any = {};
@@ -76,6 +84,7 @@ export default class Client {
         }
         this.options = Object.assign(this.options, options);
         this.guilds = new GuildBlock(this);
+        this.channels = new ChannelBlock(this);
         this.users = new UserBlock(this, {
             maxSize: 150000,
             removeOldest: true,

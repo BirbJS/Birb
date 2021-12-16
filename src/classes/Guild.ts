@@ -22,6 +22,7 @@ import GuildMember from './GuildMember';
 import { ChannelResolvable } from '../util/Types';
 import Validator from '../util/Validator';
 import HTTPUser from './http/HTTPUser';
+import GuildChannelBlock from './blocks/GuildChannelBlock';
 
 export default class Guild {
     
@@ -56,8 +57,8 @@ export default class Guild {
     rulesChannelId: string | null = null;
     afkTimeout: number = null!;
     roles: RoleBlock = null!;
-    channels: ChannelBlock = null!;
     members: GuildMemberBlock = null!;
+    channels: GuildChannelBlock = null!;
 
     constructor (client: Client, data: any) {
         if (typeof data.id !== 'string') {
@@ -85,12 +86,14 @@ export default class Guild {
             this.roles.cache.set(data.roles[i].id, new Role(this.client, data.roles[i], this));
         }
 
-        this.members = new GuildMemberBlock(this.client, this);
-        for ( let i = 0; i < data.members.length; i++ ) {
-            this.members.cache.set(data.members[i].id, new GuildMember(this.client, data.members[i], this));
+        if ('members' in data) {
+            this.members = new GuildMemberBlock(this.client, this);
+            for ( let i = 0; i < data.members.length; i++ ) {
+                this.members.cache.set(data.members[i].id, new GuildMember(this.client, data.members[i], this));
+            }
         }
 
-        this.channels = new ChannelBlock(this.client, this);
+        this.channels = new GuildChannelBlock(this.client);
         for ( let i = 0; i < data.channels.length; i++ ) {
             switch (data.channels[i].type) {
                 case 0:
