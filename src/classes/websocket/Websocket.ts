@@ -27,6 +27,7 @@ export default class Websocket extends InternalWebsocket {
     protected lastSequenceIdentifier = null;
     protected sessionIdentifier: string|null = null;
     protected doNotReconnect = false;
+    protected lastResume = 0;
 
     /**
      * Creates a websocket connection to a Discord gateway.
@@ -88,10 +89,10 @@ export default class Websocket extends InternalWebsocket {
      * Process a packet.
      * 
      * @param {any} data The packet's data.
-     * @returns {void}
+     * @returns {Promise<void>}
      * @private
      */
-    private onPacket (body: any): void {
+    private async onPacket (body: any): Promise<void> {
         body = this.processPacket(body);
         if (!body) {
             this.client.warn('received invalid gateway packet; ignoring it');
@@ -128,8 +129,21 @@ export default class Websocket extends InternalWebsocket {
 
                 break;
             }
+            case PacketOperation.RECONNECT: {
+                this.client.debug('discord has requested that we reconnect (the gateway is probably restarting); closing this connection to resume...');
+                this.close(1000);
+                await wait(100);
+                this.reconnect();
+                break;
+            }
+            case PacketOperation.INVALID_SESSION: {
+                this.client.warn('received invalid session error; sending normal identify packet');
+                this.status = Status.CONNECTING;
+                this.identify();
+                break;
+            }
             case PacketOperation.HELLO: {
-                if (this.status !== Status.CONNECTING) {
+                if (!this.isConnecting()) {
                     this.client.warn('received hello packet whilst not in connecting state; ignoring it');
                     return;
                 }
@@ -139,6 +153,9 @@ export default class Websocket extends InternalWebsocket {
                 this.lastHeartbeatAcked = true;
                 this.lastHeartbeat = Date.now();
                 this.ping = 0;
+                if (this.sessionIdentifier) {
+                    this.status = Status.RESUMING;
+                }
                 this.identify();
                 break;
             }
@@ -176,7 +193,7 @@ export default class Websocket extends InternalWebsocket {
      */
     private async onClose (code: number): Promise<void> {
         this.cleanup();
-        this.client.debug(`websocket closed with code ${code}`);
+        this.client.warn(`websocket closed with code ${code}`);
 
         if (!this.isConnected())
             // the disconnection was intentional
@@ -254,13 +271,14 @@ export default class Websocket extends InternalWebsocket {
                 break;
             }
             default: {
-                this.client.debug('websocket closed');
+                this.client.warn('websocket closed');
                 break;
             }
         }
 
         if (!this.doNotReconnect) {
             await wait(15000);
+            this.status = Status.DISCONNECTED;
             this.reconnect();
         } else {
             console.error(new WebsocketError('websocket closed; unable to reconnect'));
@@ -300,16 +318,21 @@ export default class Websocket extends InternalWebsocket {
      */
     private identify (): void {
         if (this.status === Status.RESUMING) {
-            this.client.debug('sending resume packet...');
-            this.send({
-                op: PacketOperation.RESUME,
-                d: {
-                    token: this.client.token,
-                    session_id: this.sessionIdentifier,
-                    seq: this.lastSequenceIdentifier || null,
-                },
-            });
-            return;
+            if (Date.now() - this.lastResume > 5000) {
+                this.client.debug('sending resume packet...');
+                this.send({
+                    op: PacketOperation.RESUME,
+                    d: {
+                        token: this.client.token,
+                        session_id: this.sessionIdentifier,
+                        seq: this.lastSequenceIdentifier || null,
+                    },
+                });
+                return;
+            } else {
+                this.client.warn('attempting to reidentify in quick succession; scrapping old session and identifying normally...');
+                this.status = Status.CONNECTING;
+            }
         }
         if (this.status !== Status.CONNECTING) {
             throw new WebsocketError('cannot send identify packet; not in connecting state');
@@ -368,7 +391,8 @@ export default class Websocket extends InternalWebsocket {
         if (!this.isConnected()) 
             // don't throw an error, it'll cause chaos
             return;
-
+        this.client.warn('closing websocket (`this.close()` called)...');
+        this.status = Status.DISCONNECTED;
         this.ws.close(code);
         this.cleanup();
     }
@@ -385,7 +409,7 @@ export default class Websocket extends InternalWebsocket {
         if (!this.isConnected())
             // don't throw an error, it'll cause chaos
             return;
-
+        this.client.warn('terminating websocket (`this.terminate()` called)...');
         this.ws.terminate();
         this.cleanup();
     }
@@ -398,6 +422,16 @@ export default class Websocket extends InternalWebsocket {
      */
     isConnected (): boolean {
         return ![Status.IDLE, Status.CONNECTING, Status.RECONNECTING, Status.DISCONNECTED].includes(this.status);
+    }
+
+    /**
+     * Check if the websocket is connecting.
+     * 
+     * @returns {boolean}
+     * @public
+     */
+    isConnecting (): boolean {
+        return [Status.CONNECTING, Status.RECONNECTING].includes(this.status);
     }
 
     /**
@@ -452,7 +486,6 @@ export default class Websocket extends InternalWebsocket {
     private cleanup (): void {
         if (this.schedulerLoop)
             clearInterval(this.schedulerLoop);
-
         this.ping = 0;
         this.lastHeartbeat = 0;
         this.lastHeartbeatAcked = false;
