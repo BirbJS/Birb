@@ -17,7 +17,7 @@ import GuildMember from './GuildMember';
 import TextBasedChannel from './TextBasedChannel';
 import { UserResolvable, RoleResolvable, MessageContent } from '../util/Types';
 import Embed from './message/embed/MessageEmbed';
-import { MessageFlags, MessageTypes } from '../util/Constants';
+import { MessageFlags, MessageTypes, SystemMessageTypes } from '../util/Constants';
 import User from './User';
 import MessageAttachment from './message/MessageAttachment';
 import { ReadStream } from 'fs';
@@ -34,7 +34,7 @@ export default class Message {
     system: boolean = false;
     channel: TextBasedChannel = null!;
     attachments: MessageAttachment[] = [];
-    type: MessageTypes = MessageTypes.DEFAULT;
+    type: keyof typeof MessageTypes = null!;
     flags: number = 0;
     private baseAuthor: any = null;
 
@@ -68,8 +68,8 @@ export default class Message {
             } catch (err) {}
         }
         if ('type' in data) {
-            if (data.type > 0 && data.type < 23) this.system = true;
-            this.type = data.type;
+            if(SystemMessageTypes[data.type]) this.system = true
+            this.type = MessageTypes[data.type] as keyof typeof MessageTypes
         }
         if (!this.webhookId && !this.system) {
             if (data.author.id == this.client.me?.id) {
