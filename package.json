@@ -27,7 +27,7 @@
     },
     "homepage": "https://birb.js.org",
     "devDependencies": {
-        "@birbjs/devtools": "^1.1.13",
+        "@birbjs/devtools": "^1.1.14",
         "@types/node": "^16.11.11",
         "@types/ws": "^8.2.1",
         "copyfiles": "^2.4.1",
