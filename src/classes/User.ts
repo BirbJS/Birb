@@ -98,16 +98,6 @@ export default class User extends BaseUser {
     }
 
     /**
-     * Supress embeds for this message.
-     *
-     * @returns {Promise<Message>} The updated message
-     * @public
-     */
-    supressEmbeds(): void {
-        
-    }
-
-    /**
      * Determine if the user's avatar is default.
      *
      * @returns {boolean} Whether or not the user's avatar is default.

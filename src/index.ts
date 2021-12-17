@@ -92,6 +92,8 @@ import {
     GatewayCloseCode,
     ActivityType,
     MessageFlags,
+    MessageTypes,
+    SystemMessageTypes,
 } from './util/Constants';
 import Pair from './util/Pair';
 import {
@@ -177,6 +179,8 @@ export {
     GatewayCloseCode,
     ActivityType,
     MessageFlags,
+    MessageTypes,
+    SystemMessageTypes,
 
     GuildResolvable,
     RoleResolvable,
