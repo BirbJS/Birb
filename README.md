@@ -16,7 +16,7 @@ With just a few lines of code, you can get a Discord bot connected to the API.
 [Discord API Server](https://discord.gg/discord-developers)
 
 ## Installation
-**Node.js v14.0.0+ is required.**
+**Node.js v16.0.0+ is required.**
 ```sh-session
 npm install birb
 # or
