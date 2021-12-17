@@ -1,0 +1,11 @@
+{
+    "entryPoints": ["./src/index.ts"],
+    "entryPointStrategy": "resolve",
+    "excludeExternals": false,
+    "excludePrivate": false,
+    "excludeProtected": false,
+    "excludeInternal": false,
+    "json": "./docs.json",
+    "darkHighlightTheme": "github-dark-dimmed",
+    "lightHighlightTheme": "github-light"
+}

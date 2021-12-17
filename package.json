@@ -1,6 +1,6 @@
 {
     "name": "birb",
-    "version": "1.0.0-pre.3",
+    "version": "1.0.0-pre.4",
     "description": "A JavaScript wrapper for the Discord API.",
     "main": "index.js",
     "types": "index.d.ts",
@@ -9,7 +9,8 @@
         "publish-the-awesomeness": "tsc && npm run files && node test.js && cd dist/ && npm publish --dry-run",
         "publish-release": "tsc && npm run files && cd dist/ && npm publish",
         "files": "copyfiles package.json package-lock.json tsconfig.json .npmignore LICENSE README.md dist",
-        "build": "tsc --build --verbose && npm run files"
+        "build": "tsc --build --verbose && npm run files",
+        "docs": "typedoc && node node_modules/@birbjs/devtools/pack/Documentation.js"
     },
     "repository": {
         "type": "git",
@@ -26,10 +27,11 @@
     },
     "homepage": "https://birb.js.org",
     "devDependencies": {
-        "@birbjs/devtools": "^1.0.4",
+        "@birbjs/devtools": "^1.1.14",
         "@types/node": "^16.11.11",
         "@types/ws": "^8.2.1",
         "copyfiles": "^2.4.1",
+        "typedoc": "^0.22.10",
         "typescript": "^4.5.2"
     },
     "dependencies": {

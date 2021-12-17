@@ -1,5 +1,7 @@
 node_modules/
 dist/
+docs/
 logs/
 TESTING.js
+docs.json
 .DS_Store
