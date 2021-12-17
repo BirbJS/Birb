@@ -3,39 +3,57 @@
 
 [![NPM](https://nodei.co/npm/birb.png)](https://nodei.co/npm/birb/)
 
-# Birb.JS
-Birb.JS is a Discord API wrapper for JavaScript and TypeScript (we include built-in type declarations). It’s built to be simple, yet powerful. With just a few lines of code, you can get a Discord bot connected to the Discord API. **Birb.JS is still in development. It is highly recommended you don’t use it until it’s ready.**
+## About
+Birb.JS is a simple, yet powerful [Discord API](https://discord.dev) wrapper for [Node.JS](https://nodejs.org).    
+With just a few lines of code, you can get a Discord bot connected to the API.    
+**Birb.JS is still in development. It is highly recommended you DO NOT use it until it’s ready.**
 
 ## Links
 [Documentation](https://birb.js.org/)    
-[GitHub Repo](https://github.com/BirbJS/Birb)    
-[NPM Page](https://npmjs.com/package/birb)
+[GitHub](https://github.com/BirbJS/Birb)    
+[NPM](https://npmjs.com/package/birb)    
+[Birb.JS Server](https://discord.gg/FDEjx3xmtr)    
+[Discord API Server](https://discord.gg/discord-developers)
 
 ## Installation
-Birb.JS is listed on [npm](https://www.npmjs.com/package/birb)! You can install it by running `npm install birb --save`.
+**Node.js v16.0.0+ is required.**
+```sh-session
+npm install birb
+# or
+yarn add birb
+# or
+pnpm add birb
+```
 
 ### Optional Addons
-Birb.JS comes with a few optional addons made by the Birb.JS team. Please view their documentation for more information on how to use them. **None of these libraries are installed by default** and all of them are completely optional.
+Birb.JS comes with a few optional addons made by our team.    
+Please view their documentation for more information on how to use them.
 
-- [@birbjs/framework](https://birb.js.org/addons/framework) is a framework to make the development of Discord bots easier and more efficient. It includes an in-built command handler, permission system, event manager and built-in slash command support: `npm install @birbjs/framework --save`
-- [@birbjs/sharding](https://birb.js.org/addons/sharding) is a sharding utility for Birb.JS that makes it easier to shard your Discord bot: `npm install @birbjs/sharding --save`
-- [@birbjs/cluster](https://birb.js.org/addons/cluster) is a clustering utility for Birb.JS that is built for larger Discord bots that need to split shards across multiple seperate servers: `npm install @birbjs/cluster --save`
-- [@birbjs/devtools](https://birb.js.org/addons/devtools) is a tool for the developers, contributors and maintainers of Birb.JS (it includes some important features like debugging and log-keeping): `npm install @birbjs/devtools --save-dev`
+- [@birbjs/framework](https://birb.js.org/addons/framework) is a framework to make the development of Discord bots easier and more efficient. It includes an in-built command handler, permission system, event manager and built-in slash command support (`npm install @birbjs/framework`)
+- [@birbjs/sharding](https://birb.js.org/addons/sharding) is a sharding utility that makes it easier to shard your Discord bot (`npm install @birbjs/sharding`)
+- [@birbjs/cluster](https://birb.js.org/addons/cluster) is a clustering utility that is built for larger Discord bots who need to split shards across multiple seperate servers (`npm install @birbjs/cluster`)
+- [@birbjs/devtools](https://birb.js.org/addons/devtools) is a debugging tool for Birb.js developers, contributors and maintainers. (`npm install @birbjs/devtools --save-dev`)
 
 ### Optional Dependencies
-These dependencies aren't required, but will allow Birb.JS to do things more efficiently.
+These dependencies aren't required, but will allow Birb.JS to do things more efficiently. **NPM may attempt to install these by default.** To force NPM to not attempt to install these, add the `--no-optional` command line argument.
 
-- [erlpack](https://npmjs.com/package/erlpack) for faster serialization of websocket data: `npm install erlpack --save`
-- [zlib-sync](https://npmjs.com/package/zlib-sync) for websocket compression: `npm install zlib-sync --save`
-- [bufferutil](https://npmjs.com/package/bufferutil) quicker masking and unmasking of websocket data and packets: `npm install bufferutil --save`
-- [utf-8-validate](https://npmjs.com/package/utf-8-validate) more efficient websocket data validation: `npm install utf-8-validate --save`
+- [erlpack](https://npmjs.com/package/erlpack) for faster (de)serialization of websocket data (`npm install erlpack`)
+- [zlib-sync](https://npmjs.com/package/zlib-sync) for websocket compression (`npm install zlib-sync`)
+- [bufferutil](https://npmjs.com/package/bufferutil) for quicker (un)masking of websocket data and packets (`npm install bufferutil`)
+- [utf-8-validate](https://npmjs.com/package/utf-8-validate) for more efficient websocket data validation (`npm install utf-8-validate`)
+- [@discordjs/opus](https://npmjs.com/package/@discordjs/opus) for voice support - e.g. talking in voice channels (`npm install @discordjs/opus`)
 
-Most of these dependencies require [node-gyp](https://github.com/nodejs/node-gyp) which some users may struggle to install (mostly due to very unhelpful errors). If you're on Windows and having issues, try running `npm install windows-build-tools --global` in an **administrator** command prompt. If you're on Ubuntu, try `sudo apt install build-tools`. *Remember that these are optional dependencies. If you're struggling, feel free to ignore them. Birb.JS will only use them if they are available.*
+**Most of these dependencies require [node-gyp](https://github.com/nodejs/node-gyp) which some users may struggle to install (mostly due to very unhelpful errors).**
+
+If you're on Windows, run `npm install windows-build-tools --global` in an **administrator** command prompt.    
+If you're on Ubuntu, run `sudo apt install build-tools`.    
+
+*Remember that these are optional dependencies. If you're struggling, feel free to ignore them. Birb.JS will only use them if they are available.*
 
 ## Example
 ```js
 const { Client, Intents } = require('birb');
-let client = new Client({
+const client = new Client({
     intents: new Intents(Intents.FLAGS.ALL),
 });
 
@@ -43,19 +61,19 @@ client.listen('ready', () => {
     console.log('Connected to Discord!');
 });
 
-client.connect('your_token');
+client.connect('your_bot_token');
 ```
 
 ## Credits
 
 ### Main Contributors
-[@knokbak](https://github.com/knokbak)*PL, [@axisiscool](https://github.com/axisiscool)
+[@knokbak](https://github.com/knokbak)*PL, [@axisiscool](https://github.com/axisiscool), [@PalmDevs](https://github.com/PalmDevs)
 
 ### Dependencies
 [ws](https://npmjs.com/package/ws), [petitio](https://npmjs.com/package/petitio), [crypit](https://npmjs.com/package/crypit), [@sapphire/snowflake](https://npmjs.com/package/@sapphire/snowflake), [erlpack](https://npmjs.com/package/erlpack), [bufferutil](https://npmjs.com/package/bufferutil), [utf-8-validate](https://npmjs.com/package/utf-8-validate), [zlib-sync](https://npmjs.com/package/zlib-sync)
 
 ### Dev Dependencies
-[typescript](https://npmjs.com/package/typescript), [copyfiles](https://npmjs.com/package/copyfiles), [@types/node](https://npmjs.com/package/@types/node), [@types/ws](https://npmjs.com/package/@types/ws)
+[typescript](https://npmjs.com/package/typescript), [copyfiles](https://npmjs.com/package/copyfiles), [@types/node](https://npmjs.com/package/@types/node), [@types/ws](https://npmjs.com/package/@types/ws), [@birbjs/devtools](https://npmjs.com/package/@birbjs/devtools)
 
 ## Licensing
-Birb.JS is currently licensed under the [Mozilla Public License 2.0](https://github.com/BirbJS/Birb/blob/main/LICENSE). You're free to use it as a library in both personal and commercial projects, free-of-charge.
+Birb.js is currently licensed under the [Mozilla Public License 2.0](https://github.com/BirbJS/Birb/blob/main/LICENSE). You're free to use it as a library in both personal and commercial projects, free-of-charge.
