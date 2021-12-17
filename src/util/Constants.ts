@@ -116,73 +116,73 @@ export enum SystemChannelFlags {
 
 // Guild
 
-    // Guild Settings Level
+// Guild Settings Level
 
-    export enum NotificationLevel {
-        ALL_MESSAGES = 0,
-        ONLY_MENTIONS = 1,
-    }
+export enum NotificationLevel {
+    ALL_MESSAGES = 0,
+    ONLY_MENTIONS = 1,
+}
 
-    export enum VerificationLevel {
-        NONE = 0,
-        LOW = 1,
-        MEDIUM = 2,
-        HIGH = 3,
-        VERY_HIGH = 4,
-    }
+export enum VerificationLevel {
+    NONE = 0,
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 3,
+    VERY_HIGH = 4,
+}
 
-    export enum MFALevel {
-        NONE = 0,
-        ELEVATED = 1,
-    }
+export enum MFALevel {
+    NONE = 0,
+    ELEVATED = 1,
+}
 
-    export enum ExplicitContentFilterLevel {
-        DISABLED = 0,
-        MEMBERS_WITHOUT_ROLES = 1,
-        ALL_MEMBERS = 2,
-    }
+export enum ExplicitContentFilterLevel {
+    DISABLED = 0,
+    MEMBERS_WITHOUT_ROLES = 1,
+    ALL_MEMBERS = 2,
+}
 
-    export enum NSFWLevel {
-        UNKNOWN = 0,
-        EXPLICIT = 1,
-        SAFE = 2,
-        AGE_RESTRICTED = 3,
-    }
+export enum NSFWLevel {
+    UNKNOWN = 0,
+    EXPLICIT = 1,
+    SAFE = 2,
+    AGE_RESTRICTED = 3,
+}
 
-    // Guild Boost Level
+// Guild Boost Level
 
-    export enum PremiumTier {
-        NONE = 0,
-        TIER_1 = 1,
-        TIER_2 = 2,
-        TIER_3 = 3,
-    }
+export enum PremiumTier {
+    NONE = 0,
+    TIER_1 = 1,
+    TIER_2 = 2,
+    TIER_3 = 3,
+}
 
-    // Guild Events
+// Guild Events
 
-    export enum GuildScheduledEventsPrivacyLevel {
-        GUILD_ONLY = 2,
-    }
+export enum GuildScheduledEventsPrivacyLevel {
+    GUILD_ONLY = 2,
+}
 
-    export enum GuildScheduledEventsEntityTypes {
-        STAGE_INSTANCE = 1,
-        VOICE = 2,
-        EXTERNAL = 3,
-    }
+export enum GuildScheduledEventsEntityTypes {
+    STAGE_INSTANCE = 1,
+    VOICE = 2,
+    EXTERNAL = 3,
+}
 
-    // Guild Invite
+// Guild Invite
 
-    export enum InviteTargetTypes {
-        STREAM = 1,
-        EMBEDDED_APPLICATION = 2,
-    }
+export enum InviteTargetTypes {
+    STREAM = 1,
+    EMBEDDED_APPLICATION = 2,
+}
 
-    // Guild Stage
+// Guild Stage
 
-    export enum StageInstancePrivacyLevel {
-        PUBLIC = 1,
-        GUILD_ONLY = 2,
-    }
+export enum StageInstancePrivacyLevel {
+    PUBLIC = 1,
+    GUILD_ONLY = 2,
+}
 
 
 // Presence
