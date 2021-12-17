@@ -21,7 +21,7 @@ export default class BaseUser {
     bot: boolean = false;
     system: boolean = false;
     banner: string | null = null;
-    accent_color: string | null = null;
+    accentColor: string | null = null;
     flags: string | null = null;
 
     constructor (client: Client, data: any) {
