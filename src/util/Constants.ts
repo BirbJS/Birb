@@ -8,6 +8,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+
+/* 
+ *  API Constants
+ *  These will be used for API connections
+ */
+
+
+// Client Intents
+
 export enum Intents {
     GUILDS = (1 << 0),
     GUILD_MEMBERS = (1 << 1),
@@ -29,36 +38,8 @@ export enum Intents {
     ALL = 98303,
 }
 
-export enum NSFWLevel {
-    UNKNOWN = 0,
-    EXPLICIT = 1,
-    SAFE = 2,
-    AGE_RESTRICTED = 3,
-}
 
-export enum MFALevel {
-    NONE = 0,
-    ELEVATED = 1,
-}
-
-export enum ExplicitContentFilterLevel {
-    DISABLED = 0,
-    MEMBERS_WITHOUT_ROLES = 1,
-    ALL_MEMBERS = 2
-}
-
-export enum NotificationLevel {
-    ALL_MESSAGES = 0,
-    ONLY_MENTIONS = 1,
-}
-
-export enum VerificationLevel {
-    NONE = 0,
-    LOW = 1,
-    MEDIUM = 2,
-    HIGH = 3,
-    VERY_HIGH = 4,
-}
+// Gateway
 
 export enum Status {
     IDLE = 0,
@@ -103,6 +84,109 @@ export enum GatewayCloseCode {
     DISALLOWED_INTENTS = 4014,
 }
 
+/*
+ *  Data Constants
+ *  Constants for data types that the API sent
+ */
+
+
+// Channel
+
+export enum ChannelTypes {
+    GUILD_TEXT = 0,
+    DM = 1,
+    GUILD_VOICE	= 2,
+    GROUP_DM = 3,
+    GUILD_CATEGORY = 4,
+    GUILD_NEWS = 5,
+    GUILD_STORE	= 6,
+    GUILD_NEWS_THREAD = 10,
+    GUILD_PUBLIC_THREAD	= 11,
+    GUILD_PRIVATE_THREAD = 12,
+    GUILD_STAGE_VOICE = 13,
+}
+
+export enum SystemChannelFlags {
+    SUPPRESS_JOIN_NOTIFICATIONS	= (1 << 0),
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS	= (1 << 1),
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS	= (1 << 2),
+    SUPPRESS_JOIN_NOTIFICATION_REPLIES	= (1 << 3),
+}
+
+
+// Guild
+
+// Guild Settings Level
+
+export enum NotificationLevel {
+    ALL_MESSAGES = 0,
+    ONLY_MENTIONS = 1,
+}
+
+export enum VerificationLevel {
+    NONE = 0,
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 3,
+    VERY_HIGH = 4,
+}
+
+export enum MFALevel {
+    NONE = 0,
+    ELEVATED = 1,
+}
+
+export enum ExplicitContentFilterLevel {
+    DISABLED = 0,
+    MEMBERS_WITHOUT_ROLES = 1,
+    ALL_MEMBERS = 2,
+}
+
+export enum NSFWLevel {
+    UNKNOWN = 0,
+    EXPLICIT = 1,
+    SAFE = 2,
+    AGE_RESTRICTED = 3,
+}
+
+// Guild Boost Level
+
+export enum PremiumTier {
+    NONE = 0,
+    TIER_1 = 1,
+    TIER_2 = 2,
+    TIER_3 = 3,
+}
+
+// Guild Events
+
+export enum GuildScheduledEventsPrivacyLevel {
+    GUILD_ONLY = 2,
+}
+
+export enum GuildScheduledEventsEntityTypes {
+    STAGE_INSTANCE = 1,
+    VOICE = 2,
+    EXTERNAL = 3,
+}
+
+// Guild Invite
+
+export enum InviteTargetTypes {
+    STREAM = 1,
+    EMBEDDED_APPLICATION = 2,
+}
+
+// Guild Stage
+
+export enum StageInstancePrivacyLevel {
+    PUBLIC = 1,
+    GUILD_ONLY = 2,
+}
+
+
+// Presence
+
 export enum ActivityType {
     PLAYING = 0,
     STREAMING = 1,
@@ -111,6 +195,9 @@ export enum ActivityType {
     CUSTOM = 4,
     COMPETING = 5,
 }
+
+
+// Message
 
 export enum MessageTypes {
     DEFAULT = 0,
@@ -169,4 +256,53 @@ export enum MessageFlags {
     HAS_THREAD = (1 << 5),
     EPHEMERAL = (1 << 6),
     LOADING = (1 << 7),
+}
+
+
+// Sticker
+
+export enum StickerTypes {
+    STANDARD = 1,
+    GUILD = 2,
+}
+
+export enum StickerFormatTypes {
+    PNG = 1,
+    APNG = 2,
+    LOTTIE = 3,
+}
+
+
+// User
+
+export enum UserFlags {
+	None = 0,
+	STAFF = (1 << 0),
+	PARTNER = (1 << 1),
+	HYPESQUAD = (1 << 2),
+	BUG_HUNTER_LEVEL_1 = (1 << 3),
+	HYPESQUAD_ONLINE_HOUSE_1 = (1 << 6),
+	HYPESQUAD_ONLINE_HOUSE_2 = (1 << 7),
+	HYPESQUAD_ONLINE_HOUSE_3 = (1 << 8),
+	PREMIUM_EARLY_SUPPORTER	 = (1 << 9),
+	TEAM_PSEUDO_USER = (1 << 10),
+	BUG_HUNTER_LEVEL_2 = (1 << 14),
+	VERIFIED_BOT = (1 << 16),
+	VERIFIED_DEVELOPER = (1 << 17),
+	CERTIFIED_MODERATOR = (1 << 18),
+	BOT_HTTP_INTERACTIONS = (1 << 19),
+}
+
+export enum VisibilityTypes {
+    None = 0,
+    Everyone = 1,
+}
+
+
+// Webhook
+
+export enum WebhookTypes {
+    "Incoming" = 1,
+    "Channel Follower" = 2,
+    "Application" = 3,
 }
