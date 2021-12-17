@@ -39,7 +39,7 @@ export default class User extends BaseUser {
             this.banner = data.banner;
         }
         if ('accent_color' in data) {
-            this.accent_color = data.accent_color;
+            this.accentColor = data.accent_color;
         }
     }
 
