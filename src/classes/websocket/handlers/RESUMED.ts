@@ -11,5 +11,7 @@
 import Websocket from '../Websocket';
 
 export default async function RESUMED (ws: Websocket, data: any): Promise<void> {
+    ws.heartbeat();
     ws['lastResume'] = Date.now();
+    ws['scheduler']();
 }

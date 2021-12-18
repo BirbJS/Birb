@@ -501,13 +501,12 @@ export default class Websocket extends InternalWebsocket {
      * @private
      */
     private scheduler () {
+        this.client.debug('scheduler loop started');
         if (this.schedulerLoop) {
             clearInterval(this.schedulerLoop);
         }
         this.schedulerLoop = setInterval(() => {
-            if (![Status.READY, Status.WAITING_FOR_GUILDS].includes(this.status)) {
-                return;
-            }
+            if (!this.isConnected()) return;
             if (!this.heartbeatInterval || Date.now() >= this.lastHeartbeat + this.heartbeatInterval) {
                 this.heartbeat();
             }
