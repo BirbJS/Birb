@@ -18,8 +18,7 @@ import OptionError from '../errors/OptionError';
 export default class ClientUser extends BaseUser {
 
     /**
-     * The ClientUser represents the user that is logged in
-     * to the client.
+     * Represents the user that is logged in to the client.
      * 
      * @param {Client} client The client this user belongs to.
      * @param {any} data The data of this user.
@@ -59,7 +58,7 @@ export default class ClientUser extends BaseUser {
     }
 
     /**
-     * Updates the User's presence (or status).
+     * Updates the user's presence.
      * 
      * @param {object} [options] The options to use when updating the status.
      * @param {ActivityStatus} [options.status='online'] The status to set.
