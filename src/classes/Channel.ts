@@ -27,7 +27,7 @@ export default class Channel {
     readonly id: string;
 
     /**
-     * A Channel represents any channel on Discord.
+     * Represents any kind of channel on Discord.
      * 
      * @param {Client} client The client this channel belongs to.
      * @param {any} data The data of this channel.
