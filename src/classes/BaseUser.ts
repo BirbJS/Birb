@@ -59,7 +59,7 @@ export default class BaseUser {
     /**
      * The flags of this user.
      */
-    flags: string[] | null = null;
+    flags: string | null = null;
 
     /**
      * A BaseUser is a model user that is not a partial
