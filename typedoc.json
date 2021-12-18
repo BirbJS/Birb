@@ -2,9 +2,9 @@
     "entryPoints": ["./src/index.ts"],
     "entryPointStrategy": "resolve",
     "excludeExternals": false,
-    "excludePrivate": false,
+    "excludePrivate": true,
     "excludeProtected": false,
-    "excludeInternal": false,
+    "excludeInternal": true,
     "json": "./docs.json",
     "darkHighlightTheme": "github-dark-dimmed",
     "lightHighlightTheme": "github-light"

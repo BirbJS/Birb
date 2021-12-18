@@ -10,8 +10,16 @@
 
 export default class BitsBlock {
 
+    /**
+     * The flags of the bitfield.
+     */
     flags: number = 0;
 
+    /**
+     * A BitsBlock stores bitfield data provided by Discord.
+     * 
+     * @param {...number[]} flags The flags to set.
+     */
     constructor (...flags: number[]) {
         if (flags) {
             for ( let i = 0; i < flags.length; ++i ) this.add(flags[i]);
@@ -21,9 +29,8 @@ export default class BitsBlock {
     /**
      * Adds a flag (bit) to the block.
      * 
-     * @param {number} flags The flags to add.
+     * @param {...number[]} flags The flags to add.
      * @returns {BitsBlock} The updated block.
-     * @public
      */
     add (...flags: number[]): BitsBlock {
         for ( let i = 0; i < flags.length; ++i ) {
@@ -36,9 +43,8 @@ export default class BitsBlock {
     /**
      * Sets the flags of the block.
      * 
-     * @param {number} flags The flags to set.
+     * @param {...number[]} flags The flags to set.
      * @returns {BitsBlock} The updated block.
-     * @public
      */
     set (flags: number): BitsBlock {
         this.flags = flags;
@@ -48,9 +54,8 @@ export default class BitsBlock {
     /**
      * Removes a flag (bit) from the block.
      * 
-     * @param {number} flags The flags to remove.
+     * @param {...number[]} flags The flags to remove.
      * @returns {BitsBlock} The updated block.
-     * @public
      */
     remove (...flags: number[]): BitsBlock {
         for ( let i = 0; i < flags.length; ++i ) {
@@ -65,7 +70,6 @@ export default class BitsBlock {
      * 
      * @param {number} flag The flag to check.
      * @returns {boolean} The result.
-     * @public
      */
     has (flag: number): boolean {
         return (this.flags & flag) === flag;
@@ -75,7 +79,6 @@ export default class BitsBlock {
      * Check if the block is empty.
      * 
      * @returns {boolean} `true` if the block is empty, `false` otherwise.
-     * @public
      */
     isEmpty (): boolean {
         return this.flags == 0;

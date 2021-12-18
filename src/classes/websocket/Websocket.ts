@@ -17,24 +17,61 @@ import ShardingError from '../../errors/ShardingError';
 
 export default class Websocket extends InternalWebsocket {
 
+    /**
+     * The websocket instance from the `ws` package.
+     */
     ws: WS = null!;
-    ping: number = 0;
+    /**
+     * The current latency (in milliseconds) between the
+     * client and the Discord gateway.
+     */
+    latency: number = 0;
+    /**
+     * The guild IDs that the client is expecting to 
+     * receive from the Discord gateway.
+     */
     expectedGuilds: Set<string> = new Set();
-    protected lastHeartbeat = 0;
-    protected lastHeartbeatAcked = false;
-    protected heartbeatInterval = null;
-    protected schedulerLoop: NodeJS.Timer = null!;
-    protected lastSequenceIdentifier = null;
-    protected sessionIdentifier: string|null = null;
-    protected doNotReconnect = false;
-    protected lastResume = 0;
+    /**
+     * The time the last heartbeat was sent.
+     */
+    lastHeartbeat: number = 0;
+    /**
+     * Whether or not the last heartbeat was acknowledged
+     * by the Discord gateway.
+     */
+    lastHeartbeatAcked: boolean = false;
+    /**
+     * The interval to send heartbeats.
+     */
+    heartbeatInterval: number | null = null;
+    /**
+     * The websocket's scheduler loop.
+     */
+    schedulerLoop: NodeJS.Timer | null = null;
+    /**
+     * The last sequence identifier received from the
+     * Discord gateway.
+     */
+    lastSequenceIdentifier: number | null = null;
+    /**
+     * The session identifier from the Discord gateway.
+     */
+    sessionIdentifier: string | null = null;
+    /**
+     * Whether or not to prevent the websocket from
+     * attempting to reconnect. Used to prevent loops.
+     */
+    private doNotReconnect: boolean = false;
+    /**
+     * The time the last resume packet was sent.
+     */
+    lastResume: number = 0;
 
     /**
      * Creates a websocket connection to a Discord gateway.
      * 
      * @param {Client} client The client.
      * @param {string} domain The domain to connect to.
-     * @public
      */
     constructor (client: Client, domain: string) {
         super(client, domain);
@@ -43,8 +80,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Connect to the gateway.
      * 
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     connect (): void {
         if (this.status !== Status.IDLE) {
@@ -63,8 +99,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Reconnect to the gateway.
      * 
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     reconnect (): void {
         if (this.status === Status.IDLE) {
@@ -90,8 +125,7 @@ export default class Websocket extends InternalWebsocket {
      * Process a packet.
      * 
      * @param {any} data The packet's data.
-     * @returns {Promise<void>}
-     * @private
+     * @returns {Promise<void>} Voids once completed.
      */
     private async onPacket (body: any): Promise<void> {
         body = this.processPacket(body);
@@ -153,7 +187,7 @@ export default class Websocket extends InternalWebsocket {
                 this.heartbeatInterval = data.heartbeat_interval;
                 this.lastHeartbeatAcked = true;
                 this.lastHeartbeat = Date.now();
-                this.ping = 0;
+                this.latency = 0;
                 if (this.sessionIdentifier) {
                     this.status = Status.RESUMING;
                 }
@@ -162,8 +196,8 @@ export default class Websocket extends InternalWebsocket {
             }
             case PacketOperation.HEARTBEAT_ACK: {
                 this.lastHeartbeatAcked = true;
-                this.ping = Date.now() - this.lastHeartbeat;
-                this.client.debug(`discord acked our heartbeat; took them: ${this.ping}ms`);
+                this.latency = Date.now() - this.lastHeartbeat;
+                this.client.debug(`discord acked our heartbeat; took them: ${this.latency}ms`);
                 break;
             }
             default: {
@@ -176,8 +210,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Process the websocket opening.
      * 
-     * @returns {void}
-     * @private
+     * @returns {void} Voids once completed.
      */
     private onOpen (): void {
         this.client.debug('websocket opened');
@@ -188,8 +221,7 @@ export default class Websocket extends InternalWebsocket {
      * Process the websocket closing.
      * 
      * @param {number} code The closing code.
-     * @returns {Promise<void>}
-     * @private
+     * @returns {Promise<void>} Voids once completed.
      */
     private async onClose (code: number): Promise<void> {
         this.cleanup();
@@ -281,7 +313,7 @@ export default class Websocket extends InternalWebsocket {
             this.status = Status.DISCONNECTED;
             this.reconnect();
         } else {
-            console.error(new WebsocketError('websocket closed; unable to reconnect'));
+            throw new WebsocketError('websocket closed; unable to reconnect');
         }
     }
 
@@ -289,8 +321,7 @@ export default class Websocket extends InternalWebsocket {
      * Send a packet to the gateway.
      * 
      * @param {Object} data The data to send.
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once sent.
      */
     send (data: Object): void {
         this.client['logSend'](JSON.stringify(data));
@@ -313,8 +344,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Send an identify packet to the gateway.
      * 
-     * @returns {void}
-     * @private
+     * @returns {void} Voids once sent.
      */
     private identify (): void {
         if (this.status === Status.RESUMING) {
@@ -358,8 +388,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Send a heartbeat to the gateway.
      * 
-     * @returns {Promise<void>}
-     * @public
+     * @returns {Promise<void>} Voids once sent.
      */
     async heartbeat (): Promise<void> {
         if (!this.isConnected()) 
@@ -384,8 +413,7 @@ export default class Websocket extends InternalWebsocket {
      * Close the websocket.
      * 
      * @param {number} [code] The close code.
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     close (code?: number): void {
         if (!this.isConnected()) 
@@ -402,8 +430,7 @@ export default class Websocket extends InternalWebsocket {
      * that you've disconnected. Should only be used when
      * the gateway won't respond (e.g. timeouts).
      * 
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     terminate (): void {
         if (!this.isConnected())
@@ -417,8 +444,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Check if the websocket is connected.
      * 
-     * @returns {boolean}
-     * @public
+     * @returns {boolean} Whether or not the websocket is connected.
      */
     isConnected (): boolean {
         return ![Status.IDLE, Status.CONNECTING, Status.RECONNECTING, Status.DISCONNECTED].includes(this.status);
@@ -427,8 +453,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Check if the websocket is connecting.
      * 
-     * @returns {boolean}
-     * @public
+     * @returns {boolean} Whether or not the websocket is connecting.
      */
     isConnecting (): boolean {
         return [Status.CONNECTING, Status.RECONNECTING].includes(this.status);
@@ -437,8 +462,7 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Check if the websocket is closed.
      * 
-     * @returns {boolean}
-     * @public
+     * @returns {boolean} Whether or not the websocket is closed.
      */
     isClosed (): boolean {
         return [Status.IDLE, Status.DISCONNECTED].includes(this.status);
@@ -448,8 +472,7 @@ export default class Websocket extends InternalWebsocket {
      * Prevent reconnection.
      * 
      * @param {boolean} [doNotReconnect=true] Whether or not to prevent reconnection.
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     preventReconnect (value?: boolean): void {
         this.doNotReconnect = value ?? true;
@@ -459,8 +482,7 @@ export default class Websocket extends InternalWebsocket {
      * Set the websocket's status.
      * 
      * @param {Status} status The status to set.
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     setStatus (status: Status): void {
         this.status = status;
@@ -470,8 +492,7 @@ export default class Websocket extends InternalWebsocket {
      * Set the websocket's session identifier.
      * 
      * @param {string} sessionIdentifier The session identifier to set.
-     * @returns {void}
-     * @public
+     * @returns {void} Voids once completed.
      */
     setSessionIdentifier (sessionIdentifier: string): void {
         this.sessionIdentifier = sessionIdentifier;
@@ -480,13 +501,12 @@ export default class Websocket extends InternalWebsocket {
     /**
      * Clean up the websocket.
      * 
-     * @returns {void}
-     * @private
+     * @returns {void} Voids once completed.
      */
     private cleanup (): void {
         if (this.schedulerLoop)
             clearInterval(this.schedulerLoop);
-        this.ping = 0;
+        this.latency = 0;
         this.lastHeartbeat = 0;
         this.lastHeartbeatAcked = false;
         this.heartbeatInterval = null;
@@ -497,15 +517,14 @@ export default class Websocket extends InternalWebsocket {
      * Creates a loop that will manage repeating tasks. It
      * will call it's method every 50ms.
      * 
-     * @returns {void}
-     * @private
+     * @returns {NodeJS.Timer} The NodeJS loop.
      */
-    private scheduler () {
+    private scheduler (): NodeJS.Timer {
         this.client.debug('scheduler loop started');
         if (this.schedulerLoop) {
             clearInterval(this.schedulerLoop);
         }
-        this.schedulerLoop = setInterval(() => {
+        return this.schedulerLoop = setInterval(() => {
             if (!this.isConnected()) return;
             if (!this.heartbeatInterval || Date.now() >= this.lastHeartbeat + this.heartbeatInterval) {
                 this.heartbeat();

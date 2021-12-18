@@ -12,10 +12,27 @@ import EmbedChild from './EmbedChild';
 
 export default class EmbedField extends EmbedChild {
 
+    /**
+     * The name of the field.
+     */
     name: string = null!;
+    /**
+     * The value of the field.
+     */
     value: string = null!;
+    /**
+     * Whether or not this field is inline.
+     */
     inline: boolean = false;
 
+    /**
+     * An EmbedField stores data on a field of a
+     * MessageEmbed.
+     * 
+     * @param {string} name The name of the field.
+     * @param {string} value The value of the field.
+     * @param {boolean} [inline=false] Whether or not this field is inline.
+     */
     constructor (name: string, value: string, inline?: boolean) {
         super();
         this.name = name;
@@ -23,22 +40,45 @@ export default class EmbedField extends EmbedChild {
         this.inline = inline ?? false;
     }
 
-    setName (name: string) {
+    /**
+     * Set the name of the field.
+     * 
+     * @param {string} name The name of the field.
+     * @returns {EmbedField} The updated EmbedField.
+     */
+    setName (name: string): EmbedField {
         this.name = name;
+        return this;
     }
 
-    setValue (value: string) {
+    /**
+     * Set the value of the field.
+     * 
+     * @param {string} value The value of the field.
+     * @returns {EmbedField} The updated EmbedField.
+     */
+    setValue (value: string): EmbedField {
         this.value = value;
+        return this;
     }
 
-    setInline (inline: boolean) {
+    /**
+     * Set whether or not this field is inline.
+     * 
+     * @param {boolean} inline Whether or not this field is inline.
+     * @returns {EmbedField} The updated EmbedField.
+     */
+    setInline (inline: boolean): EmbedField {
         this.inline = inline;
+        return this;
     }
 
     /**
      * Format this class into an API-acceptable object.
+     * 
+     * @returns {any} The formatted object.
      */
-    format () {
+    format (): any {
         return {
             name: this.name,
             value: this.value,

@@ -12,7 +12,6 @@ import HTTPGuild from './http/HTTPGuild';
 import GuildError from '../errors/GuildError';
 import OptionError from '../errors/OptionError';
 import { NSFWLevel, MFALevel, NotificationLevel, VerificationLevel, ExplicitContentFilterLevel } from '../util/Constants';
-import ChannelBlock from './blocks/ChannelBlock';
 import RoleBlock from './blocks/RoleBlock';
 import Client from './Client';
 import Role from './Role';
@@ -26,40 +25,176 @@ import GuildChannelBlock from './blocks/GuildChannelBlock';
 
 export default class Guild {
     
+    /**
+     * The client this Guild belongs to.
+     */
     client: Client = null!;
+    /**
+     * The ID of this Guild.
+     */
     readonly id: string;
+    /**
+     * The name of this Guild.
+     */
     name: string = null!;
+    /**
+     * The guild's icon hash.    
+     * **Note:** This is not the same as an icon URL. Use
+     * the `getIconURL` method to get the icon URL of this
+     * guild.
+     */
     icon: string | null = null;
+    /**
+     * Whether or not Discord has marked this guild as Not
+     * Safe For Wumpus (explicit).
+     */
     nsfw: boolean = false;
+    /**
+     * The guild's discovery splash hash.    
+     * **Note:** This is not the same as a splash URL. Use
+     * the `getSplashURL` method to get the splash URL of
+     * this guild.
+     */
     discoverySplash: string | null = null;
+    /**
+     * The guild's banner hash.    
+     * **Note:** This is not the same as an banner URL.
+     * Use the `getBannerURL` method to get the icon URL of
+     * this guild.
+     */
     banner: string | null = null;
+    /**
+     * The guild's description.
+     */
     description: string | null = null;
+    /**
+     * The verification level of this guild.
+     */
     verificationLevel: VerificationLevel = null!;
+    /**
+     * The default notification level of this guild.
+     */
     defaultNotifications: NotificationLevel = null!;
+    /**
+     * Whether or not this guild is available to this
+     * client. **You should check this is set to `true`
+     * before performing actions on guilds.**
+     */
     available: boolean = false;
+    /**
+     * The ID of this guild's system channel where join
+     * notifications, boost messages, etc. are sent.
+     */
     systemChannelId: string | null = null;
+    /**
+     * The ID of the owner of this guild.
+     */
     ownerId: string = null!;
+    /**
+     * Whether or not this guild is deemed 'large' (at
+     * which point Discord will not automatically send a
+     * list of members).
+     */
     large: boolean = false;
+    /**
+     * The ID of the guild's AFK channel.
+     */
     afkChannelId: string | null = null;
+    /**
+     * The setting of the explicit content filter for this
+     * guild.
+     */
     explicitContentFilter: ExplicitContentFilterLevel = null!;
+    /**
+     * The maximum amount of members allowed in this guild.
+     * Reach out to [Discord support](https://dis.gd/support)
+     * if you're getting close to this limit and need it
+     * increased.
+     */
     maxMembers: number | null = null;
+    /**
+     * The preferred locale (language) for this Guild.
+     */
     preferredLocale: string | null = null;
+    /**
+     * The multi-factor authentication requirement level
+     * for this guild's staff members.
+     */
     mfaLevel: MFALevel = null!;
+    /**
+     * The vanity invite code this guild owns. `null` if it
+     * doesn't have one.
+     */
     vanityCode: string | null = null;
+    /**
+     * The Not Safe For Wumpus (explicit) level Discord has
+     * assigned to this guild. Discord uses this to block
+     * NSFW servers on iOS.
+     */
     nsfwLevel: NSFWLevel = null!;
+    /**
+     * The maximum amount of video channel members.
+     */
     maxVideoChannelUsers: number | null = null;
+    /**
+     * The approximate amount of members in this guild.
+     */
     approximateMemberCount: number | null = null;
+    /**
+     * The approximate amount of online members in this
+     * guild.
+     */
     approximatePresenceCount: number | null = null;
+    /**
+     * The amount of members who have used Discord Nitro
+     * to boost this guild (or have purchased a Nitro boost
+     * on its own for this guild).
+     */
     boosterCount: number | null = null;
+    /**
+     * The splash hash of this guild.
+     * **Note:** This is not the same as a splash URL.
+     * Use the `getSplashURL` method to get the splash URL
+     * of this guild.
+     */
     splash: string | null = null;
+    /**
+     * The member count of this guild.
+     */
     memberCount: number | null = null;
+    /**
+     * The boost tier of this guild.
+     */
     boostTier: number = null!;
+    /**
+     * The channel ID of the guild's rules or guidelines
+     * channel.
+     */
     rulesChannelId: string | null = null;
+    /**
+     * The amount of seconds to wait before moving AFK
+     * members to the AFK voice channel.
+     */
     afkTimeout: number = null!;
+    /**
+     * The roles this guild has.
+     */
     roles: RoleBlock = null!;
+    /**
+     * The members this guild has.
+     */
     members: GuildMemberBlock = null!;
+    /**
+     * The channels this guild has.
+     */
     channels: GuildChannelBlock = null!;
 
+    /**
+     * A Guild represents a Discord server.
+     * 
+     * @param {Client} client The client that this guild belongs to.
+     * @param {any} data The data for this guild.
+     */
     constructor (client: Client, data: any) {
         if (typeof data.id !== 'string') {
             throw new GuildError('invalid guild data provided');
@@ -69,7 +204,13 @@ export default class Guild {
         this.build(data);
     }
 
-    private build (data: any): void {
+    /**
+     * Builds this guild with the given data.
+     * 
+     * @param {any} data The data to build this guild with.
+     * @returns {Guild} This guild.
+     */
+    private build (data: any): Guild {
         this.name = data.name;
         this.verificationLevel = data.verification_level;
         this.defaultNotifications = data.default_message_notifications;
@@ -156,6 +297,8 @@ export default class Guild {
         if ('rules_channel_id' in data) {
             this.rulesChannelId = data.rules_channel_id;
         }
+
+        return this;
     }
 
     /**
@@ -164,7 +307,6 @@ export default class Guild {
      * @param {String} name The new name for the Guild.
      * @param {String} [reason] The reason for changing the Guild's name.
      * @returns {Promise<void>} A Promise that voids when the Guild's name has been changed.
-     * @public
      */
     async setName (name: string, reason?: string): Promise<void> {
         if (name === undefined) {
@@ -182,7 +324,6 @@ export default class Guild {
      * @param {VerificationLevel} level The new verification level for the Guild.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setVerificationLevel (level: VerificationLevel, reason?: string): Promise<void> {
         if (level === undefined) {
@@ -200,7 +341,6 @@ export default class Guild {
      * @param {NotificationLevel} level The new notification level for the Guild.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setDefaultNotifications (level: NotificationLevel, reason?: string): Promise<void> {
         if (level === undefined) {
@@ -218,7 +358,6 @@ export default class Guild {
      * @param {ExplicitContentFilterLevel} level The new explicit content filter level for the Guild.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setExplicitContentFilter (level: ExplicitContentFilterLevel, reason?: string): Promise<void> {
         if (level === undefined) {
@@ -236,7 +375,6 @@ export default class Guild {
      * @param {ChannelResolvable} channel The AFK timeout channel.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setAfkChannel (channel: ChannelResolvable, reason?: string): Promise<void> {
         if (channel === undefined) {
@@ -252,7 +390,6 @@ export default class Guild {
      * @param {number} seconds The AFK timeout in seconds.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setAfkTimeout (seconds: number, reason?: string): Promise<void> {
         if (seconds === undefined) {
@@ -267,7 +404,6 @@ export default class Guild {
      * @param {ChannelResolvable} channel The channel.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setSystemChannel (channel: ChannelResolvable, reason?: string): Promise<void> {
         if (channel === undefined) {
@@ -283,7 +419,6 @@ export default class Guild {
      * @param {ChannelResolvable} channel The channel.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setRulesChannel (channel: ChannelResolvable, reason?: string): Promise<void> {
         if (channel === undefined) {
@@ -299,7 +434,6 @@ export default class Guild {
      * @param {ChannelResolvable} channel The channel.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setPublicUpdatesChannel (channel: ChannelResolvable, reason?: string): Promise<void> {
         if (channel === undefined) {
@@ -315,7 +449,6 @@ export default class Guild {
      * @param {String} locale The new locale.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setPreferredLocale (locale: string, reason?: string): Promise<void> {
         if (locale === undefined) {
@@ -330,7 +463,6 @@ export default class Guild {
      * @param {String} description The new description.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setDescription (description: string, reason?: string): Promise<void> {
         if (description === undefined) {
@@ -345,7 +477,6 @@ export default class Guild {
      * @param {boolean} toggle Whether or not to show the booster progress bar.
      * @param {String} [reason] The reason for modifying this Guild.
      * @returns {Promise<void>} A Promise that voids when the Guild has been changed.
-     * @public
      */
     async setBoostProgressBar (toggle: number, reason?: string): Promise<void> {
         if (toggle === undefined) {
@@ -390,7 +521,6 @@ export default class Guild {
      * Set the Guild's data to the cache.
      * 
      * @returns {Guild} This Guild instance.
-     * @private
      */
     private set (): Guild {
         this.client.guilds.cache.set(this.id, this);

@@ -13,28 +13,60 @@ import Client from '../Client';
 
 export default class PermissionsBlock {
 
+    /**
+     * The client that initiliazed the block.
+     */
     client: Client = null!;
+    /**
+     * The permissions bits.
+     */
     bits: Permissions = null!;
 
+    /**
+     * The PermissionsBlock stores permissions data.
+     * 
+     * @param {Client} client The client instance.
+     * @param {number} [flags] The permissions bits.
+     */
     constructor (client: Client, ...flags: number[]) {
         this.client = client;
         this.bits = new Permissions(...flags);
     }
 
+    /**
+     * Add a permission bit.
+     * 
+     * @param {number} flags The permission bit.
+     * @returns {PermissionsBlock} The updated PermissionsBlock.
+     */
     add (...flags: number[]): PermissionsBlock {
         this.bits.add(...flags);
         return this;
     }
 
+    /**
+     * Remove a permission bit.
+     * 
+     * @param {number} flags The permission bit.
+     * @returns {PermissionsBlock} The updated PermissionsBlock.
+     */
     remove (...flags: number[]): PermissionsBlock {
         this.bits.remove(...flags);
         return this;
     }
 
+    /**
+     * Check if the PermissionsBlock has a permission bit.
+     * 
+     * @param {number} flag The permission bit.
+     * @param {object} [options] The options.
+     * @param {boolean} [options.adminOverride=true] Whether or not to take administrator permissions into account.
+     * @returns {boolean} Whether or not the PermissionsBlock has the permission bit.
+     */
     has (flag: number, options: {
         adminOverride?: boolean
     } = {
-        adminOverride: false
+        adminOverride: true
     }): boolean {
         if (options.adminOverride) {
             return this.bits.hasPermission(flag);
@@ -43,6 +75,12 @@ export default class PermissionsBlock {
         }
     }
 
+    /**
+     * Compare the PermissionsBlock to another PermissionsBlock.
+     * 
+     * @param {PermissionsBlock | Permissions | number} check The PermissionsBlock or Permissions to compare to.
+     * @returns {boolean} Whether or not the PermissionsBlock has the same permissions as the other.
+     */
     equals (check: PermissionsBlock | Permissions | number): boolean {
         if (check instanceof PermissionsBlock) {
             return this.bits.flags == check.bits.flags;

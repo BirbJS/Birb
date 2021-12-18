@@ -17,10 +17,27 @@ import UserPermissionOverwrite from '../UserPermissionOverwrite';
 
 export default class ChannelPermissionsBlock {
 
+    /**
+     * The client that initiliazed the block.
+     */
     client: Client = null!;
+    /**
+     * The channel this permissions block is for.
+     */
     channel: GuildChannel = null!;
+    /**
+     * The list of permission overwrites.
+     */
     overwrites: PermissionOverwrite[] = [];
 
+    /**
+     * A ChannelPermissionsBlock stores data about channel
+     * permissions.
+     * 
+     * @param {Client} client The client instance. 
+     * @param {GuildChannel} channel The channel this permissions block is for. 
+     * @param {any[]} overwrites The data to parse. 
+     */
     constructor (client: Client, channel: GuildChannel, overwrites: any[]) {
         this.client = client;
         this.channel = channel;

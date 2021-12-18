@@ -16,6 +16,14 @@ export default class RefrenceCache {
     client: Client = null!;
     private readonly key: string;
 
+    /**
+     * A RefrenceCache references a cache that is stored on
+     * the client object. Its methods directly call the
+     * client's cache methods, and filters results.
+     * 
+     * @param {Client} client The client instance. 
+     * @param {string} key The key to reference (on `client`).
+     */
     constructor (client: Client, key: string) {
         this.client = client;
         this.key = key;

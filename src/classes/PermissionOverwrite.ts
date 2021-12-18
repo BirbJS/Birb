@@ -13,17 +13,40 @@ import PermissionsBlock from './blocks/PermissionsBlock';
 
 export default class PermissionOverwrite {
 
+    /**
+     * The client this overwrite belongs to.
+     */
     client: Client = null!;
+    /**
+     * The allowed permissions.
+     */
     allow: PermissionsBlock = null!;
+    /**
+     * The denied permissions.
+     */
     deny: PermissionsBlock = null!;
 
+    /**
+     * A permission overwrite represents a user or role
+     * overwrite for a channel.
+     * 
+     * @param {Client} client The client this overwrite belongs to.
+     * @param {number} allow The allowed permissions.
+     * @param {number} deny The denied permissions.
+     */
     constructor (client: Client, allow: number = 0, deny: number = 0) {
         this.client = client;
         this.allow = new PermissionsBlock(client, allow);
         this.deny = new PermissionsBlock(client, deny);
     }
 
-    grant (...flags: number[]) {
+    /**
+     * Grant the specified permissions.
+     * 
+     * @param {number} flags The flags to grant.
+     * @returns {PermissionOverwrite} The permission overwrite.
+     */
+    grant (...flags: number[]): PermissionOverwrite {
         for ( let i = 0; i < flags.length; ++i ) {
             if (this.deny.has(flags[i])) this.deny.remove(flags[i]);
             else this.allow.add(flags[i]);
@@ -31,7 +54,13 @@ export default class PermissionOverwrite {
         return this;
     }
 
-    revoke (...flags: number[]) {
+    /**
+     * Revoke the specified permissions.
+     * 
+     * @param {number} flags The flags to revoke.
+     * @returns {PermissionOverwrite} The permission overwrite.
+     */
+    revoke (...flags: number[]): PermissionOverwrite {
         for ( let i = 0; i < flags.length; ++i ) {
             if (this.allow.has(flags[i])) this.allow.remove(flags[i]);
             else this.deny.add(flags[i]);

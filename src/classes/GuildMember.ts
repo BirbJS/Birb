@@ -17,21 +17,82 @@ import OptionError from '../errors/OptionError';
 
 export default class GuildMember {
 
+    /**
+     * The client that this member belongs to.
+     */
     client: Client = null!;
+    /**
+     * The user ID of this member.
+     */
     readonly id: string;
+    /**
+     * The guild this member is in.
+     */
     guild: Guild = null!;
+    /**
+     * The user related to this member.
+     */
     user: BaseUser | null = null;
-    originalUser: any = null;
-    full: boolean = false;
+    /**
+     * The original user object of this member.
+     */
+    protected originalUser: any = null;
+    /**
+     * Whether or not this member has been fully resolved.
+     */
+    protected full: boolean = false;
+    /**
+     * The nickname of this member.
+     */
     nick: string | null = null;
+    /**
+     * The avatar hash for this member.    
+     * **Note:** This is not the same as an avatar URL. Use
+     * the `displayAvatarURL` method to get the avatar URL
+     * of this user.
+     */
     avatar: string | null = null;
+    /**
+     * The date this member joined the guild.
+     */
     joinedAt: Date | null = null;
+    /**
+     * Whether or not this member is deafened in this
+     * guild's voice channels. If `true`, the member won't
+     * be able to hear anything said in voice channels.
+     */
     deafened: boolean = false;
+    /**
+     * Whether or not this member is muted in this guild's
+     * voice channels. If `true`, the member won't be able
+     * to say anything in voice channels.
+     */
     muted: boolean = false;
+    /**
+     * The date until this member leaves timeout mode. This
+     * will be `null` if the member is not in timeout mode.
+     */
     timedOutUntil: Date | null = null;
+    /**
+     * Whether or not this member is pending membership
+     * screening in this guild. Until membership screening
+     * is passed, the member may not interact with the
+     * guild in any way.
+     */
     pendingMembershipScreening: boolean = false;
+    /**
+     * The roles this member has.
+     */
     roles: GuildMemberRoleBlock = null!;
 
+    /**
+     * A GuildMember represents a member of a Discord
+     * guild (or "server").
+     * 
+     * @param {Client} client The client that this member belongs to.
+     * @param {any} data The data of this member.
+     * @param {Guild} guild The guild this member is in.
+     */
     constructor (client: Client, data: any, guild: Guild) {
         this.client = client;
         this.id = data.user.id;
@@ -39,7 +100,12 @@ export default class GuildMember {
         this.build(data);
     }
 
-    private build (data: any) {
+    /**
+     * Build this GuildMember.
+     * 
+     * @param data The data of this GuildMember.
+     */
+    private build (data: any): GuildMember {
         this.roles = new GuildMemberRoleBlock(this.client);
         if (data.roles) {
             for ( let i = 0; i < data.roles.length; i++ ) {
@@ -74,6 +140,8 @@ export default class GuildMember {
         if ('pending' in data) {
             this.pendingMembershipScreening = data.pending;
         }
+
+        return this;
     }
 
     /**
@@ -161,6 +229,14 @@ export default class GuildMember {
         await HTTPGuild.modifyMember(this.client, this.guild.id, this.id, data, reason);
     }
 
+    /**
+     * Forces the client to wait until the member has been
+     * fully resolved. If the member is in the cache, the
+     * promise will resolve immediately. However, if the
+     * client will fetch the member from the Discord API.
+     * 
+     * @returns {Promise<GuildMember>} A Promise that resolves when the member has been fully resolved.
+     */
     async _waitForFull (): Promise<GuildMember> {
         if (this.full) {
             return this;
@@ -174,6 +250,11 @@ export default class GuildMember {
         return this;
     }
 
+    /**
+     * Sets the GuildMember to the cache.
+     * 
+     * @returns {GuildMember} The GuildMember.
+     */
     private set (): GuildMember {
         this.guild.members.cache.set(this.id, this);
         return this;
