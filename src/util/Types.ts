@@ -23,17 +23,16 @@ export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
-
 export type MessageContent = string | Embed | {
     content?: string;
-    embeds?: [ Embed ],
+    embeds?: Partial<Embed>[],
     tts?: boolean;
     nonce?: string;
     mentionRepliedUser?: boolean;
     attachments?: [ MessageAttachment ],
     allowedMentions?: {
         parse?: [ 'users' | 'roles' | 'everyone' ];
-        users?: [ UserResolvable ];
-        roles?: [ RoleResolvable ];
+        users?: UserResolvable[];
+        roles?: RoleResolvable[];
     }
 }
