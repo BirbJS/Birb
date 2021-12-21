@@ -13,8 +13,19 @@ import { Intents as IntentFlags } from '../util/Constants';
 
 export default class Intents extends BitsBlock {
 
+    /**
+     * The available Intents.
+     */
     static FLAGS = IntentFlags;
 
+    /**
+     * Intents are used by Discord to selectively send the
+     * client data, whilst not sending data that isn't
+     * needed. Intents are required to be set to use
+     * Birb.JS.
+     * 
+     * @param {number} flags The flags to set.
+     */
     constructor (...flags: number[]) {
         super(...flags);
     }

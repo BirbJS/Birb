@@ -16,15 +16,44 @@ import Client from '../Client';
 
 export default abstract class Cache {
 
+    /**
+     * The Client that initialized this cache.
+     */
     abstract client: Client;
+    /**
+     * The Cache's map (where the data is stored).
+     */
     private cache = new Map<string, any>();
-    private options: any = {
+    /**
+     * The cache's options.
+     * 
+     * @type {object} The options.
+     * @property {number} [maxSize=null] The maximum size of the cache.
+     * @property {number} [maxAge=null] The maximum age (in seconds) of the values in the cache.
+     * @property {number} [checkInterval=60] The interval (in seconds) to check for old values in the cache.
+     * @property {boolean} [removeOldest=true] Whether to remove the oldest values when the cache is full.
+     */
+    private options: {
+        maxSize?: number | null,
+        maxAge?: number | null,
+        checkInterval?: number,
+        removeOldest?: boolean,
+    } = {
         maxSize: null,
         maxAge: null,
         checkInterval: 60,
         removeOldest: true,
     }
 
+    /**
+     * A Cache stores values in memory.
+     * 
+     * @param {object} [options] The options for the cache.
+     * @param {number} [options.maxSize=null] The maximum size of the cache.
+     * @param {number} [options.maxAge=null] The maximum age (in seconds) of the values in the cache.
+     * @param {number} [options.checkInterval=60] The interval (in seconds) to check for old values in the cache.
+     * @param {boolean} [options.removeOldest=true] Whether to remove the oldest values when the cache is full.
+     */
     constructor (options?: {
         maxSize?: number,
         maxAge?: number,
@@ -68,7 +97,7 @@ export default abstract class Cache {
                 }
                 if (removed > 0) this.client.debug(`garbage collected ${removed} entries from a cache`);
             }
-        }, this.options.checkInterval * 1000);
+        }, (this.options.checkInterval || 60) * 1000);
     }
 
     /**
@@ -77,7 +106,6 @@ export default abstract class Cache {
      * 
      * @param {string} key The key to get the value for.
      * @returns {any | null} The value for the key, or `null` if the key is not found.
-     * @public
      */
     get (key: string): any | null {
         let entry = this.cache.get(key);
@@ -91,7 +119,6 @@ export default abstract class Cache {
      * 
      * @param {string} key The key to get the value for.
      * @returns {any | null} The value for the key, or `null` if the key is not found.
-     * @public
      */
     find (fn: ((e: any) => boolean)): any | null {
         return this.array().find(fn);
@@ -103,7 +130,6 @@ export default abstract class Cache {
      * 
      * @param {string} key The key to get the value for.
      * @returns {any[]} The value for the key, or [] if the key is not found.
-     * @public
      */
     filter (fn: ((e: any) => boolean)): any[] {
         return this.array().filter(fn);
@@ -115,7 +141,6 @@ export default abstract class Cache {
      * @param {string} key The key of the entry.
      * @param {any} value The value to set it to.
      * @returns {Cache} The updated cache.
-     * @public
      */
     set (key: string, value: any, options?: any): Cache {
         let push = {
@@ -133,7 +158,6 @@ export default abstract class Cache {
      * 
      * @param {string} key The key of the entry.
      * @returns {boolean} `true` if the key is found, `false` otherwise.
-     * @public
      */
     has (key: string): boolean {
         return this.cache.has(key);
@@ -144,7 +168,6 @@ export default abstract class Cache {
      * 
      * @param {string} key The key of the entry.
      * @returns {Cache} The updated cache.
-     * @public
      */
     remove (key: string): Cache {
         this.cache.delete(key);
@@ -155,7 +178,6 @@ export default abstract class Cache {
      * Get the amount of entries in the cache.
      * 
      * @returns {number} The size of the cache.
-     * @public
      */
     size (): number {
         return this.cache.size;
@@ -167,7 +189,6 @@ export default abstract class Cache {
      * the value of the entry.
      * 
      * @returns {{ [key: string]: any }} The array.
-     * @public
      */
     entries (): { [key: string]: any } {
         let entries: any = {};
@@ -181,7 +202,6 @@ export default abstract class Cache {
      * Get an array of the entries in the cache as `Pair`s.
      * 
      * @returns {any[]} The array.
-     * @public
      */
     arrayPair (): any[] {
         let entries = [];
@@ -195,7 +215,6 @@ export default abstract class Cache {
      * Get an array of the entries in the cache.
      * 
      * @returns {Pair<string, any>[]} The array.
-     * @public
      */
     array (): Pair<string, any>[] {
         let entries = [];
@@ -209,7 +228,6 @@ export default abstract class Cache {
      * Clear the cache and its contents.
      * 
      * @returns {Cache} The updated cache.
-     * @public
      */
     clear (): Cache {
         this.cache.clear();
@@ -221,8 +239,7 @@ export default abstract class Cache {
      * **probably shouldn't** run this method directly
      * unless you know **EXACTLY** what you're doing.
      * 
-     * @returns {void}
-     * @public
+     * @returns {void} Voids when completed.
      */
     makeSpace (options?: any): void {
         options = options ?? {};
@@ -242,7 +259,22 @@ export default abstract class Cache {
         }
     }
 
+    /**
+     * A method called to strip unwanted properties from an
+     * entry before it is added to the cache.
+     * 
+     * @param {any} data The data to check and strip.
+     * @returns {any} The updated data.
+     */
     abstract strip (data: any): any;
+
+    /**
+     * A method called to rebuild data that has been
+     * stripped.
+     * 
+     * @param {any} data The data to check and rebuild.
+     * @returns {any} The rebuilt data.
+     */
     abstract rebuild (data: any): any;
 
 }

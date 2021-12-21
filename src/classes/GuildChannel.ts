@@ -11,21 +11,39 @@
 import Channel from './Channel';
 import Guild from './Guild';
 import Client from './Client';
-import HTTPChannel from './http/HTTPChannel';
 import ChannelPermissionsBlock from './blocks/ChannelPermissionsBlock';
-import PermissionsBlock from './blocks/PermissionsBlock';
 
 export default abstract class GuildChannel extends Channel {
 
+    /**
+     * The guild this channel belongs to.
+     */
     guild: Guild = null!;
+    /**
+     * The permission overwrites associated with this
+     * channel.
+     */
     permissions: ChannelPermissionsBlock = null!;
 
+    /**
+     * A GuildChannel represents any channel on Discord
+     * that is associated with a guild.
+     * 
+     * @param {Client} client The client this channel belongs to.
+     * @param {any} data The data of this channel.
+     * @param {Guild} [guild] The guild this channel belongs to.
+     */
     constructor (client: Client, data: any, guild?: Guild) {
         super(client, data);
         this.guild = guild ?? client.guilds.cache.get(data.guild_id);
         this.permissions = new ChannelPermissionsBlock(client, this, data.permission_overwrites);
     }
 
+    /**
+     * Set the overwrites of this channel.
+     * 
+     * @param {{ id: string, type: 'role' | 'member' }[]} overwrites The overwrites to set.
+     */
     protected async setOverwrites (overwrite: {
         id: string,
         type: 'role' | 'member',
@@ -33,6 +51,12 @@ export default abstract class GuildChannel extends Channel {
         
     }
 
+    /**
+     * Send a raw API request to modify this channel
+     * 
+     * @param {any} data The data to send.
+     * @param {string} [reason] The reason for this action.
+     */
     abstract modify (data: any, reason?: string): Promise<GuildChannel>;
 
 }

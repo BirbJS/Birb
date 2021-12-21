@@ -11,13 +11,6 @@
 import Client from './Client';
 import User from './User';
 
-/**
- * **Warning:** Only the `id` property is guaranteed to be
- * set. Run the `fetch()` method to retrieve the entirety
- * of the User from the Discord API. If the username and/or
- * discriminator are not provided, they will be set to
- * `Unknown` and `0000` respectively.
- */
 export default class PartialUser {
 
     client: Client = null!;
@@ -26,16 +19,33 @@ export default class PartialUser {
     discriminator: string = null!;
     tag: string = null!;
 
+    /**
+     * **Warning:** Only the `id` property is guaranteed to be
+     * set. Run the `fetch()` method to retrieve the entirety
+     * of the User from the Discord API. If the username and/or
+     * discriminator are not provided, they will be set to
+     * `Unknown` and `0000` respectively.
+     * 
+     * @param {Client} client The client this user belongs to.
+     * @param {any} data The data of this user.
+     */    
     constructor (client: Client, data: any) {
         this.client = client;
         this.id = data.id;
         this.build(data);
     }
 
-    private build (data: any) {
+    /**
+     * Build the data of this user.
+     * 
+     * @param {any} data The data of this user.
+     * @returns {PartialUser} This user.
+     */
+    private build (data: any): PartialUser {
         this.username = data.username ?? 'Unknown';
         this.discriminator = data.discriminator ?? '0000';
         this.tag = `${this.username}#${this.discriminator}`;
+        return this;
     }
 
     /**

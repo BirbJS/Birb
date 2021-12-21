@@ -17,15 +17,28 @@ import OptionError from '../errors/OptionError';
 
 export default class ClientUser extends BaseUser {
 
-    bot: boolean = true;
-    system: boolean = false;
-
+    /**
+     * Represents the user that is logged in to the client.
+     * 
+     * @param {Client} client The client this user belongs to.
+     * @param {any} data The data of this user.
+     */
     constructor (client: Client, data: any) {
         super(client, data);
+        this.bot = true;
+        this.system = false;
+        Object.freeze(this.bot);
+        Object.freeze(this.system);
         this.build(data);
     }
 
-    private build (data: any) {
+    /**
+     * Builds the ClientUser.
+     * 
+     * @param {any} data The data of this user.
+     * @returns {ClientUser} The ClientUser.
+     */
+    private build (data: any): ClientUser {
         this.username = data.username ?? 'Unknown';
         this.discriminator = data.discriminator ?? '0000';
         this.tag = `${this.username}#${this.discriminator}`;
@@ -40,17 +53,29 @@ export default class ClientUser extends BaseUser {
         if ('accent_color' in data) {
             this.accentColor = data.accent_color;
         }
+
+        return this;
     }
 
+    /**
+     * Updates the user's presence.
+     * 
+     * @param {object} [options] The options to use when updating the status.
+     * @param {ActivityStatus} [options.status='online'] The status to set.
+     * @param {boolean} [options.afk=false] Whether or not the user is AFK.
+     * @param {object} [options.activity=null] The activity to set.
+     * @param {string} options.activity.name The name of the activity.
+     * @param {ActivityType} options.activity.type The URL of the activity.
+     * @returns {void} Voids once the packet is sent to Discord.
+     */
     updatePresence (options: {
         status?: ActivityStatus,
         afk?: boolean,
         activity?: {
             name: string,
-            type?: ActivityType,
+            type: ActivityType,
         } | null
-    }) {
-        options = options ?? {};
+    } = {}): void {
         if (!options.activity) options.activity = null;
         this.client.ws.send({
             op: 3,
@@ -63,6 +88,12 @@ export default class ClientUser extends BaseUser {
         });
     }
 
+    /**
+     * Set the username of the user.
+     * 
+     * @param {string} username The new username.
+     * @returns {Promise<void>} Resolves once the username is set.
+     */
     async setName (name: string): Promise<void> {
         if (name === undefined) {
             throw new OptionError('name [at 0] must be provided');

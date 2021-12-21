@@ -14,6 +14,17 @@ import CCache from '../cache/CCache';
 
 export default class ChannelBlock extends CachedBlock {
 
+    /**
+     * The cache full of channels.
+     */
+    cache: CCache = null!;
+
+    /**
+     * A ChannelBlock stores channel data.
+     * 
+     * @param {Client} client The client instance.
+     * @param {any} [options] The Cache options.
+     */
     constructor (client: Client, options?: any) {
         super(client, new CCache(client, options));
     }

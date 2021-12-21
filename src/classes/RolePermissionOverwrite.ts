@@ -14,8 +14,20 @@ import Role from './Role';
 
 export default class RolePermissionOverwrite extends PermissionOverwrite {
 
+    /**
+     * The role this overwrite belongs to.
+     */
     role: Role = null!;
 
+    /**
+     * A RolePermissionOverwrite represents a role
+     * overwrite for a channel on Discord.
+     * 
+     * @param {Client} client The client this overwrite belongs to.
+     * @param {Role} role The role this overwrite belongs to.
+     * @param {number} allow The allowed permissions.
+     * @param {number} deny The denied permissions.
+     */
     constructor (client: Client, role: Role, allow: number = 0, deny: number = 0) {
         super(client, allow, deny);
         this.role = role;

@@ -17,6 +17,9 @@
 
 // Client Intents
 
+/**
+ * The available Intents.
+ */
 export enum Intents {
     GUILDS = (1 << 0),
     GUILD_MEMBERS = (1 << 1),
@@ -41,6 +44,9 @@ export enum Intents {
 
 // Gateway
 
+/**
+ * The possible websocket states.
+ */
 export enum Status {
     IDLE = 0,
     READY = 1,
@@ -52,6 +58,9 @@ export enum Status {
     IDENTIFYING = 7,
 }
 
+/**
+ * The possible gateway opcodes.
+ */
 export enum PacketOperation {
     DISPATCH = 0,
     HEARTBEAT = 1,
@@ -67,6 +76,9 @@ export enum PacketOperation {
     HEARTBEAT_ACK = 11,
 }
 
+/**
+ * The possible gateway close codes.
+ */
 export enum GatewayCloseCode {
     UNKNOWN_ERROR = 4000,
     UNKNOWN_OPCODE = 4001,
@@ -92,6 +104,9 @@ export enum GatewayCloseCode {
 
 // Channel
 
+/**
+ * The possible channel types.
+ */
 export enum ChannelTypes {
     GUILD_TEXT = 0,
     DM = 1,
@@ -106,6 +121,9 @@ export enum ChannelTypes {
     GUILD_STAGE_VOICE = 13,
 }
 
+/**
+ * The possible system channel flags.
+ */
 export enum SystemChannelFlags {
     SUPPRESS_JOIN_NOTIFICATIONS	= (1 << 0),
     SUPPRESS_PREMIUM_SUBSCRIPTIONS	= (1 << 1),
@@ -118,11 +136,17 @@ export enum SystemChannelFlags {
 
 // Guild Settings Level
 
+/**
+ * The possible notification levels.
+ */
 export enum NotificationLevel {
     ALL_MESSAGES = 0,
     ONLY_MENTIONS = 1,
 }
 
+/**
+ * The possible verification levels.
+ */
 export enum VerificationLevel {
     NONE = 0,
     LOW = 1,
@@ -131,17 +155,26 @@ export enum VerificationLevel {
     VERY_HIGH = 4,
 }
 
+/**
+ * The possible MFA requirement levels.
+ */
 export enum MFALevel {
     NONE = 0,
     ELEVATED = 1,
 }
 
+/**
+ * The possible explicit content filter levels.
+ */
 export enum ExplicitContentFilterLevel {
     DISABLED = 0,
     MEMBERS_WITHOUT_ROLES = 1,
     ALL_MEMBERS = 2,
 }
 
+/**
+ * The possible NSFW levels.
+ */
 export enum NSFWLevel {
     UNKNOWN = 0,
     EXPLICIT = 1,
@@ -151,6 +184,9 @@ export enum NSFWLevel {
 
 // Guild Boost Level
 
+/**
+ * The possible guild boost levels.
+ */
 export enum PremiumTier {
     NONE = 0,
     TIER_1 = 1,
@@ -160,10 +196,16 @@ export enum PremiumTier {
 
 // Guild Events
 
+/**
+ * The possible guild event privacy levels.
+ */
 export enum GuildScheduledEventsPrivacyLevel {
     GUILD_ONLY = 2,
 }
 
+/**
+ * The possible guild event entity types.
+ */
 export enum GuildScheduledEventsEntityTypes {
     STAGE_INSTANCE = 1,
     VOICE = 2,
@@ -172,6 +214,9 @@ export enum GuildScheduledEventsEntityTypes {
 
 // Guild Invite
 
+/**
+ * The possible invite types.
+ */
 export enum InviteTargetTypes {
     STREAM = 1,
     EMBEDDED_APPLICATION = 2,
@@ -179,6 +224,9 @@ export enum InviteTargetTypes {
 
 // Guild Stage
 
+/**
+ * The possible stage privacy levels.
+ */
 export enum StageInstancePrivacyLevel {
     PUBLIC = 1,
     GUILD_ONLY = 2,
@@ -187,6 +235,9 @@ export enum StageInstancePrivacyLevel {
 
 // Presence
 
+/**
+ * The possible activity types.
+ */
 export enum ActivityType {
     PLAYING = 0,
     STREAMING = 1,
@@ -199,6 +250,9 @@ export enum ActivityType {
 
 // Message
 
+/**
+ * The possible message types.
+ */
 export enum MessageTypes {
     DEFAULT = 0,
     RECIPIENT_ADD = 1,
@@ -225,6 +279,9 @@ export enum MessageTypes {
     CONTEXT_MENU_COMMAND = 23,
 }
 
+/**
+ * The possible system message types.
+ */
 export enum SystemMessageTypes {
     RECIPIENT_ADD = 1,
     RECIPIENT_REMOVE = 2,
@@ -247,6 +304,9 @@ export enum SystemMessageTypes {
     GUILD_INVITE_REMINDER = 22,
 }
 
+/**
+ * The possible message flags.
+ */
 export enum MessageFlags {
     CROSSPOSTED = (1 << 0),
     IS_CROSSPOST = (1 << 1),
@@ -261,11 +321,17 @@ export enum MessageFlags {
 
 // Sticker
 
+/**
+ * The possible sticker types.
+ */
 export enum StickerTypes {
     STANDARD = 1,
     GUILD = 2,
 }
 
+/**
+ * The possible sticker formats.
+ */
 export enum StickerFormatTypes {
     PNG = 1,
     APNG = 2,
@@ -275,9 +341,12 @@ export enum StickerFormatTypes {
 
 // User
 
+/**
+ * The possible user flags.
+ */
 export enum UserFlags {
     None = 0,
-    STAFF = (1 << 0),
+    DISCORD_EMPLOYEE = (1 << 0),
     PARTNER = (1 << 1),
     HYPESQUAD = (1 << 2),
     BUG_HUNTER_LEVEL_1 = (1 << 3),
@@ -293,16 +362,22 @@ export enum UserFlags {
     BOT_HTTP_INTERACTIONS = (1 << 19),
 }
 
+/**
+ * The possible user visibility types.
+ */
 export enum VisibilityTypes {
-    None = 0,
-    Everyone = 1,
+    NONE = 0,
+    EVERYONE = 1,
 }
 
 
 // Webhook
 
+/**
+ * The possible webhook types.
+ */
 export enum WebhookTypes {
-    "Incoming" = 1,
-    "Channel Follower" = 2,
-    "Application" = 3,
+    INCOMING = 1,
+    CHANNEL_FOLLOWER = 2,
+    APPLICATION = 3,
 }

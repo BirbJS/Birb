@@ -9,13 +9,19 @@
  */
 
 import Client from '../Client';
-import Cache from '../cache/Cache';
 import CachedBlock from './CachedBlock';
 import CGCache from '../cache/CGCache';
 import Guild from '../Guild';
 
 export default class MessageBlock extends CachedBlock {
 
+    /**
+     * A MessageBlock stores information on messages.
+     * 
+     * @param {Client} client The client instance.
+     * @param {Guild} guild The guild instance.
+     * @param {any} [options] The Cache options.
+     */
     constructor (client: Client, guild: Guild, options?: any) {
         super(client, new CGCache(client, guild, options));
     }

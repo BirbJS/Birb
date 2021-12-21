@@ -36,29 +36,81 @@ try {
 
 export default class Client {
 
+    /**
+     * Whether or not this client is valid.
+     */
     private valid = true;
-    private devtools: any = null;
+    /**
+     * The devtools instance for this client. Only set if
+     * the `@birbjs/devtools` package is installed.
+     */
+    devtools: any = null;
+    /**
+     * The token of the client.
+     * 
+     * ⚠️ **DON'T SHARE YOUR TOKEN!** There is no reason
+     * anyone should need it, with the exception of your
+     * development team. ANYONE with your token can gain
+     * FULL and UNRESTRICTED ACCESS to the entirety of your
+     * bot, INCLUDING ANY PERMISSIONS IT HAS BEEN GRANTED.
+     */
     token: string = null!;
+    /**
+     * The client's websocket.
+     */
     ws: Websocket = null!;
+    /**
+     * The client's Discord user.
+     */
     me: ClientUser | null = null;
+    /**
+     * The client's Shard if sharding is enabled. See the
+     * [docs](https://birb.js.org/addons/sharding) for more
+     * information.
+     */
     shard: any = null;
+    /**
+     * The client's options.
+     */
     options = {
         intents: <Intents>null!,
         debug: false,
     }
-
+    /**
+     * Direct access to the client's rest API endpoints.
+     */
     readonly api = {
         channels: HTTPChannel,
         guilds: HTTPGuild,
         users: HTTPUser,
     }
-
+    /**
+     * The client's guild cache.
+     */
     guilds: GuildBlock = null!;
+    /**
+     * The client's channel cache.
+     */
     channels: ChannelBlock = null!;
+    /**
+     * The client's user cache.
+     */
     users: UserBlock = null!;
-    
+    /**
+     * A private object containing all event listeners.
+     */
     private events: any = {};
 
+    /**
+     * The client is the entrypoint to Birb.JS. If you'd
+     * like to learn how to use Birb.JS, head over to our
+     * [docs](https://birb.js.org) or have a quick look at
+     * our [examples](https://birb.js.org/start).
+     * 
+     * @param {object} options The client options.
+     * @param {string} options.intents The [Intents](https://birb.js.org/start/intents) to use.
+     * @param {boolean} [options.debug=false] Whether or not to enable the client's debug mode. Requires the `@birbjs/devtools` package.
+     */
     constructor (options: {
         intents: Intents,
         debug?: boolean,
@@ -103,7 +155,7 @@ export default class Client {
      * 
      * @param {EventResolvable | string} event The event name.
      * @param {Function} listener The function to call when the event is emitted.
-     * @returns {void}
+     * @returns {void} Voids once the event listener is added.
      */
     listen (event: EventResolvable | string, callback: Function): void {
         if (!this.valid) {
@@ -119,7 +171,7 @@ export default class Client {
      * Undind an event listener.
      * 
      * @param {EventResolvable | string} event The event name to unbind.
-     * @returns {void}
+     * @returns {void} Voids once the event listener is removed.
      */
     unbind (event: EventResolvable | string): void {
         if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
@@ -131,10 +183,10 @@ export default class Client {
      * 
      * @param {EventResolvable | string} event The event name.
      * @param {any} data The event data to pass to the listener.
-     * @returns {void}
+     * @returns {any} The response of the listener's method. `undefined` if not bound.
      */
     emit (event: EventResolvable | string, ...args: any[]): any {
-        if (this.events[event] == undefined || !this.valid) return;
+        if (this.events[event] == undefined || !this.valid) return undefined;
         return this.events[event](...args);
     }
 
@@ -152,16 +204,14 @@ export default class Client {
     /**
      * Connect to the Discord gateway.
      * 
-     * ⚠️ **DON'T SHARE YOUR GOD DAMN TOKEN!** There is no
-     * reason anyone should need it, with the exception of
-     * your development team. ANYONE with your token can
-     * gain FULL and UNRESTRICTED ACCESS to the entirety of
-     * your bot, INCLUDING ANY PERMISSIONS IT HAS BEEN
-     * GRANTED. Bot takeovers have happened far too often
-     * in the past: don't let your bot join the list.
+     * ⚠️ **DON'T SHARE YOUR TOKEN!** There is no reason
+     * anyone should need it, with the exception of your
+     * development team. ANYONE with your token can gain
+     * FULL and UNRESTRICTED ACCESS to the entirety of your
+     * bot, INCLUDING ANY PERMISSIONS IT HAS BEEN GRANTED.
      * 
      * @param {string} token Your bot's token.
-     * @returns {void}
+     * @returns {void} Voids once the client has started (not connected).
      */
     connect (token: string): void {
         if (!this.valid) throw new ClientError('the client has been invalidated; please restart the process');
@@ -177,7 +227,7 @@ export default class Client {
      * Emit a log in debug mode.
      * 
      * @param {any} message The log message.
-     * @returns {void}
+     * @returns {void} Voids once the log has been emitted.
      */
     debug (...message: any[]): void {
         if (this.options.debug && this.devtools) {
@@ -189,7 +239,7 @@ export default class Client {
      * Emit a warning in debug mode.
      * 
      * @param {any} message The warning message.
-     * @returns {void}
+     * @returns {void} Voids once the log has been emitted.
      */
     warn (...message: any[]): void {
         if (this.options.debug && this.devtools) {
@@ -201,7 +251,7 @@ export default class Client {
      * Log a packet received from the gateway.
      * 
      * @param {any} message The packet data.
-     * @returns {void}
+     * @returns {void} Voids once the log has been emitted.
      */
     private logReceive (...message: any[]): void {
         if (this.options.debug && this.devtools) {
@@ -213,7 +263,7 @@ export default class Client {
      * Log a packet sent to the gateway.
      * 
      * @param {any} message The packet data.
-     * @returns {void}
+     * @returns {void} Voids once the log has been emitted.
      */
     private logSend (...message: any[]): void {
         if (this.options.debug && this.devtools) {
@@ -225,7 +275,7 @@ export default class Client {
      * Log a HTTP event.
      * 
      * @param {any} message The event data.
-     * @returns {void}
+     * @returns {void} Voids once the log has been emitted.
      */
     private logHttp (...message: any[]): void {
         if (this.options.debug && this.devtools) {
@@ -236,6 +286,10 @@ export default class Client {
     /**
      * Only registers the provided event if it isn't
      * already registered.
+     * 
+     * @param {string} event The event name.
+     * @param {Function} callback The function to call when the event is emitted.
+     * @returns {void} Voids once the event has been registered.
      */
     private listenIfNotRegistered (event: EventResolvable, callback: Function): void {
         if (this.events[event] == undefined) this.listen(event, callback);
@@ -246,11 +300,18 @@ export default class Client {
      * the process to use it. Once called, this cannot be
      * undone (mostly because it would defeat the entire
      * purpose of this function).
+     * 
+     * @returns {void} Voids once the client has been invalidated.
      */
-    private invalidate (): void {
+    invalidate (): void {
+        this.warn('the client has been invalidated (`client.invalidate() called`)');
         this.events = {};
         this.valid = false;
         Object.freeze(this.valid);
+        this.ws.terminate();
+        this.guilds.cache.clear();
+        this.channels.cache.clear();
+        this.users.cache.clear();
         console.error(new ClientError('the Birb.JS client has been invalidated; please restart the process'));
     }
 

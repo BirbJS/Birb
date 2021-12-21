@@ -9,7 +9,6 @@
  */
 
 import Client from '../Client';
-import Cache from '../cache/Cache';
 import CachedBlock from './CachedBlock';
 import ClientUser from '../ClientUser';
 import HTTPUser from '../http/HTTPUser';
@@ -20,10 +19,21 @@ import CCache from '../cache/CCache';
 
 export default class UserBlock extends CachedBlock {
 
+    /**
+     * A UserBlock stores user data.
+     * 
+     * @param {Client} client The client instance.
+     * @param {any} [options] The Cache options.
+     */
     constructor (client: Client, options?: any) {
         super(client, new CCache(client, options));
     }
 
+    /**
+     * Fetches this Client's user.
+     * 
+     * @returns {Promise<User>} The Client's user.
+     */
     async fetchMe (): Promise<ClientUser> {
         let user = await HTTPUser.getCurrent(this.client);
         user = new ClientUser(this.client, user);
@@ -31,6 +41,16 @@ export default class UserBlock extends CachedBlock {
         return user;
     }
 
+    /**
+     * Fetches a user from the Cache or the Discord API if
+     * the user is not cached.
+     * 
+     * @param {string} userId The ID of the user to fetch.
+     * @param {object} [options] The options to use.
+     * @param {boolean} [options.shouldCache=true] Whether to cache the user.
+     * @param {boolean} [options.bypassCache=false] Whether to bypass the cache and fetch the user directly from the API.
+     * @returns {Promise<User>} The user.
+     */
     async fetch (userId: string, options?: {
         shouldCache?: boolean,
         bypassCache?: boolean,
@@ -51,6 +71,14 @@ export default class UserBlock extends CachedBlock {
         return user;
     }
 
+    /**
+     * Resolves a UserResolvable to a user if the user is
+     * in the cache.
+     * 
+     * @param {UserResolvable} user The user to resolve.
+     * @param {any} [def] The default value to build the user if the user is not cached.
+     * @returns {User | null} The user. `null` if the user is not cached.
+     */
     resolve (user: UserResolvable, def?: any): User | null {
         if (user instanceof BaseUser) return this.cache.get(user.id) ?? user;
         else if (typeof user === 'string') {
