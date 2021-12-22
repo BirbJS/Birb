@@ -25,5 +25,11 @@ export default async function VOICE_STATE_UPDATE (ws: Websocket, data: any): Pro
     let channel = guild?.channels.cache.get(data.channel_id);
     let old = channel.states.cache.get(data.user_id) ?? null;
     let state = new VoiceState(ws.client, channel, data);
+
+    if (!old) {
+        ws.client.emit('voiceJoin', state);
+        return;
+    }
+
     ws.client.emit('voiceStateUpdate', old, state);
 }
