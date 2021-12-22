@@ -13,14 +13,14 @@ import EmbedChild from './EmbedChild';
 export default class EmbedMedia extends EmbedChild {
 
     url: string = null!;
-    height: number | null = null;
-    width: number | null = null;
+    height?: number = undefined;
+    width?: number = undefined;
 
     constructor (url: string, height?: number, width?: number) {
         super();
         this.url = url;
-        this.height = height ?? null;
-        this.width = width ?? null;
+        this.height = height;
+        this.width = width;
     }
 
     setUrl (url: string) {
@@ -36,11 +36,11 @@ export default class EmbedMedia extends EmbedChild {
     }
 
     removeHeight () {
-        this.height = null;
+        this.height = undefined;
     }
 
     removeWidth () {
-        this.width = null;
+        this.width = undefined;
     }
 
     /**

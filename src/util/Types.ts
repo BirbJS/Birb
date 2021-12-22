@@ -25,7 +25,7 @@ export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
 export type MessageContent = string | Embed | {
     content?: string;
-    embeds?: Partial<Embed>[],
+    embeds?: Embed[],
     tts?: boolean;
     nonce?: string;
     mentionRepliedUser?: boolean;

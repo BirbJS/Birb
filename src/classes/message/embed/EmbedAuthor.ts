@@ -13,14 +13,14 @@ import EmbedChild from './EmbedChild';
 export default class EmbedAuthor extends EmbedChild {
 
     name: string = null!;
-    url: string | null = null;
-    iconUrl: string | null = null;
+    url?: string = undefined;
+    iconUrl?: string = undefined;
 
     constructor (name: string, url?: string, iconUrl?: string) {
         super();
         this.name = name;
-        this.url = url ?? null;
-        this.iconUrl = iconUrl ?? null;
+        this.url = url;
+        this.iconUrl = iconUrl;
     }
 
     setName (name: string) {
@@ -36,11 +36,11 @@ export default class EmbedAuthor extends EmbedChild {
     }
 
     removeUrl () {
-        this.url = null;
+        this.url = undefined;
     }
 
     removeIcon () {
-        this.iconUrl = null;
+        this.iconUrl = undefined;
     }
 
     /**

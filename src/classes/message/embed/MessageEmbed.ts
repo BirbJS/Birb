@@ -17,16 +17,16 @@ import EmbedMedia from './EmbedMedia';
 
 export default class MessageEmbed extends BaseComponent {
 
-    title: string | null = null;
-    description: string | null = null;
-    url: string | null = null;
-    timestamp: Date | null = null;
-    color: string | null = null;
-    footer: EmbedFooter | null = null;
-    image: EmbedMedia | null = null;
-    thumbnail: EmbedMedia | null = null;
-    video: EmbedMedia | null = null;
-    author: EmbedAuthor | null = null;
+    title?: string = undefined;
+    description?: string = undefined;
+    url?: string = undefined;
+    timestamp?: Date = undefined;
+    color?: string = undefined;
+    footer?: EmbedFooter = undefined;
+    image?: EmbedMedia = undefined;
+    thumbnail?: EmbedMedia = undefined;
+    video?: EmbedMedia = undefined;
+    author?: EmbedAuthor = undefined;
     fields: EmbedField[] = [];
 
     constructor () {
@@ -226,7 +226,7 @@ export default class MessageEmbed extends BaseComponent {
             description: this.description,
             url: this.url,
             timestamp: this.timestamp?.toISOString(),
-            color: this.color ? Color.hexToInt(this.color): null,
+            color: this.color ? Color.hexToInt(this.color): undefined,
             footer: this.footer?.format(),
             image: this.image?.format(),
             thumbnail: this.thumbnail?.format(),

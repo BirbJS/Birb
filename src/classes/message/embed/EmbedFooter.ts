@@ -13,12 +13,12 @@ import EmbedChild from './EmbedChild';
 export default class EmbedFooter extends EmbedChild {
 
     text: string = null!;
-    iconUrl: string | null = null;
+    iconUrl?: string = undefined;
 
     constructor (text: string, iconUrl?: string) {
         super();
         this.text = text;
-        this.iconUrl = iconUrl ?? null;
+        this.iconUrl = iconUrl ?? undefined;
     }
 
     setText (text: string) {
@@ -30,7 +30,7 @@ export default class EmbedFooter extends EmbedChild {
     }
 
     removeIcon () {
-        this.iconUrl = null;
+        this.iconUrl = undefined;
     }
 
     /**
