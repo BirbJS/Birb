@@ -54,10 +54,10 @@ export default class EmbedMedia extends EmbedChild {
     /**
      * Set the height of the media.
      * 
-     * @param {number | null} height The height of the media. `null` to remove the height.
+     * @param {number | undefined} height The height of the media. Pass through no arguments to remove the height.
      * @returns {EmbedMedia} The updated EmbedMedia.
      */
-    setHeight (height: number): EmbedMedia {
+    setHeight (height?: number): EmbedMedia {
         this.height = height;
         return this;
     }
@@ -65,10 +65,10 @@ export default class EmbedMedia extends EmbedChild {
     /**
      * Set the width of the media.
      * 
-     * @param {number | null} width The width of the media. `null` to remove the width.
+     * @param {number | undefined} width The width of the media. Pass through no arguments to remove the width.
      * @returns {EmbedMedia} The updated EmbedMedia.
      */
-    setWidth (width: number): EmbedMedia {
+    setWidth (width?: number): EmbedMedia {
         this.width = width;
         return this;
     }
