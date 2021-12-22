@@ -13,8 +13,8 @@ import EmbedChild from './EmbedChild';
 export default class EmbedAuthor extends EmbedChild {
 
     name: string = null!;
-    url?: string = undefined;
-    iconUrl?: string = undefined;
+    url?: string;
+    iconUrl?: string;
 
     constructor (name: string, url?: string, iconUrl?: string) {
         super();

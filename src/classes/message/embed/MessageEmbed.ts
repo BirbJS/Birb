@@ -17,16 +17,16 @@ import EmbedMedia from './EmbedMedia';
 
 export default class MessageEmbed extends BaseComponent {
 
-    title?: string = undefined;
-    description?: string = undefined;
-    url?: string = undefined;
-    timestamp?: Date = undefined;
-    color?: string = undefined;
-    footer?: EmbedFooter = undefined;
-    image?: EmbedMedia = undefined;
-    thumbnail?: EmbedMedia = undefined;
-    video?: EmbedMedia = undefined;
-    author?: EmbedAuthor = undefined;
+    title?: string;
+    description?: string;
+    url?: string;
+    timestamp?: Date;
+    color?: string;
+    footer?: EmbedFooter;
+    image?: EmbedMedia;
+    thumbnail?: EmbedMedia;
+    video?: EmbedMedia;
+    author?: EmbedAuthor;
     fields: EmbedField[] = [];
 
     constructor () {

@@ -13,7 +13,7 @@ import EmbedChild from './EmbedChild';
 export default class EmbedFooter extends EmbedChild {
 
     text: string = null!;
-    iconUrl?: string = undefined;
+    iconUrl?: string;
 
     constructor (text: string, iconUrl?: string) {
         super();

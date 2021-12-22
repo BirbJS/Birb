@@ -13,8 +13,8 @@ import EmbedChild from './EmbedChild';
 export default class EmbedMedia extends EmbedChild {
 
     url: string = null!;
-    height?: number = undefined;
-    width?: number = undefined;
+    height?: number;
+    width?: number;
 
     constructor (url: string, height?: number, width?: number) {
         super();
