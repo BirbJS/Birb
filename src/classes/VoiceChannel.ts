@@ -53,9 +53,7 @@ export default class VoiceChannel extends GuildChannel {
         if ('bitrate' in data) {
             this.bitrate = data.bitrate;
         }
-        if ('user_limit' in data) {
-            this.userLimit = data.user_limit || null;
-        }
+        if ('user_limit' in data) this.userLimit = data.user_limit ?? null;
 
         return this;
     }
