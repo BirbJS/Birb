@@ -95,27 +95,13 @@ export default class VoiceState {
             this.member = member;
         }
 
-        if ('session_id' in data) {
-            this.sessionId = data.session_id;
-        }
-        if ('deaf' in data) {
-            this.deaf = data.deaf;
-        }
-        if ('mute' in data) {
-            this.mute = data.mute;
-        }
-        if ('self_deaf' in data) {
-            this.selfDeaf = data.self_deaf;
-        }
-        if ('self_mute' in data) {
-            this.selfMute = data.self_mute;
-        }
-        if ('self_stream' in data) {
-            this.streaming = data.self_stream;
-        }
-        if ('self_video' in data) {
-            this.videoEnabled = data.self_video;
-        }
+        if ('session_id' in data) this.sessionId = data.session_id;
+        if ('deaf' in data) this.deaf = data.deaf;
+        if ('mute' in data) this.mute = data.mute;
+        if ('self_deaf' in data) this.selfDeaf = data.self_deaf;
+        if ('self_mute' in data) this.selfMute = data.self_mute;
+        if ('self_stream' in data) this.streaming = data.self_stream;
+        if ('self_video' in data) this.videoEnabled = data.self_video;
 
         return this;
     }
