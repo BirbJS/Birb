@@ -126,7 +126,7 @@ export default class VoiceState {
      * @returns {Promise<VoiceState>} The updated voice state.
      */
     async fetch (): Promise<VoiceState> {
-        if (!this.member) this.member = await this.guild.members.fetch(this.memberId);
+        this.member ??= await this.guild.members.fetch(this.memberId);
         return this;
     }
 
