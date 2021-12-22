@@ -50,9 +50,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param {any} data The data of this channel.
      */
     private build (data: any): VoiceChannel {
-        if ('bitrate' in data) {
-            this.bitrate = data.bitrate;
-        }
+        if ('bitrate' in data) this.bitrate = data.bitrate;
         if ('user_limit' in data) this.userLimit = data.user_limit ?? null;
 
         return this;
