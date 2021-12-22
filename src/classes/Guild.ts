@@ -11,7 +11,7 @@
 import HTTPGuild from './http/HTTPGuild';
 import GuildError from '../errors/GuildError';
 import OptionError from '../errors/OptionError';
-import { NSFWLevel, MFALevel, NotificationLevel, VerificationLevel, ExplicitContentFilterLevel } from '../util/Constants';
+import { NSFWLevel, MFALevel, NotificationLevel, VerificationLevel, ExplicitContentFilterLevel, ChannelTypes } from '../util/Constants';
 import RoleBlock from './blocks/RoleBlock';
 import Client from './Client';
 import Role from './Role';
@@ -22,6 +22,7 @@ import { ChannelResolvable } from '../util/Types';
 import Validator from '../util/Validator';
 import HTTPUser from './http/HTTPUser';
 import GuildChannelBlock from './blocks/GuildChannelBlock';
+import VoiceChannel from './VoiceChannel';
 
 export default class Guild {
     
@@ -201,6 +202,7 @@ export default class Guild {
         }
         this.client = client;
         this.id = data.id;
+        this.channels = new GuildChannelBlock(this.client);
         this.build(data);
     }
 
@@ -234,14 +236,16 @@ export default class Guild {
             }
         }
 
-        this.channels = new GuildChannelBlock(this.client);
         for ( let i = 0; i < data.channels.length; i++ ) {
             switch (data.channels[i].type) {
-                case 0:
+                case ChannelTypes.GUILD_TEXT:
                     this.channels.cache.set(data.channels[i].id, new TextChannel(this.client, data.channels[i], {
                         maxSize: 100,
                         maxAge: 120,
                     }, this));
+                    break;
+                case ChannelTypes.GUILD_VOICE:
+                    this.channels.cache.set(data.channels[i].id, new VoiceChannel(this.client, data.channels[i], this));
                     break;
             }
         }

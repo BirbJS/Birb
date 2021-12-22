@@ -10,18 +10,22 @@
 
 import Client from '../Client';
 import CachedBlock from './CachedBlock';
-import CCache from '../cache/CCache';
+import CGCCache from '../cache/CGCCache';
+import Guild from '../Guild';
+import GuildChannel from '../GuildChannel';
 
-export default class ChannelBlock extends CachedBlock {
+export default class VoiceStateBlock extends CachedBlock {
 
     /**
-     * A ChannelBlock stores channel data.
+     * A MessageBlock stores information on messages.
      * 
      * @param {Client} client The client instance.
+     * @param {Guild} guild The guild instance.
+     * @param {GuildChannel} channel The channel instance.
      * @param {any} [options] The Cache options.
      */
-    constructor (client: Client, options?: any) {
-        super(client, new CCache(client, options));
+    constructor (client: Client, guild: Guild, channel: GuildChannel, options?: any) {
+        super(client, new CGCCache(client, guild, channel, options));
     }
 
 }

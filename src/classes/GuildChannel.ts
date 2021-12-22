@@ -40,6 +40,28 @@ export default abstract class GuildChannel extends Channel {
     }
 
     /**
+     * Set the name of this channel.
+     * 
+     * @param {string} name The name of this channel.
+     * @param {string} [reason] The reason for changing the name.
+     * @returns {Promise<GuildChannel>} This channel.
+     */
+    setName (name: string, reason?: string): Promise<GuildChannel> {
+        return this.modify({ name }, reason);
+    }
+
+    /**
+     * Set the position of this channel.
+     * 
+     * @param {number} position The position of this channel.
+     * @param {string} [reason] The reason for changing the position.
+     * @returns {Promise<GuildChannel>} This channel.
+     */
+    setPosition (position: number, reason?: string): Promise<GuildChannel> {
+        return this.modify({ position }, reason);
+    }
+
+    /**
      * Set the overwrites of this channel.
      * 
      * @param {{ id: string, type: 'role' | 'member' }[]} overwrites The overwrites to set.

@@ -26,7 +26,7 @@ export default class TextChannel extends TextBasedChannel {
      * @param {number} [options.maxAge=null] The maximum age (in seconds) of the values in the cache.
      * @param {number} [options.checkInterval=60] The interval (in seconds) to check for old values in the cache.
      * @param {boolean} [options.removeOldest=true] Whether to remove the oldest values when the cache is full.
-     * @param {Guild} [guild] The guild this channel belongs to.
+     * @param {Guild} guild The guild this channel belongs to.
      */
     constructor (client: Client, data: any, options?: {
         maxSize?: number,
@@ -45,28 +45,6 @@ export default class TextChannel extends TextBasedChannel {
      */
     private build (data: any): TextChannel {
         return this;
-    }
-
-    /**
-     * Set the name of this channel.
-     * 
-     * @param {string} name The name of this channel.
-     * @param {string} [reason] The reason for changing the name.
-     * @returns {Promise<TextChannel>} This TextChannel instance.
-     */
-    setName (name: string, reason?: string): Promise<TextChannel> {
-        return this.modify({ name }, reason);
-    }
-
-    /**
-     * Set the position of this channel.
-     * 
-     * @param {number} position The position of this channel.
-     * @param {string} [reason] The reason for changing the position.
-     * @returns 
-     */
-    setPosition (position: number, reason?: string): Promise<TextChannel> {
-        return this.modify({ position }, reason);
     }
 
     /**

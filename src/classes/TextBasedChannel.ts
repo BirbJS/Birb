@@ -34,7 +34,7 @@ export default abstract class TextBasedChannel extends GuildChannel {
      * @param {number} [options.maxAge=null] The maximum age (in seconds) of the values in the cache.
      * @param {number} [options.checkInterval=60] The interval (in seconds) to check for old values in the cache.
      * @param {boolean} [options.removeOldest=true] Whether to remove the oldest values when the cache is full.
-     * @param {Guild} [guild] The guild this channel belongs to.
+     * @param {Guild} guild The guild this channel belongs to.
      */
     constructor (client: Client, data: any, options?: {
         maxSize?: number,

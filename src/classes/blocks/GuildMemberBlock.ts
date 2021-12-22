@@ -79,7 +79,7 @@ export default class GuildMemberBlock extends CachedBlock {
         if (user instanceof BaseUser) {
             return this.cache.get(user.id) ?? user;
         } else if (typeof user === 'string') {
-            if (def) return this.cache.get(user) ?? new GuildMember(this.client, def, this.guild);
+            if (def) return this.cache.get(user) ?? (new GuildMember(this.client, def, this.guild))['set']();
             else return this.cache.get(user) ?? null;
         } else {
             return null;
