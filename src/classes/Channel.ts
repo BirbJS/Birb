@@ -13,19 +13,39 @@ import TextChannel from './TextChannel';
 
 export default class Channel {
 
+    /**
+     * The client this channel belongs to.
+     */
     client: Client = null!;
+    /**
+     * The name of this channel.
+     */
     name: string = null!;
+    /**
+     * The ID of this channel.
+     */
     readonly id: string;
 
+    /**
+     * Represents any kind of channel on Discord.
+     * 
+     * @param {Client} client The client this channel belongs to.
+     * @param {any} data The data of this channel.
+     */
     constructor (client: Client, data: any) {
         this.client = client;
         this.id = data.id;
         this.name = data.name;
     }
 
-    protected init () {
+    /**
+     * Initialize the data of this channel.
+     * 
+     * @returns {any} The channel object, or `null`.
+     */
+    protected init (): any {
         if (this instanceof TextChannel) {
-            return this
+            return this;
         }
     }
 

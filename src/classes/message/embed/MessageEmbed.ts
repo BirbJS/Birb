@@ -17,18 +17,57 @@ import EmbedMedia from './EmbedMedia';
 
 export default class MessageEmbed extends BaseComponent {
 
+    /**
+     * The title of this embed.
+     */
     title?: string;
+    /**
+     * The description of this embed.
+     */
     description?: string;
+    /**
+     * The URL of this embed (makes the title clickable).
+     */
     url?: string;
+    /**
+     * The timestamp of this embed (shows in the footer).
+     */
     timestamp?: Date;
+    /**
+     * The color of this embed as a hex string.
+     */
     color?: string;
+    /**
+     * The footer of this embed.
+     */
     footer?: EmbedFooter;
+    /**
+     * The image in this embed.
+     */
     image?: EmbedMedia;
+    /**
+     * The thumbnail for this embed.
+     */
     thumbnail?: EmbedMedia;
+    /**
+     * The video for this embed (usually not settable).
+     */
     video?: EmbedMedia;
+    /**
+     * The author of this embed.
+     */
     author?: EmbedAuthor;
+    /**
+     * This embed's fields.
+     */
     fields: EmbedField[] = [];
 
+    /**
+     * The MessageEmbed class represents a message embed on
+     * Discord. A message embed is a rich embed that can
+     * include a lot of formatted data (they can also have
+     * their color set which is quite nice).
+     */
     constructor () {
         super();
     }
@@ -218,8 +257,10 @@ export default class MessageEmbed extends BaseComponent {
 
     /**
      * Format this class into an API-acceptable object.
+     * 
+     * @returns {any} The formatted object.
      */
-    format () {
+    format (): any {
         return {
             title: this.title,
             type: 'rich',

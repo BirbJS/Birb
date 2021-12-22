@@ -17,10 +17,23 @@ import CCache from '../cache/CCache';
 
 export default class GuildBlock extends CachedBlock {
 
+    /**
+     * A GuildBlock stores guild data.
+     * 
+     * @param {Client} client The client instance.
+     * @param {any} [options] The Cache options.
+     */
     constructor (client: Client, options?: any) {
         super(client, new CCache(client, options));
     }
 
+    /**
+     * Fetches a guild from the cache or Discord if it is
+     * not already cached.
+     * 
+     * @param {GuildResolvable | Object} options The options to use.
+     * @returns {Promise<Guild>} The guild.
+     */
     async fetch (options: GuildResolvable | {
         guild: GuildResolvable,
         shouldCache?: boolean,

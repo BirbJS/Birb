@@ -13,26 +13,71 @@ import Client from './Client';
 import Color from '../util/Color';
 import Guild from './Guild';
 import HTTPGuild from './http/HTTPGuild';
-import Permissions from './Permissions';
 import OptionError from '../errors/OptionError';
 import RolePermissionsBlock from './blocks/RolePermissionsBlock';
 import { RoleResolvable } from '../util/Types';
 
 export default class Role {
     
+    /**
+     * The client that this Role belongs to.
+     */
     client: Client = null!;
+    /**
+     * The ID of this Role.
+     */
     readonly id: string;
+    /**
+     * The guild this Role belongs to.
+     */
     guild: Guild = null!;
+    /**
+     * The name of this Role.
+     */
     name: string | null = null;
+    /**
+     * The color of this Role as a hex color string.
+     */
     color: string | null = null;
+    /**
+     * Whether or not this Role is hoisted on the member
+     * list.
+     */
     hoist: boolean | null = null;
+    /**
+     * The icon hash of this Role.
+     */
     icon: string | null = null;
+    /**
+     * Whether or not this Role is managed by Discord,
+     * another application or a bot. If so, it cannot be
+     * deleted.
+     */
     managed: boolean | null = null;
+    /**
+     * Whether or not anyone can mention this Role.
+     */
     mentionable: boolean | null = null;
+    /**
+     * The permissions of this Role.
+     */
     permissions: RolePermissionsBlock = null!;
+    /**
+     * The position of this Role.
+     */
     position: number | null = null;
+    /**
+     * The unicode emoji of this Role.
+     */
     unicodeEmoji: string | null = null;
 
+    /**
+     * A Role represents a role in a guild on Discord.
+     * 
+     * @param {Client} client The client that this Role belongs to.
+     * @param {any} data The data of this Role.
+     * @param {Guild} guild The guild this Role belongs to.
+     */
     constructor (client: Client, data: any, guild: Guild) {
         if (typeof data.id !== 'string') {
             throw new GuildError('invalid role data provided');
@@ -43,7 +88,13 @@ export default class Role {
         this.build(data);
     }
 
-    private build (data: any): void {
+    /**
+     * Build this Role.
+     * 
+     * @param {any} data The data to build this Role with.
+     * @returns {Role} This Role.
+     */
+    private build (data: any): Role {
         if ('name' in data) {
             this.name = data.name;
         }
@@ -72,6 +123,8 @@ export default class Role {
         if ('unicode_emoji' in data) {
             this.unicodeEmoji = data.unicode_emoji;
         }
+
+        return this;
     }
 
     /**
@@ -244,7 +297,13 @@ export default class Role {
         return this;
     }
 
-    private static toIdOnly (role: RoleResolvable): string {
+    /**
+     * Convert a RoleResolvable into a role ID (string).
+     * 
+     * @param {RoleResolvable} role The Role to convert.
+     * @returns {string} The ID of the Role.
+     */
+    protected static toIdOnly (role: RoleResolvable): string {
         if (typeof role === 'string') {
             return role;
         } else if (role instanceof Role) {

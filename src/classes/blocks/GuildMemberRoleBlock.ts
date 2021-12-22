@@ -14,6 +14,13 @@ import CCache from '../cache/CCache';
 
 export default class GuildMemberRoleBlock extends CachedBlock {
 
+    /**
+     * A GuildMemberRoleBlock stores data on a guild
+     * guild member's roles.
+     * 
+     * @param {Client} client The client instance.
+     * @param {any} [options] The Cache options.
+     */
     constructor (client: Client, options?: any) {
         super(client, new CCache(client, options));
     }

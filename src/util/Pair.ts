@@ -10,9 +10,21 @@
 
 export default class Pair<Key, Value> {
 
+    /**
+     * The key of this pair.
+     */
     key: Key;
+    /**
+     * The value of this pair.
+     */
     value: Value;
 
+    /**
+     * A Pair is a key-value pair.
+     * 
+     * @param {Key} key The key of this pair.
+     * @param {Value} value The value of this pair.
+     */
     constructor (key: Key, value: Value) {
         this.key = key;
         this.value = value;

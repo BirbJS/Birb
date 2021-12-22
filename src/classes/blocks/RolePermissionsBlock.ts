@@ -15,8 +15,18 @@ import BitsBlock from './BitsBlock';
 
 export default class RolePermissionsBlock extends PermissionsBlock {
 
+    /**
+     * The Role this PermissionsBlock is for.
+     */
     role: Role = null!;
 
+    /**
+     * A RolePermissionsBlock stores role permissions data.
+     * 
+     * @param {Client} client The client instance.
+     * @param {Role} role The Role this PermissionsBlock is for.
+     * @param {...number[]} flags The permissions to set.
+     */
     constructor (client: Client, role: Role, ...flags: number[]) {
         super(client, ...flags);
         this.role = role;

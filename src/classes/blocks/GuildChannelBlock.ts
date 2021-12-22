@@ -13,9 +13,20 @@ import Client from '../Client';
 
 export default class GuildChannelBlock {
 
+    /**
+     * The client that initiliazed the block.
+     */
     client: Client = null!;
+    /**
+     * The cache full of channels.
+     */
     cache: RefrenceCache = null!;
 
+    /**
+     * A GuildChannelBlock stores guild channel data.
+     * 
+     * @param {Client} client The client instance.
+     */
     constructor (client: Client) {
         this.client = client;
         this.cache = new RefrenceCache(client, 'channels');
