@@ -16,14 +16,8 @@ export default class EmbedAuthor extends EmbedChild {
      * The name of the author.
      */
     name: string = null!;
-    /**
-     * The URL of the author.
-     */
-    url: string | null = null;
-    /**
-     * The icon URL of the author.
-     */
-    iconUrl: string | null = null;
+    url?: string;
+    iconUrl?: string;
 
     /**
      * An EmbedAuthor stores data on the author field of
@@ -36,8 +30,8 @@ export default class EmbedAuthor extends EmbedChild {
     constructor (name: string, url?: string, iconUrl?: string) {
         super();
         this.name = name;
-        this.url = url ?? null;
-        this.iconUrl = iconUrl ?? null;
+        this.url = url;
+        this.iconUrl = iconUrl;
     }
 
     /**
@@ -54,10 +48,10 @@ export default class EmbedAuthor extends EmbedChild {
     /**
      * Set the URL of the author.
      * 
-     * @param {string | null} url The URL of the author. `null` to remove the URL.
+     * @param {string | undefined} url The URL of the author. Pass through no arguments to remove the URL.
      * @returns {EmbedAuthor} The updated EmbedAuthor.
      */
-    setUrl (url: string | null): EmbedAuthor {
+    setUrl (url?: string): EmbedAuthor {
         this.url = url;
         return this;
     }
@@ -65,10 +59,10 @@ export default class EmbedAuthor extends EmbedChild {
     /**
      * Set the icon URL of the author.
      * 
-     * @param {string | null} iconUrl A publicly-accessible URL to an image to use as the author's icon. `null` to remove the icon.
+     * @param {string | undefined} iconUrl A publicly-accessible URL to an image to use as the author's icon. Pass through no arguments to remove the icon.
      * @returns {EmbedAuthor} The updated EmbedAuthor.
      */
-    setIconUrl (iconUrl: string | null): EmbedAuthor {
+    setIconUrl (iconUrl?: string): EmbedAuthor {
         this.iconUrl = iconUrl;
         return this;
     }
@@ -79,7 +73,7 @@ export default class EmbedAuthor extends EmbedChild {
      * @returns {EmbedAuthor} The updated EmbedAuthor.
      */
     removeUrl (): EmbedAuthor {
-        this.url = null;
+        this.url = undefined;
         return this;
     }
 
@@ -89,7 +83,7 @@ export default class EmbedAuthor extends EmbedChild {
      * @returns {EmbedAuthor} The updated EmbedAuthor.
      */
     removeIcon (): EmbedAuthor {
-        this.iconUrl = null;
+        this.iconUrl = undefined;
         return this;
     }
 

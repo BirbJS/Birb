@@ -20,6 +20,7 @@ import Embed from './message/embed/MessageEmbed';
 import { MessageFlags, MessageTypes, SystemMessageTypes } from '../util/Constants';
 import User from './User';
 import MessageAttachment from './message/MessageAttachment';
+import MessageEmbed from './message/embed/MessageEmbed';
 
 export default class Message {
     
@@ -301,13 +302,10 @@ export default class Message {
         if (typeof data === 'string') {
             return { content: data };
         }
-        if (data instanceof Embed) {
-            return { embeds: [ data.format() ] };
-        }
         if (edit) {
             return {
                 content: data.content ?? undefined,
-                embeds: data.embeds?.map(e => e.format()) ?? undefined,
+                embeds: data.embeds?.map(e => e instanceof MessageEmbed ? e.format() : e) ?? undefined,
                 tts: data.tts ?? undefined,
                 nonce: data.nonce ?? undefined,
                 attachments: data.attachments ?? undefined,
@@ -321,7 +319,7 @@ export default class Message {
         } else {
             return {
                 content: data.content ?? null,
-                embeds: data.embeds?.map(e => e.format()) ?? [],
+                embeds: data.embeds?.map(e => e instanceof MessageEmbed ? e.format() : e) ?? [],
                 tts: data.tts ?? false,
                 nonce: data.nonce ?? null,
                 attachments: data.attachments ?? [],

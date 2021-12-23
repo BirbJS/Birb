@@ -20,7 +20,7 @@ export default class EmbedFooter extends EmbedChild {
      * The URL of the icon displayed at the bottom of the
      * embed.
      */
-    iconUrl: string | null = null;
+    iconUrl?: string;
 
     /**
      * An EmbedFooter stores data on the footer field of
@@ -32,7 +32,7 @@ export default class EmbedFooter extends EmbedChild {
     constructor (text: string, iconUrl?: string) {
         super();
         this.text = text;
-        this.iconUrl = iconUrl ?? null;
+        this.iconUrl = iconUrl ?? undefined;
     }
 
     /**
@@ -50,10 +50,10 @@ export default class EmbedFooter extends EmbedChild {
      * Set the URL of the icon displayed at the bottom of the
      * embed.
      * 
-     * @param {string | null} url The URL of the icon. `null` to remove the URL.
+     * @param {string | undefined} url The URL of the icon. Pass through no arguments to remove the URL.
      * @returns {EmbedFooter} The updated EmbedFooter.
      */
-    setIconUrl (iconUrl: string): EmbedFooter {
+    setIconUrl (iconUrl?: string): EmbedFooter {
         this.iconUrl = iconUrl;
         return this;
     }
@@ -65,7 +65,7 @@ export default class EmbedFooter extends EmbedChild {
      * @returns {EmbedFooter} The updated EmbedFooter.
      */
     removeIcon (): EmbedFooter {
-        this.iconUrl = null;
+        this.iconUrl = undefined;
         return this;
     }
 

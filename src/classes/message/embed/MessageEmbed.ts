@@ -20,43 +20,43 @@ export default class MessageEmbed extends BaseComponent {
     /**
      * The title of this embed.
      */
-    title: string | null = null;
+    title?: string;
     /**
      * The description of this embed.
      */
-    description: string | null = null;
+    description?: string;
     /**
      * The URL of this embed (makes the title clickable).
      */
-    url: string | null = null;
+    url?: string;
     /**
      * The timestamp of this embed (shows in the footer).
      */
-    timestamp: Date | null = null;
+    timestamp?: Date;
     /**
      * The color of this embed as a hex string.
      */
-    color: string | null = null;
+    color?: string;
     /**
      * The footer of this embed.
      */
-    footer: EmbedFooter | null = null;
+    footer?: EmbedFooter;
     /**
      * The image in this embed.
      */
-    image: EmbedMedia | null = null;
+    image?: EmbedMedia;
     /**
      * The thumbnail for this embed.
      */
-    thumbnail: EmbedMedia | null = null;
+    thumbnail?: EmbedMedia;
     /**
      * The video for this embed (usually not settable).
      */
-    video: EmbedMedia | null = null;
+    video?: EmbedMedia;
     /**
      * The author of this embed.
      */
-    author: EmbedAuthor | null = null;
+    author?: EmbedAuthor;
     /**
      * This embed's fields.
      */
@@ -267,7 +267,7 @@ export default class MessageEmbed extends BaseComponent {
             description: this.description,
             url: this.url,
             timestamp: this.timestamp?.toISOString(),
-            color: this.color ? Color.hexToInt(this.color): null,
+            color: this.color ? Color.hexToInt(this.color): undefined,
             footer: this.footer?.format(),
             image: this.image?.format(),
             thumbnail: this.thumbnail?.format(),
