@@ -302,9 +302,6 @@ export default class Message {
         if (typeof data === 'string') {
             return { content: data };
         }
-        if (data instanceof Embed) {
-            return { embeds: [ data.format() ] };
-        }
         if (edit) {
             return {
                 content: data.content ?? undefined,
