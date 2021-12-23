@@ -16,6 +16,7 @@ import Embed from '../classes/message/embed/MessageEmbed';
 import MessageAttachment from '../classes/message/MessageAttachment';
 import Role from '../classes/Role';
 import User from '../classes/User';
+import type { APIEmbed } from 'discord-api-types/v9';
 
 export type GuildResolvable = Guild | string;
 export type RoleResolvable = Role | string;
@@ -23,15 +24,15 @@ export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
-export type MessageContent = string | Embed | {
+export type MessageContent = string | {
     content?: string;
-    embeds?: Embed[],
+    embeds?: Embed[] | APIEmbed[],
     tts?: boolean;
     nonce?: string;
     mentionRepliedUser?: boolean;
     attachments?: [ MessageAttachment ],
     allowedMentions?: {
-        parse?: [ 'users' | 'roles' | 'everyone' ];
+        parse?: 'users' | 'roles' | 'everyone';
         users?: UserResolvable[];
         roles?: RoleResolvable[];
     }
