@@ -24,16 +24,24 @@ export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
-export type MessageContent = string | {
+export type MessageContent = string | RequireOnlyOne<{
     content?: string;
     embeds?: Embed[] | APIEmbed[],
     tts?: boolean;
     nonce?: string;
     mentionRepliedUser?: boolean;
-    attachments?: [ MessageAttachment ],
+    attachments?: MessageAttachment[],
     allowedMentions?: {
         parse?: 'users' | 'roles' | 'everyone';
         users?: UserResolvable[];
         roles?: RoleResolvable[];
     }
-}
+}, 'content' | 'embeds'>
+
+type RequireOnlyOne<T, Keys extends keyof T = keyof T> =
+    Pick<T, Exclude<keyof T, Keys>>
+    & {
+        [K in Keys]-?:
+            Required<Pick<T, K>>
+            & Partial<Record<Exclude<Keys, K>, undefined>>
+    }[Keys]
