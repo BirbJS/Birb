@@ -8,22 +8,54 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export default class BitsBlock {
+import { BitsResolvable } from "../../util/Types"
+
+export default class BitsBlock<Flags extends string> {
 
     /**
-     * The flags of the bitfield.
+     * The bits of the bitfield.
      */
-    flags: number = 0;
+    bitfield: number = 0;
+    protected ENUM: { [key in Flags]: number }
 
     /**
      * A BitsBlock stores bitfield data provided by Discord.
      * 
-     * @param {...number[]} flags The flags to set.
+     * @param {Object} flags All available flags
+     * @param {string[] | number} bits Bits to add
      */
-    constructor (...flags: number[]) {
-        if (flags) {
-            for ( let i = 0; i < flags.length; ++i ) this.add(flags[i]);
+    constructor(flags: BitsBlock<Flags>["ENUM"], bits?: BitsResolvable<Flags>) {
+        this.ENUM = flags
+        this.set(bits || 0)
+    }
+
+    /**
+     * Converts BitsResolvable to number.
+     * 
+     * @param {string[] | number} flags The flags you want to convert.
+     * @returns {number} The converted number.
+     */
+    convert(flags: BitsResolvable<Flags>): number {
+        let bits = 0
+
+        if (Array.isArray(flags)) {
+            for (let i = 0; i < flags.length; ++i) {
+                let bit: number = this.ENUM[flags[i] as Flags]
+                // if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
+                bits |= bit
+            }
+        } else if (!Number.isInteger(flags)) {
+            let bit = this.ENUM[flags as Flags]
+            // if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
+            bits |= bit
+        } else if (typeof flags === 'number') {
+            if (!(Math.log2(flags) % 1 === 0)) throw new Error(`Bit ${flags} is not a valid bit`)
+            bits |= flags
+        } else {
+            // throw new Error(`Cannot convert ${flags} into possible bits`)
         }
+
+        return bits
     }
 
     /**
@@ -32,22 +64,26 @@ export default class BitsBlock {
      * @param {...number[]} flags The flags to add.
      * @returns {BitsBlock} The updated block.
      */
-    add (...flags: number[]): BitsBlock {
-        for ( let i = 0; i < flags.length; ++i ) {
-            let flag = flags[i];
-            if ( !this.has(flag) ) this.flags |= flag;
+    add(...flags: BitsResolvable<Flags>[]): BitsBlock<Flags> {
+        let bits = 0
+
+        for (let i = 0; i < flags.length; ++i) {
+            bits |= this.convert(bits)
         }
+
+        this.bitfield |= bits
+
         return this;
     }
 
     /**
      * Sets the flags of the block.
      * 
-     * @param {...number[]} flags The flags to set.
+     * @param {number | string[]} flags The flags to set.
      * @returns {BitsBlock} The updated block.
      */
-    set (flags: number): BitsBlock {
-        this.flags = flags;
+    set(bits: BitsResolvable<Flags>): BitsBlock<Flags> {
+        this.bitfield = this.convert(bits);
         return this;
     }
 
@@ -57,11 +93,15 @@ export default class BitsBlock {
      * @param {...number[]} flags The flags to remove.
      * @returns {BitsBlock} The updated block.
      */
-    remove (...flags: number[]): BitsBlock {
-        for ( let i = 0; i < flags.length; ++i ) {
-            let flag = flags[i];
-            if ( this.has(flag) ) this.flags ^= flag;
+    remove(...flags: BitsResolvable<Flags>[]): BitsBlock<Flags> {
+        let bits = 0
+
+        for (let i = 0; i < flags.length; ++i) {
+            bits |= this.convert(bits)
         }
+
+        this.bitfield ^= bits
+
         return this;
     }
 
@@ -71,8 +111,9 @@ export default class BitsBlock {
      * @param {number} flag The flag to check.
      * @returns {boolean} The result.
      */
-    has (flag: number): boolean {
-        return (this.flags & flag) === flag;
+    has(flags: BitsResolvable<Flags>): boolean {
+        let bit = this.convert(flags)
+        return (this.bitfield & bit) === bit;
     }
 
     /**
@@ -80,8 +121,8 @@ export default class BitsBlock {
      * 
      * @returns {boolean} `true` if the block is empty, `false` otherwise.
      */
-    isEmpty (): boolean {
-        return this.flags == 0;
+    isEmpty(): boolean {
+        return this.bitfield == 0;
     }
 
     /**
@@ -90,8 +131,8 @@ export default class BitsBlock {
      * 
      * @returns {BitsBlock} The new block.
      */
-    clone (): BitsBlock {
-        return new BitsBlock(this.flags);
+    clone(): BitsBlock<Flags> {
+        return new BitsBlock(this.ENUM, this.bitfield);
     }
 
 }

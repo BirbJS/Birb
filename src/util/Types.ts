@@ -24,6 +24,7 @@ export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
+export type BitsResolvable<Flags> = Flags | Flags[] | number;
 export type MessageContent = string | RequireOnlyOne<{
     content?: string;
     embeds?: Embed[] | APIEmbed[],
