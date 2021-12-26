@@ -18,8 +18,8 @@ import Role from '../classes/Role';
 import User from '../classes/User';
 import { Permissions as PermissionFlags, Intents as IntentFlags } from './Constants'
 import type { APIEmbed } from 'discord-api-types/v9';
-import Permissions from "../classes/Permissions"
-import PermissionsBlock from '../classes/blocks/PermissionsBlock';
+// import Permissions from "../classes/Permissions"
+// import PermissionsBlock from '../classes/blocks/PermissionsBlock';
 
 export type GuildResolvable = Guild | string;
 export type RoleResolvable = Role | string;

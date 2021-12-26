@@ -117,6 +117,8 @@ import {
     ActivityStatus,
     MessageContent,
     BitResolvable,
+    IntentResolvable,
+    PermissionResolvable,
 } from './util/Types';
 import Validator from './util/Validator';
 
@@ -215,6 +217,8 @@ export {
     ActivityStatus,
     MessageContent,
     BitResolvable,
+    PermissionResolvable,
+    IntentResolvable,
 
     Validator,
 
