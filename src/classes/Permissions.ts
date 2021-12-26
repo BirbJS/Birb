@@ -26,17 +26,18 @@ export default class Permissions extends BitsBlock<keyof typeof PermissionFlags>
      * @param {PermissionResolvable} flags The permission flags.
      */
     constructor (flags?: PermissionResolvable) {
-        super(Permissions.FLAGS, flags);
-    }
-
-    convert(flags: PermissionResolvable): number {
-        if(flags instanceof Permissions) {
-            return flags.bitfield
-        } else if(flags instanceof PermissionsBlock) {
-            return flags.permissions.bitfield
-        } else {
-            return super.convert(flags)
-        }
+        super(Permissions.FLAGS,
+                (flags: PermissionResolvable): number => {
+                    if(flags instanceof Permissions) {
+                        return flags.bitfield
+                    } else if(flags instanceof PermissionsBlock) {
+                        return flags.permissions.bitfield
+                    } else {
+                        return super.resolve(flags)
+                    }
+                },
+            flags
+        );
     }
 
     /**
@@ -49,8 +50,12 @@ export default class Permissions extends BitsBlock<keyof typeof PermissionFlags>
      * @param {PermissionResolvable} flag The permission flag to check for.
      * @returns {boolean} Whether or not the permission flag exists.
      */
-    has (flags: PermissionResolvable): boolean {
-        return super.has(this.convert(flags)) || super.has("ADMINISTRATOR")
+    has (flags: PermissionResolvable, options: {
+        adminOverride: boolean
+    } = { 
+        adminOverride: true 
+    }): boolean {
+        return (options.adminOverride && super.has("ADMINISTRATOR")) || super.has(flags)
     }
 
 }
