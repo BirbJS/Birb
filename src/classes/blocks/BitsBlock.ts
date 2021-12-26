@@ -126,8 +126,7 @@ export default class BitsBlock<Flags extends string> {
     }
 
     /**
-     * Returns a new BitsBlock with the flags of this
-     * block.
+     * Returns a new BitsBlock with the flags of this block.
      * 
      * @returns {BitsBlock} The new block.
      */

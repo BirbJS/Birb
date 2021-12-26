@@ -10,8 +10,9 @@
 
 import BitsBlock from './blocks/BitsBlock';
 import { Intents as IntentFlags } from '../util/Constants';
+import { BitsResolvable } from '../util/Types';
 
-export default class Intents extends BitsBlock {
+export default class Intents extends BitsBlock<keyof typeof IntentFlags> {
 
     /**
      * The available Intents.
@@ -26,8 +27,8 @@ export default class Intents extends BitsBlock {
      * 
      * @param {number} flags The flags to set.
      */
-    constructor (...flags: number[]) {
-        super(...flags);
+    constructor (flags: BitsResolvable<keyof typeof IntentFlags>) {
+        super(IntentFlags, flags);
     }
 
 }

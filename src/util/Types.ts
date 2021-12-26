@@ -22,6 +22,7 @@ export type GuildResolvable = Guild | string;
 export type RoleResolvable = Role | string;
 export type ChannelResolvable = Channel | string;
 export type UserResolvable = User | ClientUser | BaseUser | string;
+export type BitsResolvable<Flags = string> = Flags | Flags[] | number | bigint;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
 export type BitsResolvable<Flags> = Flags | Flags[] | number;
