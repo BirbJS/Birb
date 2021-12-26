@@ -46,7 +46,6 @@ export default class BitsBlock<Flags extends string> {
             // if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
             bits |= bit
         } else if (typeof flags === 'number') {
-            if (!(Math.log2(flags) % 1 === 0)) throw new Error(`Bit ${flags} is not a valid bit`)
             bits |= flags
         } else {
             // throw new Error(`Cannot convert ${flags} into possible bits`)
