@@ -28,7 +28,7 @@ export default class Intents extends BitsBlock<keyof typeof IntentFlags> {
      * @param {string | string[] | number} flags The flags to set.
      */
     constructor (flags: IntentResolvable) {
-        super(IntentFlags, undefined, flags);
+        super(IntentFlags, flags);
     }
 
 }
