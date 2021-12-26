@@ -374,7 +374,7 @@ export default class Websocket extends InternalWebsocket {
             op: PacketOperation.IDENTIFY,
             d: {
                 token: this.client.token,
-                intents: this.client.options.intents.flags,
+                intents: this.client.options.intents.bitfield,
                 properties: {
                     '$os': process.platform,
                     '$browser': 'birb.js',

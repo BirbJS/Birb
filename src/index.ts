@@ -116,7 +116,7 @@ import {
     EventResolvable,
     ActivityStatus,
     MessageContent,
-    BitsResolvable,
+    BitResolvable,
 } from './util/Types';
 import Validator from './util/Validator';
 
@@ -214,7 +214,7 @@ export {
     EventResolvable,
     ActivityStatus,
     MessageContent,
-    BitsResolvable,
+    BitResolvable,
 
     Validator,
 

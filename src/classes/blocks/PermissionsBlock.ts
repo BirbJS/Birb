@@ -10,6 +10,7 @@
 
 import Permissions from '../Permissions';
 import Client from '../Client';
+import { PermissionResolvable } from '../../util/Types';
 
 export default class PermissionsBlock {
 
@@ -20,76 +21,76 @@ export default class PermissionsBlock {
     /**
      * The permissions bits.
      */
-    bits: Permissions = null!;
+    permissions: Permissions = null!;
 
     /**
      * The PermissionsBlock stores permissions data.
      * 
      * @param {Client} client The client instance.
-     * @param {number} [flags] The permissions bits.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} [flags] The permissions bits.
      */
-    constructor (client: Client, ...flags: number[]) {
+    constructor (client: Client, flags: PermissionResolvable) {
         this.client = client;
-        this.bits = new Permissions(...flags);
+        this.permissions = new Permissions(flags);
     }
 
     /**
      * Add a permission bit.
      * 
-     * @param {number} flags The permission bit.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} flags The permission bit.
      * @returns {PermissionsBlock} The updated PermissionsBlock.
      */
-    add (...flags: number[]): PermissionsBlock {
-        this.bits.add(...flags);
+    add (...flags: PermissionResolvable[]): PermissionsBlock {
+        this.permissions.add(...flags);
         return this;
     }
 
     /**
      * Remove a permission bit.
      * 
-     * @param {number} flags The permission bit.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} flags The permission bit.
      * @returns {PermissionsBlock} The updated PermissionsBlock.
      */
-    remove (...flags: number[]): PermissionsBlock {
-        this.bits.remove(...flags);
+    remove (...flags: PermissionResolvable[]): PermissionsBlock {
+        this.permissions.remove(...flags);
         return this;
     }
 
     /**
      * Check if the PermissionsBlock has a permission bit.
      * 
-     * @param {number} flag The permission bit.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} flag The permission bit.
      * @param {object} [options] The options.
      * @param {boolean} [options.adminOverride=true] Whether or not to take administrator permissions into account.
      * @returns {boolean} Whether or not the PermissionsBlock has the permission bit.
      */
-    has (flag: number, options: {
+    has (flag: PermissionResolvable, options: {
         adminOverride?: boolean
     } = {
         adminOverride: true
     }): boolean {
         if (options.adminOverride) {
-            return this.bits.hasPermission(flag);
+            return this.permissions.has(flag);
         } else {
-            return this.bits.has(flag);
+            return this.permissions.has(flag);
         }
     }
 
     /**
      * Compare the PermissionsBlock to another PermissionsBlock.
      * 
-     * @param {PermissionsBlock | Permissions | number} check The PermissionsBlock or Permissions to compare to.
+     * @param {PermissionsBlock | Permissions | Permissions.FLAGS | Permissions.FLAGS[] | number} check The PermissionsBlock or Permissions to compare to.
      * @returns {boolean} Whether or not the PermissionsBlock has the same permissions as the other.
      */
-    equals (check: PermissionsBlock | Permissions | number): boolean {
+    equals (check: PermissionsBlock | Permissions | PermissionResolvable): boolean {
         if (check instanceof PermissionsBlock) {
-            return this.bits.flags == check.bits.flags;
+            return this.permissions.bitfield == check.permissions.bitfield;
         } else if (check instanceof Permissions) {
-            return this.bits.flags == check.flags;
+            return this.permissions.bitfield == check.bitfield;
         } else if (typeof check == 'number') {
-            return this.bits.flags == check;
+            return this.permissions.bitfield == check;
         } else {
-            throw new TypeError(`Expected PermissionsBlock, Permissions or number, got ${typeof check}`);
+            throw new TypeError(`Expected PermissionsBlock, Permissions, or PermissionResolvable, got ${typeof check}`);
         }
     }
 

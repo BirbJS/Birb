@@ -10,7 +10,8 @@
 
 import BitsBlock from './blocks/BitsBlock';
 import { Permissions as PermissionFlags } from '../util/Constants';
-import { BitsResolvable } from '../util/Types';
+import { PermissionResolvable } from '../util/Types';
+import PermissionsBlock from './blocks/PermissionsBlock';
 
 export default class Permissions extends BitsBlock<keyof typeof PermissionFlags> {
 
@@ -22,10 +23,20 @@ export default class Permissions extends BitsBlock<keyof typeof PermissionFlags>
     /**
      * Permissions objects store permission data.
      * 
-     * @param {number} flags The permission flags.
+     * @param {PermissionResolvable} flags The permission flags.
      */
-    constructor (flags: BitsResolvable<keyof typeof PermissionFlags>) {
+    constructor (flags?: PermissionResolvable) {
         super(Permissions.FLAGS, flags);
+    }
+
+    convert(flags: PermissionResolvable): number {
+        if(flags instanceof Permissions) {
+            return flags.bitfield
+        } else if(flags instanceof PermissionsBlock) {
+            return flags.permissions.bitfield
+        } else {
+            return super.convert(flags)
+        }
     }
 
     /**
@@ -35,11 +46,11 @@ export default class Permissions extends BitsBlock<keyof typeof PermissionFlags>
      * to ignore the administrator permission, use the
      * `has` method instead.
      * 
-     * @param {number} flag The permission flag to check for.
+     * @param {PermissionResolvable} flag The permission flag to check for.
      * @returns {boolean} Whether or not the permission flag exists.
      */
-    has (flags: BitsResolvable<keyof typeof PermissionFlags>): boolean {
-        return super.has(flags) || super.has("ADMINISTRATOR")
+    has (flags: PermissionResolvable): boolean {
+        return super.has(this.convert(flags)) || super.has("ADMINISTRATOR")
     }
 
 }

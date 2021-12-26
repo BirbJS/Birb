@@ -11,7 +11,8 @@
 import Client from '../Client';
 import Role from '../Role';
 import PermissionsBlock from './PermissionsBlock';
-import BitsBlock from './BitsBlock';
+import Permissions from '../Permissions';
+import { PermissionResolvable } from '../../util/Types';
 
 export default class RolePermissionsBlock extends PermissionsBlock {
 
@@ -25,72 +26,60 @@ export default class RolePermissionsBlock extends PermissionsBlock {
      * 
      * @param {Client} client The client instance.
      * @param {Role} role The Role this PermissionsBlock is for.
-     * @param {...number[]} flags The permissions to set.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} flags The permissions to set.
      */
-    constructor (client: Client, role: Role, ...flags: number[]) {
-        super(client, ...flags);
+    constructor (client: Client, role: Role, flags: PermissionResolvable) {
+        super(client, flags);
         this.role = role;
     }
 
     /**
      * Grant the role the specified permissions.
      * 
-     * @param {Permissions.FLAGS | number[] | number} permissions The permissions to grant.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} permissions The permissions to grant.
      * @param {Object} options The options for the action.
      * @param {string} [options.reason] The reason for the action.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async grant (permissions: number[] | number, options: {
+    async grant (permissions: PermissionResolvable, options: {
         reason?: string
     } = {}): Promise<Role> {
-        let bits = this.bits.clone();
-        if (typeof permissions == 'number') {
-            bits.add(permissions);
-        } else {
-            for ( let i = 0; i < permissions.length; ++i ) bits.add(permissions[i]);
-        }
-        return await this.set(bits.flags, options);
+        let bits = this.permissions.clone();
+        bits.add(permissions)
+        return await this.set(bits.bitfield, options);
     }
 
     /**
      * Revoke the specified permissions from the Role.
      * 
-     * @param {Permissions.FLAGS | number[] | number} permissions The permissions to revoke.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} permissions The permissions to revoke.
      * @param {Object} options The options for the action.
      * @param {string} [options.reason] The reason for the action.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async revoke (permissions: number[] | number, options: {
+    async revoke (permissions: PermissionResolvable, options: {
         reason?: string
     } = {}): Promise<Role> {
-        let bits = this.bits.clone();
-        if (typeof permissions == 'number') {
-            bits.remove(permissions);
-        } else {
-            for ( let i = 0; i < permissions.length; ++i ) bits.remove(permissions[i]);
-        }
-        return await this.set(bits.flags, options);
+        let bits = this.permissions.clone();
+        bits.remove(permissions)
+        return await this.set(bits.bitfield, options);
     }
 
     /**
      * Set the permissions for the Role.
      * 
-     * @param {Permissions.FLAGS | number[] | number} permissions The permissions to set.
+     * @param {Permissions.FLAGS | Permissions.FLAGS[] | number} permissions The permissions to set.
      * @param {Object} options The options for the action.
      * @param {string} [options.reason] The reason for the action.
      * @returns {Promise<Role>} A Promise that resolves to the modified Role.
      */
-    async set (permissions: number[] | number, options: {
+    async set (permissions: PermissionResolvable, options: {
         reason?: string
     } = {}): Promise<Role> {
-        let bits = new BitsBlock(0);
-        if (typeof permissions == 'number') {
-            bits.set(permissions);
-        } else {
-            for ( let i = 0; i < permissions.length; ++i ) bits.add(permissions[i]);
-        }
-        if (bits.flags == this.bits.flags) return this.role;
-        return await this.role.modify({ permissions: bits.flags }, options.reason);
+        let bits = new Permissions(0);
+        bits.set(permissions)
+        if (bits.bitfield == this.permissions.bitfield) return this.role;
+        return await this.role.modify({ permissions: bits.bitfield }, options.reason);
     }
 
 }

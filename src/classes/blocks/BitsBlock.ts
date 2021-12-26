@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { BitsResolvable } from "../../util/Types"
+import { BitResolvable } from "../../util/Types"
 
 export default class BitsBlock<Flags extends string> {
 
@@ -22,20 +22,20 @@ export default class BitsBlock<Flags extends string> {
      * A BitsBlock stores bitfield data provided by Discord.
      * 
      * @param {Object} flags All available flags
-     * @param {string[] | number} bits Bits to add
+     * @param {Flags | Flags[] | number} bits Bits to add
      */
-    constructor(flags: BitsBlock<Flags>["ENUM"], bits?: BitsResolvable<Flags>) {
+    constructor(flags: BitsBlock<Flags>["ENUM"], bits?: BitResolvable<Flags>) {
         this.ENUM = flags
         this.set(bits || 0)
     }
 
     /**
-     * Converts BitsResolvable to number.
+     * Converts BitResolvable to number.
      * 
-     * @param {string[] | number} flags The flags you want to convert.
+     * @param {Flags | Flags[] | number} flags The flags you want to convert.
      * @returns {number} The converted number.
      */
-    convert(flags: BitsResolvable<Flags>): number {
+    convert(flags: BitResolvable<Flags>): number {
         let bits = 0
 
         if (Array.isArray(flags)) {
@@ -61,10 +61,10 @@ export default class BitsBlock<Flags extends string> {
     /**
      * Adds a flag (bit) to the block.
      * 
-     * @param {...number[]} flags The flags to add.
+     * @param {...Flags[] | ...number[]} flags The flags to add.
      * @returns {BitsBlock} The updated block.
      */
-    add(...flags: BitsResolvable<Flags>[]): BitsBlock<Flags> {
+    add(...flags: BitResolvable<Flags>[]): BitsBlock<Flags> {
         let bits = 0
 
         for (let i = 0; i < flags.length; ++i) {
@@ -79,10 +79,10 @@ export default class BitsBlock<Flags extends string> {
     /**
      * Sets the flags of the block.
      * 
-     * @param {number | string[]} flags The flags to set.
+     * @param {Flags | Flags[] | number} flags The flags to set.
      * @returns {BitsBlock} The updated block.
      */
-    set(bits: BitsResolvable<Flags>): BitsBlock<Flags> {
+    set(bits: BitResolvable<Flags>): BitsBlock<Flags> {
         this.bitfield = this.convert(bits);
         return this;
     }
@@ -90,10 +90,10 @@ export default class BitsBlock<Flags extends string> {
     /**
      * Removes a flag (bit) from the block.
      * 
-     * @param {...number[]} flags The flags to remove.
+     * @param {...Flags[] | ...number[]} flags The flags to remove.
      * @returns {BitsBlock} The updated block.
      */
-    remove(...flags: BitsResolvable<Flags>[]): BitsBlock<Flags> {
+    remove(...flags: BitResolvable<Flags>[]): BitsBlock<Flags> {
         let bits = 0
 
         for (let i = 0; i < flags.length; ++i) {
@@ -108,10 +108,10 @@ export default class BitsBlock<Flags extends string> {
     /**
      * Check if a flag (bit) is in the block.
      * 
-     * @param {number} flag The flag to check.
+     * @param {Flags | Flags[] | number} flag The flag to check.
      * @returns {boolean} The result.
      */
-    has(flags: BitsResolvable<Flags>): boolean {
+    has(flags: BitResolvable<Flags>): boolean {
         let bit = this.convert(flags)
         return (this.bitfield & bit) === bit;
     }
@@ -132,6 +132,10 @@ export default class BitsBlock<Flags extends string> {
      */
     clone(): BitsBlock<Flags> {
         return new BitsBlock(this.ENUM, this.bitfield);
+    }
+
+    toArray(): Flags[] {
+        return Object.keys(this.ENUM).filter((bit) => this.has(bit as Flags)) as Flags[]
     }
 
 }
