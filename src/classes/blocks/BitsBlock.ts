@@ -17,7 +17,6 @@ export default class BitsBlock<Flags extends string> {
      */
     bitfield: number = 0;
     protected ENUM: { [key in Flags]: number }
-    readonly resolve: (f: any) => number
 
     /**
      * A BitsBlock stores bitfield data provided by Discord.
@@ -28,30 +27,32 @@ export default class BitsBlock<Flags extends string> {
     constructor(flags: BitsBlock<Flags>["ENUM"], resolver?: (f: any) => number, bits?: BitResolvable<Flags>) {
         this.ENUM = flags
 
-        this.resolve = resolver || ((flags: BitResolvable<Flags>) => {
-            let bits = 0
-
-            if (Array.isArray(flags)) {
-                for (let i = 0; i < flags.length; ++i) {
-                    let bit: number = this.ENUM[flags[i] as Flags]
-                    // if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
-                    bits |= bit
-                }
-            } else if (!Number.isInteger(flags)) {
-                let bit = this.ENUM[flags as Flags]
-                // if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
-                bits |= bit
-            } else if (typeof flags === 'number') {
-                if (!(Math.log2(flags) % 1 === 0)) throw new Error(`Bit ${flags} is not a valid bit`)
-                bits |= flags
-            } else {
-                // throw new Error(`Cannot convert ${flags} into possible bits`)
-            }
-
-            return bits
-        })
+        this.resolve = resolver || this.resolve
 
         this.set(bits || 0)
+    }
+
+    resolve(flags: BitResolvable<Flags>) {
+        let bits = 0
+
+        if (Array.isArray(flags)) {
+            for (let i = 0; i < flags.length; ++i) {
+                let bit: number = this.ENUM[flags[i] as Flags]
+                // if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
+                bits |= bit
+            }
+        } else if (!Number.isInteger(flags)) {
+            let bit = this.ENUM[flags as Flags]
+            // if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
+            bits |= bit
+        } else if (typeof flags === 'number') {
+            if (!(Math.log2(flags) % 1 === 0)) throw new Error(`Bit ${flags} is not a valid bit`)
+            bits |= flags
+        } else {
+            // throw new Error(`Cannot convert ${flags} into possible bits`)
+        }
+
+        return bits
     }
 
     /**
