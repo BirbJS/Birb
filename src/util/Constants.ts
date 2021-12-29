@@ -403,182 +403,167 @@ export enum WebhookTypes {
 
 export enum Permissions {
     /**
-     * Create new invite links.
+     * Allows creation of instant invites.
      */
     CREATE_INSTANT_INVITE = (1 << 0),
     /**
-     * Kick other members.
+     * Allows kicking members.
      */
     KICK_MEMBERS = (1 << 1),
     /**
-     * Ban other members.
+     * Allows banning members.
      */
     BAN_MEMBERS = (1 << 2),
     /**
-     * ⚠️ **No bot truly needs the Administrator
-     * permission** with the exception of some
-     * moderation and anti-abuse type bots. You should
-     * consider whether or not a group of less
-     * priviliged permissions would suffice for your
-     * use case. Requesting the Administrator
-     * permission just puts your users at risk and can
-     * lead to unneeded privacy concerns.
+     * Allows all permissions and bypasses channel permission overwrites.
      */
     ADMINISTRATOR = (1 << 3),
     /**
-     * Manage channels in this guild.
+     * Allows management and editing of channels.
      */
     MANAGE_CHANNELS = (1 << 4),
     /**
-     * Manage the guild's settings.
+     * Allows management and editing of the guild.
      */
     MANAGE_GUILD = (1 << 5),
     /**
-     * Add reactions to messages. Users without this
-     * permission will still be able to react to 
-     * already-added reactions.
+     * Allows for the addition of reactions to messages.
      */
     ADD_REACTIONS = (1 << 6),
     /**
-     * View the guild's audit log.
+     * Allows for viewing of audit logs.
      */
     VIEW_AUDIT_LOG = (1 << 7),
     /**
-     * Grants the ability to speak in priority mode.
-     * Whilst a member is speaking in priority mode,
-     * everyone else's volume is decreased until the
-     * priority member stops speaking.
+     * Allows for using priority speaker in a voice channel.
      */
     PRIORITY_SPEAKER = (1 << 8),
     /**
-     * Stream games and video to the channel.
+     * Allows the user to go live.
      */
     STREAM = (1 << 9),
     /**
-     * View the guild's channels.
+     * Allows guild members to view a channel, which includes reading messages in text channels.
      */
     VIEW_CHANNEL = (1 << 10),
     /**
-     * Send messages in the guild's channels.
+     * Allows for sending messages in a channel. (does not allow sending messages in threads)
      */
     SEND_MESSAGES = (1 << 11),
     /**
-     * Send text-to-speach messages in the guild's
-     * channels.
+     * Allows for sending `/tts` messages.
      */
     SEND_TTS_MESSAGES = (1 << 12),
     /**
-     * Delete and/or report messages in the guild's
-     * channels.
+     * Allows for deletion of other users messages.
      */
     MANAGE_MESSAGES = (1 << 13),
     /**
-     * Embed links and GIFs in messages.
+     * Links sent by users with this permission will be auto-embedded.
      */
     EMBED_LINKS = (1 << 14),
     /**
-     * Attach files to messages.
+     * Allows for uploading images and files.
      */
     ATTACH_FILES = (1 << 15),
     /**
-     * Read messages sent before launching the client.
+     * Allows for reading of message history.
      */
     READ_MESSAGE_HISTORY = (1 << 16),
     /**
-     * Mention @everyone, @here, and all roles.
+     * Allows for using the `@everyone` tag to notify all users in a channel, and the `@here` tag to notify all online users in a channel.
      */
     MENTION_EVERYONE = (1 << 17),
     /**
-     * Use emojis from other guilds.
+     * Allows the usage of custom emojis from other servers.
      */
     USE_EXTERNAL_EMOJIS = (1 << 18),
     /**
-     * View the guild's insights and stats.
+     * Allows for viewing guild insights.
      */
     VIEW_GUILD_INSIGHTS = (1 << 19),
     /**
-     * Connect to voice channels.
+     * Allows for joining a voice channel.
      */
     CONNECT = (1 << 20),
     /**
-     * Speak in voice channels.
+     * Allows for speaking in a voice channel.
      */
     SPEAK = (1 << 21),
     /**
-     * Mute members in voice channels.
+     * Allows for muting of members in a voice channel.
      */
     MUTE_MEMBERS = (1 << 22),
     /**
-     * Deafen members in voice channels.
+     * Allows for deafening of members in a voice channel.
      */
     DEAFEN_MEMBERS = (1 << 23),
     /**
-     * Move members between voice channels and
-     * disconnect them completely.
+     * Allows for moving of members between voice channels or disconnecting.
      */
     MOVE_MEMBERS = (1 << 24),
     /**
-     * Use voice-activity-detection in voice channels.
-     * Removes the need of push-to-talk.
+     * Allows for using voice-activity-detection in a voice channel.
      */
     USE_VAD = (1 << 25),
     /**
-     * Change their own nickname.
+     * Allows for modification of own nickname.
      */
     CHANGE_NICKNAME = (1 << 26),
     /**
-     * Change the nicknames of other members.
+     * Allows for modification of other users nicknames.
      */
     MANAGE_NICKNAMES = (1 << 27),
     /**
-     * Manage the guild's roles, including creating,
-     * editing, and deleting the roles, and modify the
-     * roles of themselves and other members.
+     * Allows management and editing of roles.
      */
     MANAGE_ROLES = (1 << 28),
     /**
-     * Create, modify, and delete webhooks, and follow
-     * external text channels.
+     * Allows management and editing of webhooks
      */
     MANAGE_WEBHOOKS = (1 << 29),
     /**
-     * Create, modify, and delete emojis and stickers.
+     * Allows management and editing of emojis and stickers.
      */
     MANAGE_EMOJIS_AND_STICKERS = (1 << 30),
     /**
-     * Use slash and application commands.
+     * Allows members to use application commands, including slash commands and context menu commands.
      */
     USE_APPLICATION_COMMANDS = (1 << 31),
     /**
-     * Request to speak in stage channels.
+     * Allows for requesting to speak in stage channels.
      */
     REQUEST_TO_SPEAK = (1 << 32),
     /**
-     * Manage guild events.
+     * Allows for creating, editing, and deleting scheduled events.
      */
     MANAGE_EVENTS = (1 << 33),
     /**
-     * Delete and modify threads.
+     * Allows for deleting and archiving threads, and viewing all private threads.
      */
     MANAGE_THREADS = (1 << 34),
     /**
-     * Create public threads.
+     * Allows for creating threads.
      */
     CREATE_PUBLIC_THREADS = (1 << 35),
     /**
-     * Create private threads.
+     * Allows for creating private threads.
      */
     CREATE_PRIVATE_THREADS = (1 << 36),
     /**
-     * Use stickers from other guilds.
+     * Allows the usage of custom stickers from other servers.
      */
     USE_EXTERNAL_STICKERS = (1 << 37),
     /**
-     * Send messages in threads.
+     * Allows for sending messages in threads.
      */
     SEND_MESSAGES_IN_THREADS = (1 << 38),
     /**
-     * Start embedded activities and applications.
+     * Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.
      */
     START_EMBEDDED_ACTIVITIES = (1 << 39),
+    /**
+     * Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels.
+     */
+    MODERATE_MEMBERS = (1 << 40),
 }
