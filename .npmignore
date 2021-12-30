@@ -1,0 +1,14 @@
+# Folders
+src/
+node_modules/
+.github/
+.vscode/
+
+# All misc. files
+.prettierrc
+.gitignore
+CODEOWNERS
+CONTRIBUTING.md
+tsup.config.ts
+typedoc.json
+tsconfig.json
