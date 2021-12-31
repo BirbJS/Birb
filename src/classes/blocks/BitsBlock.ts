@@ -26,7 +26,7 @@ export default abstract class BitsBlock<K extends string> {
      * @param {Flags | Flags[] | number} bits Bits to add
      */
     constructor(bits?: BitResolvable<K>) {
-        this.set(bits || 0)
+        this.set(bits ?? 0)
     }
 
     /**
