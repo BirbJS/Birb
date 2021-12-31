@@ -54,10 +54,7 @@ If you're on Ubuntu, run `sudo apt install build-tools`.
 ```js
 const { Client, Intents } = require('birb');
 const client = new Client({
-    intents: [ 'DIRECT_MESSAGES', 
-               'GUILDS', 
-               'GUILD_MEMBERS', 
-               'GUILD_MESSAGES' ],
+    intents: [ 'DIRECT_MESSAGES', 'GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES' ],
 });
 
 client.listen('ready', () => {
