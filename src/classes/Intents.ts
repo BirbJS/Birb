@@ -18,7 +18,6 @@ export default class Intents extends BitsBlock<keyof typeof IntentFlags> {
      * The available Intents.
      */
     static FLAGS = IntentFlags;
-    FLAGS = IntentFlags
 
     /**
      * Intents are used by Discord to selectively send the
@@ -29,7 +28,7 @@ export default class Intents extends BitsBlock<keyof typeof IntentFlags> {
      * @param {string | string[] | number} flags The flags to set.
      */
     constructor (flags: IntentResolvable) {
-        super(flags);
+        super(IntentFlags, flags);
     }
 
     clone() {

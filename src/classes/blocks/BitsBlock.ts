@@ -16,7 +16,7 @@ export default abstract class BitsBlock<K extends string> {
      * The bits of the bitfield.
      */
     bitfield: number = 0;
-    protected abstract FLAGS: {[Key in K]: bigint}
+    protected FLAGS: {[Key in K]: bigint}
     abstract clone(): BitsBlock<K>
 
     /**
@@ -25,8 +25,9 @@ export default abstract class BitsBlock<K extends string> {
      * @param {Object} flags All available flags
      * @param {Flags | Flags[] | number} bits Bits to add
      */
-    constructor(bits?: BitResolvable<K>) {
-        this.set(bits ?? 0)
+    constructor(flags: BitsBlock<K>["FLAGS"], bits?: BitResolvable<K>) {
+        this.FLAGS = flags
+        this.set(bits || 0)
     }
 
     /**

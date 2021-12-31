@@ -21,7 +21,6 @@ export default class Permissions extends BitsBlock<PermissionFlags> {
      * The permission flags available.
      */
     static FLAGS = PermissionEnums
-    FLAGS = PermissionEnums
 
     /**
      * Permissions objects store permission data.
@@ -29,7 +28,7 @@ export default class Permissions extends BitsBlock<PermissionFlags> {
      * @param {PermissionResolvable} flags The permission flags.
      */
     constructor (flags?: PermissionResolvable) {
-        super(flags);
+        super(PermissionEnums, flags);
     }
 
     convert(flags: PermissionResolvable): number {
