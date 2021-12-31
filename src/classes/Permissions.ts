@@ -9,16 +9,19 @@
  */
 
 import BitsBlock from './blocks/BitsBlock';
-import { Permissions as PermissionFlags } from '../util/Constants';
+import { Permissions as PermissionEnums } from '../util/Constants';
 import { PermissionResolvable } from '../util/Types';
 import PermissionsBlock from './blocks/PermissionsBlock';
 
-export default class Permissions extends BitsBlock<keyof typeof PermissionFlags> {
+type PermissionFlags = keyof typeof PermissionEnums
+
+export default class Permissions extends BitsBlock<PermissionFlags> {
 
     /**
      * The permission flags available.
      */
-    static FLAGS = PermissionFlags
+    static FLAGS = PermissionEnums
+    FLAGS = PermissionEnums
 
     /**
      * Permissions objects store permission data.
@@ -26,7 +29,7 @@ export default class Permissions extends BitsBlock<keyof typeof PermissionFlags>
      * @param {PermissionResolvable} flags The permission flags.
      */
     constructor (flags?: PermissionResolvable) {
-        super(Permissions.FLAGS, flags);
+        super(flags);
     }
 
     convert(flags: PermissionResolvable): number {
@@ -49,12 +52,20 @@ export default class Permissions extends BitsBlock<keyof typeof PermissionFlags>
      * @param {PermissionResolvable} flag The permission flag to check for.
      * @returns {boolean} Whether or not the permission flag exists.
      */
-     has (flags: PermissionResolvable, options: {
+    has (flags: PermissionResolvable, options: {
         adminOverride: boolean
     } = { 
         adminOverride: true 
     }): boolean {
         return (options.adminOverride && super.has("ADMINISTRATOR")) || super.has(flags)
+    }
+
+    clone() {
+        return new Permissions(this.bitfield)
+    }
+
+    toArray(hasParams?: { adminOverride: boolean }): PermissionFlags[] {
+        return Object.keys(this.FLAGS).filter(bit => this.has(bit as PermissionFlags, hasParams)) as PermissionFlags[]
     }
 
 }

@@ -18,6 +18,7 @@ import Role from '../classes/Role';
 import User from '../classes/User';
 import { Permissions as PermissionFlags, Intents as IntentFlags } from './Constants'
 import type { APIEmbed } from 'discord-api-types/v9';
+// TODO(PalmDevs): 
 // import Permissions from "../classes/Permissions"
 // import PermissionsBlock from '../classes/blocks/PermissionsBlock';
 
@@ -28,7 +29,7 @@ export type UserResolvable = User | ClientUser | BaseUser | string;
 export type EventResolvable = 'ready' | 'waitingForGuilds' | 'guildAvailable' | 'guildCreate' | 'guildUpdate' | 'message';
 export type ActivityStatus = 'online' | 'idle' | 'dnd' | 'invisible';
 export type BitResolvable<Flags> = Flags | Flags[] | number;
-export type PermissionResolvable = BitResolvable<keyof typeof PermissionFlags>/*  | Permissions | PermissionsBlock */
+export type PermissionResolvable = BitResolvable<keyof typeof PermissionFlags> /*TODO(PalmDevs): | Permissions | PermissionsBlock */
 export type IntentResolvable = BitResolvable<keyof typeof IntentFlags>
 export type MessageContent = string | RequireOnlyOne<{
     content?: string;

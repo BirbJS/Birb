@@ -10,13 +10,14 @@
 
 import { BitResolvable } from "../../util/Types"
 
-export default class BitsBlock<Flags extends string> {
+export default abstract class BitsBlock<K extends string> {
 
     /**
      * The bits of the bitfield.
      */
     bitfield: number = 0;
-    protected ENUM: { [key in Flags]: number }
+    protected abstract FLAGS: {[Key in K]: bigint}
+    abstract clone(): BitsBlock<K>
 
     /**
      * A BitsBlock stores bitfield data provided by Discord.
@@ -24,8 +25,7 @@ export default class BitsBlock<Flags extends string> {
      * @param {Object} flags All available flags
      * @param {Flags | Flags[] | number} bits Bits to add
      */
-    constructor(flags: BitsBlock<Flags>["ENUM"], bits?: BitResolvable<Flags>) {
-        this.ENUM = flags
+    constructor(bits?: BitResolvable<K>) {
         this.set(bits || 0)
     }
 
@@ -35,23 +35,23 @@ export default class BitsBlock<Flags extends string> {
      * @param {Flags | Flags[] | number} flags The flags you want to convert.
      * @returns {number} The converted number.
      */
-    convert(flags: BitResolvable<Flags>): number {
+    convert(flags: BitResolvable<K>): number {
         let bits = 0
 
         if (Array.isArray(flags)) {
             for (let i = 0; i < flags.length; ++i) {
-                let bit: number = this.ENUM[flags[i] as Flags]
-                // if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
+                let bit = this.FLAGS[flags[i] as K]
+                if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
                 bits |= bit
             }
         } else if (!Number.isInteger(flags)) {
-            let bit = this.ENUM[flags as Flags]
-            // if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
+            let bit = this.FLAGS[flags as K]
+            if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
             bits |= bit
         } else if (typeof flags === 'number') {
             bits |= flags
         } else {
-            // throw new Error(`Cannot convert ${flags} into possible bits`)
+            throw new Error(`Cannot convert ${flags} into possible bits`)
         }
 
         return bits
@@ -63,7 +63,7 @@ export default class BitsBlock<Flags extends string> {
      * @param {...Flags[] | ...number[]} flags The flags to add.
      * @returns {BitsBlock} The updated block.
      */
-    add(...flags: BitResolvable<Flags>[]): BitsBlock<Flags> {
+    add(...flags: BitResolvable<K>[]): BitsBlock<K> {
         let bits = 0
 
         for (let i = 0; i < flags.length; ++i) {
@@ -81,7 +81,7 @@ export default class BitsBlock<Flags extends string> {
      * @param {Flags | Flags[] | number} flags The flags to set.
      * @returns {BitsBlock} The updated block.
      */
-    set(bits: BitResolvable<Flags>): BitsBlock<Flags> {
+    set(bits: BitResolvable<K>): BitsBlock<K> {
         this.bitfield = this.convert(bits);
         return this;
     }
@@ -92,7 +92,7 @@ export default class BitsBlock<Flags extends string> {
      * @param {...Flags[] | ...number[]} flags The flags to remove.
      * @returns {BitsBlock} The updated block.
      */
-    remove(...flags: BitResolvable<Flags>[]): BitsBlock<Flags> {
+    remove(...flags: BitResolvable<K>[]): BitsBlock<K> {
         let bits = 0
 
         for (let i = 0; i < flags.length; ++i) {
@@ -110,7 +110,7 @@ export default class BitsBlock<Flags extends string> {
      * @param {Flags | Flags[] | number} flag The flag to check.
      * @returns {boolean} The result.
      */
-    has(flags: BitResolvable<Flags>): boolean {
+    has(flags: BitResolvable<K>): boolean {
         let bit = this.convert(flags)
         return (this.bitfield & bit) === bit;
     }
@@ -124,17 +124,8 @@ export default class BitsBlock<Flags extends string> {
         return this.bitfield == 0;
     }
 
-    /**
-     * Returns a new BitsBlock with the flags of this block.
-     * 
-     * @returns {BitsBlock} The new block.
-     */
-    clone(): BitsBlock<Flags> {
-        return new BitsBlock(this.ENUM, this.bitfield);
-    }
-
-    toArray(): Flags[] {
-        return Object.keys(this.ENUM).filter((bit) => this.has(bit as Flags)) as Flags[]
+    toArray(): K[] {
+        return Object.keys(this.FLAGS).filter((bit) => this.has(bit as K)) as K[]
     }
 
 }
