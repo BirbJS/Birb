@@ -15,7 +15,7 @@ export default abstract class BitsBlock<K extends string> {
     /**
      * The bits of the bitfield.
      */
-    bitfield: number = 0;
+    bitfield: bigint = 0n;
     protected FLAGS: {[Key in K]: bigint}
     abstract clone(): BitsBlock<K>
 
@@ -27,7 +27,7 @@ export default abstract class BitsBlock<K extends string> {
      */
     constructor(flags: BitsBlock<K>["FLAGS"], bits?: BitResolvable<K>) {
         this.FLAGS = flags
-        this.set(bits || 0)
+        this.set(bits || 0n)
     }
 
     /**
@@ -36,8 +36,8 @@ export default abstract class BitsBlock<K extends string> {
      * @param {Flags | Flags[] | number} flags The flags you want to convert.
      * @returns {number} The converted number.
      */
-    convert(flags: BitResolvable<K>): number {
-        let bits = 0
+    convert(flags: BitResolvable<K>): bigint {
+        let bits = 0n
 
         if (Array.isArray(flags)) {
             for (let i = 0; i < flags.length; ++i) {
@@ -49,8 +49,8 @@ export default abstract class BitsBlock<K extends string> {
             let bit = this.FLAGS[flags as K]
             if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
             bits |= bit
-        } else if (typeof flags === 'number') {
-            bits |= flags
+        } else if (typeof flags === 'number' || typeof flags === "bigint") {
+            bits |= BigInt(flags)
         } else {
             throw new Error(`Cannot convert ${flags} into possible bits`)
         }
@@ -65,7 +65,7 @@ export default abstract class BitsBlock<K extends string> {
      * @returns {BitsBlock} The updated block.
      */
     add(...flags: BitResolvable<K>[]): BitsBlock<K> {
-        let bits = 0
+        let bits = 0n
 
         for (let i = 0; i < flags.length; ++i) {
             bits |= this.convert(bits)
@@ -94,7 +94,7 @@ export default abstract class BitsBlock<K extends string> {
      * @returns {BitsBlock} The updated block.
      */
     remove(...flags: BitResolvable<K>[]): BitsBlock<K> {
-        let bits = 0
+        let bits = 0n
 
         for (let i = 0; i < flags.length; ++i) {
             bits |= this.convert(bits)
@@ -122,7 +122,7 @@ export default abstract class BitsBlock<K extends string> {
      * @returns {boolean} `true` if the block is empty, `false` otherwise.
      */
     isEmpty(): boolean {
-        return this.bitfield == 0;
+        return this.bitfield == 0n;
     }
 
     toArray(): K[] {

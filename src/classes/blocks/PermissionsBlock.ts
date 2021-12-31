@@ -87,8 +87,8 @@ export default class PermissionsBlock {
             return this.permissions.bitfield == check.permissions.bitfield;
         } else if (check instanceof Permissions) {
             return this.permissions.bitfield == check.bitfield;
-        } else if (typeof check == 'number') {
-            return this.permissions.bitfield == check;
+        } else if (typeof check == 'number' || typeof check === 'bigint') {
+            return this.permissions.bitfield == BigInt(check);
         } else {
             throw new TypeError(`Expected PermissionsBlock, Permissions, or PermissionResolvable, got ${typeof check}`);
         }

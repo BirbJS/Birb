@@ -31,7 +31,7 @@ export default class Permissions extends BitsBlock<PermissionFlags> {
         super(PermissionEnums, flags);
     }
 
-    convert(flags: PermissionResolvable): number {
+    convert(flags: PermissionResolvable): bigint {
         if(flags instanceof Permissions) {
             return flags.bitfield
         } else if(flags instanceof PermissionsBlock) {
