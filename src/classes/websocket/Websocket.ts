@@ -324,6 +324,7 @@ export default class Websocket extends InternalWebsocket {
      * @returns {void} Voids once sent.
      */
     send (data: Object): void {
+        data = JSON.parse(JSON.stringify(data, function (k,v) { return typeof v === "bigint" ? Number(v) : v } ))
         this.client['logSend'](JSON.stringify(data));
         this.client.emit('packetSend', data);
 

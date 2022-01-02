@@ -45,11 +45,11 @@ export default abstract class BitsBlock<K extends string> {
                 if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
                 bits |= bit
             }
-        } else if (!Number.isInteger(flags)) {
+        } else if (!Number.isInteger(parseInt(flags as string))) {
             let bit = this.FLAGS[flags as K]
             if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
             bits |= bit
-        } else if (typeof flags === 'number' || typeof flags === "bigint") {
+        } else if (typeof (parseInt(flags as string)) === "number" || typeof flags === 'number' || typeof flags === "bigint") {
             bits |= BigInt(flags)
         } else {
             throw new Error(`Cannot convert ${flags} into possible bits`)
