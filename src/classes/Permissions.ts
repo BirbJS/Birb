@@ -63,7 +63,7 @@ export default class Permissions extends BitsBlock<PermissionFlags> {
         return new Permissions(this.bitfield)
     }
 
-    toArray(hasParams?: { adminOverride: boolean }): PermissionFlags[] {
+    toArray(hasParams: { adminOverride: boolean } = { adminOverride: false }): PermissionFlags[] {
         return Object.keys(this.FLAGS).filter(bit => this.has(bit as PermissionFlags, hasParams)) as PermissionFlags[]
     }
 
