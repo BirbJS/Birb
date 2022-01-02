@@ -115,7 +115,7 @@ export default class Role {
             this.mentionable = data.mentionable;
         }
         if ('permissions' in data) {
-            this.permissions = new RolePermissionsBlock(this.client, this, parseInt(data.permissions) ?? 0);
+            this.permissions = new RolePermissionsBlock(this.client, this, BigInt(data.permissions) ?? 0n);
         }
         if ('position' in data) {
             this.position = data.position;

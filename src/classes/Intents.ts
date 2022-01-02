@@ -10,8 +10,9 @@
 
 import BitsBlock from './blocks/BitsBlock';
 import { Intents as IntentFlags } from '../util/Constants';
+import { IntentResolvable } from '../util/Types';
 
-export default class Intents extends BitsBlock {
+export default class Intents extends BitsBlock<keyof typeof IntentFlags> {
 
     /**
      * The available Intents.
@@ -24,10 +25,14 @@ export default class Intents extends BitsBlock {
      * needed. Intents are required to be set to use
      * Birb.JS.
      * 
-     * @param {number} flags The flags to set.
+     * @param {string | string[] | number} flags The flags to set.
      */
-    constructor (...flags: number[]) {
-        super(...flags);
+    constructor (flags: IntentResolvable) {
+        super(IntentFlags, flags);
+    }
+
+    clone() {
+        return new Intents(this.bitfield)
     }
 
 }

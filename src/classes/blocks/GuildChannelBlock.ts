@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import RefrenceCache from '../cache/RefrenceCache';
+import ReferenceCache from '../cache/ReferenceCache';
 import Client from '../Client';
 
 export default class GuildChannelBlock {
@@ -20,7 +20,7 @@ export default class GuildChannelBlock {
     /**
      * The cache full of channels.
      */
-    cache: RefrenceCache = null!;
+    cache: ReferenceCache = null!;
 
     /**
      * A GuildChannelBlock stores guild channel data.
@@ -29,7 +29,7 @@ export default class GuildChannelBlock {
      */
     constructor (client: Client) {
         this.client = client;
-        this.cache = new RefrenceCache(client, 'channels');
+        this.cache = new ReferenceCache(client, 'channels');
     }
 
 }

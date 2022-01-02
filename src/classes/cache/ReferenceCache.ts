@@ -11,13 +11,13 @@
 import Client from '../Client';
 import Cache from './Cache'
 
-export default class RefrenceCache {
+export default class ReferenceCache {
     
     client: Client = null!;
     private readonly key: string;
 
     /**
-     * A RefrenceCache references a cache that is stored on
+     * A ReferenceCache references a cache that is stored on
      * the client object. Its methods directly call the
      * client's cache methods, and filters results.
      * 
@@ -79,9 +79,9 @@ export default class RefrenceCache {
      * 
      * @param {string} key The key to get the value for.
      * @param {string} any The value to set.
-     * @returns {RefrenceCache} This cache.
+     * @returns {ReferenceCache} This cache.
      */
-    set (key: string, value: any, options?: any): RefrenceCache {
+    set (key: string, value: any, options?: any): ReferenceCache {
         // @ts-ignore - this is really the only good way to do this
         this.client[this.key].cache.set(key, value, options);
         return this;

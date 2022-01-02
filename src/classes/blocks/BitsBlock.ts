@@ -8,71 +8,112 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export default class BitsBlock {
+import { BitResolvable } from "../../util/Types"
+
+export default abstract class BitsBlock<K extends string> {
 
     /**
-     * The flags of the bitfield.
+     * The bits of the bitfield.
      */
-    flags: number = 0;
+    bitfield: bigint = 0n;
+    protected FLAGS: {[Key in K]: bigint}
+    abstract clone(): BitsBlock<K>
 
     /**
      * A BitsBlock stores bitfield data provided by Discord.
      * 
-     * @param {...number[]} flags The flags to set.
+     * @param {Object} flags All available flags
+     * @param {Flags | Flags[] | number} bits Bits to add
      */
-    constructor (...flags: number[]) {
-        if (flags) {
-            for ( let i = 0; i < flags.length; ++i ) this.add(flags[i]);
+    constructor(flags: BitsBlock<K>["FLAGS"], bits?: BitResolvable<K>) {
+        this.FLAGS = flags
+        this.set(bits || 0n)
+    }
+
+    /**
+     * Converts BitResolvable to number.
+     * 
+     * @param {Flags | Flags[] | number} flags The flags you want to convert.
+     * @returns {number} The converted number.
+     */
+    convert(flags: BitResolvable<K>): bigint {
+        let bits = 0n
+
+        if (Array.isArray(flags)) {
+            for (let i = 0; i < flags.length; ++i) {
+                let bit = this.FLAGS[flags[i] as K]
+                if (bit === undefined) throw new Error(`Flag ${flags[i]} is not a valid ${this.constructor.name} flag`)
+                bits |= bit
+            }
+        } else if (!Number.isInteger(parseInt(flags as string))) {
+            let bit = this.FLAGS[flags as K]
+            if (bit === undefined) throw new Error(`Flag ${flags} is not a valid ${this.constructor.name} flag`)
+            bits |= bit
+        } else if (typeof (parseInt(flags as string)) === "number" || typeof flags === 'number' || typeof flags === "bigint") {
+            bits |= BigInt(flags)
+        } else {
+            throw new Error(`Cannot convert ${flags} into possible bits`)
         }
+
+        return bits
     }
 
     /**
      * Adds a flag (bit) to the block.
      * 
-     * @param {...number[]} flags The flags to add.
+     * @param {...Flags[] | ...number[]} flags The flags to add.
      * @returns {BitsBlock} The updated block.
      */
-    add (...flags: number[]): BitsBlock {
-        for ( let i = 0; i < flags.length; ++i ) {
-            let flag = flags[i];
-            if ( !this.has(flag) ) this.flags |= flag;
+    add(...flags: BitResolvable<K>[]): BitsBlock<K> {
+        let bits = 0n
+
+        for (let i = 0; i < flags.length; ++i) {
+            bits |= this.convert(bits)
         }
+
+        this.bitfield |= bits
+
         return this;
     }
 
     /**
      * Sets the flags of the block.
      * 
-     * @param {...number[]} flags The flags to set.
+     * @param {Flags | Flags[] | number} flags The flags to set.
      * @returns {BitsBlock} The updated block.
      */
-    set (flags: number): BitsBlock {
-        this.flags = flags;
+    set(bits: BitResolvable<K>): BitsBlock<K> {
+        this.bitfield = this.convert(bits);
         return this;
     }
 
     /**
      * Removes a flag (bit) from the block.
      * 
-     * @param {...number[]} flags The flags to remove.
+     * @param {...Flags[] | ...number[]} flags The flags to remove.
      * @returns {BitsBlock} The updated block.
      */
-    remove (...flags: number[]): BitsBlock {
-        for ( let i = 0; i < flags.length; ++i ) {
-            let flag = flags[i];
-            if ( this.has(flag) ) this.flags ^= flag;
+    remove(...flags: BitResolvable<K>[]): BitsBlock<K> {
+        let bits = 0n
+
+        for (let i = 0; i < flags.length; ++i) {
+            bits |= this.convert(bits)
         }
+
+        this.bitfield ^= bits
+
         return this;
     }
 
     /**
      * Check if a flag (bit) is in the block.
      * 
-     * @param {number} flag The flag to check.
+     * @param {Flags | Flags[] | number} flag The flag to check.
      * @returns {boolean} The result.
      */
-    has (flag: number): boolean {
-        return (this.flags & flag) === flag;
+    has(flags: BitResolvable<K>): boolean {
+        let bit = this.convert(flags)
+        return (this.bitfield & bit) === bit;
     }
 
     /**
@@ -80,18 +121,12 @@ export default class BitsBlock {
      * 
      * @returns {boolean} `true` if the block is empty, `false` otherwise.
      */
-    isEmpty (): boolean {
-        return this.flags == 0;
+    isEmpty(): boolean {
+        return this.bitfield == 0n;
     }
 
-    /**
-     * Returns a new BitsBlock with the flags of this
-     * block.
-     * 
-     * @returns {BitsBlock} The new block.
-     */
-    clone (): BitsBlock {
-        return new BitsBlock(this.flags);
+    toArray(): K[] {
+        return Object.keys(this.FLAGS).filter((bit) => this.has(bit as K)) as K[]
     }
 
 }

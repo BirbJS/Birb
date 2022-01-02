@@ -54,14 +54,14 @@ If you're on Ubuntu, run `sudo apt install build-tools`.
 ```js
 const { Client, Intents } = require('birb');
 const client = new Client({
-    intents: new Intents(Intents.FLAGS.ALL),
+    intents: [ 'DIRECT_MESSAGES', 'GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES' ],
 });
 
 client.listen('ready', () => {
     console.log('Connected to Discord!');
 });
 
-client.connect('your_bot_token');
+client.connect('your-bot-token');
 ```
 
 ## Credits

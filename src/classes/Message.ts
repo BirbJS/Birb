@@ -74,7 +74,7 @@ export default class Message {
     /**
      * This message's bitfield flags.
      */
-    flags: number = 0;
+    flags: bigint = 0n;
     /**
      * Base user data sent by the API/GW.
      */
