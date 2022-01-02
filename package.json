@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "test": "ls",
-    "publish-the-awesomeness": "tsup && npm run files && node test.js && npm publish --dry-run",
+    "publish-the-awesomeness": "tsup && node test.js && npm publish --dry-run",
     "publish-release": "tsup && npm publish",
     "build": "tsup",
     "format": "prettier --write ./src/**/*.ts",
