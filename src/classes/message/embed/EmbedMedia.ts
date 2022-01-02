@@ -29,7 +29,7 @@ export default class EmbedMedia extends EmbedChild {
      * An EmbedMedia stores data on a media or attachment
      * field of a MessageEmbed.
      * 
-     * @param {string} url The URL of the media. If refrences an attachment, prefix with `attachment://` followed by the attachment's filename.
+     * @param {string} url The URL of the media. If References an attachment, prefix with `attachment://` followed by the attachment's filename.
      * @param {number} [height] The height of the media.
      * @param {number} [width] The width of the media.
      */
@@ -43,7 +43,7 @@ export default class EmbedMedia extends EmbedChild {
     /**
      * Set the URL of the media.
      * 
-     * @param {string} url The URL of the media. If refrences an attachment, prefix with `attachment://` followed by the attachment's filename.
+     * @param {string} url The URL of the media. If References an attachment, prefix with `attachment://` followed by the attachment's filename.
      * @returns {EmbedMedia} The updated EmbedMedia.
      */
     setUrl (url: string): EmbedMedia {
