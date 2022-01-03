@@ -2,7 +2,7 @@
  * Copyright (c) 2021, knokbak and contributors.
  *
  * The Birb.JS Project: https://birb.js.org
- *
+ * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,17 +11,19 @@
 let _Sharding: any;
 
 try {
-  _Sharding = require('@birbjs/sharding');
+    _Sharding = require('@birbjs/sharding');
 } catch (e) {
-  _Sharding = null;
+    _Sharding = null;
 }
 
 export default class Addons {
-  Sharding: any = null;
 
-  constructor() {
-    if (_Sharding) {
-      this.Sharding = _Sharding;
+    Sharding: any = null;
+
+    constructor () {
+        if (_Sharding) {
+            this.Sharding = _Sharding;
+        }
     }
-  }
+
 }

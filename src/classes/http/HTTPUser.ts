@@ -2,7 +2,7 @@
  * Copyright (c) 2021, knokbak and contributors.
  *
  * The Birb.JS Project: https://birb.js.org
- *
+ * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -16,28 +16,30 @@ import LeaveGuild from './users/LeaveGuild';
 import ModifyCurrent from './users/ModifyCurrent';
 
 export default class HTTPUser {
-  static getCurrent(client: Client) {
-    let request = new GetCurrent(client);
-    return request.make();
-  }
+    
+    static getCurrent (client: Client) {
+        let request = new GetCurrent(client);
+        return request.make();
+    }
+    
+    static get (client: Client, userId: string) {
+        let request = new Get(client, userId);
+        return request.make();
+    }
+    
+    static createDM (client: Client, userId: string) {
+        let request = new CreateDM(client, userId);
+        return request.make();
+    }
 
-  static get(client: Client, userId: string) {
-    let request = new Get(client, userId);
-    return request.make();
-  }
+    static leaveGuild (client: Client, guildId: string) {
+        let request = new LeaveGuild(client, guildId);
+        return request.make();
+    }
 
-  static createDM(client: Client, userId: string) {
-    let request = new CreateDM(client, userId);
-    return request.make();
-  }
+    static modifyCurrent (client: Client, data: any) {
+        let request = new ModifyCurrent(client, data);
+        return request.make();
+    }
 
-  static leaveGuild(client: Client, guildId: string) {
-    let request = new LeaveGuild(client, guildId);
-    return request.make();
-  }
-
-  static modifyCurrent(client: Client, data: any) {
-    let request = new ModifyCurrent(client, data);
-    return request.make();
-  }
 }
