@@ -153,12 +153,9 @@ export default class Websocket extends InternalWebsocket {
         }
 
         try {
-          // why js? well, ts just compiles into js, so the actual
-          // file name is [event].js once compiled into js.
-          let handler = require(`./handlers/${event}.js`);
+          let { default: handler } = require(`./handlers/${event}`);
           this.client.debug(`DISP: received ${event} event`);
-          // oh and why handler.default()? NO CLUE TS IS WEIRD
-          handler.default(this, data);
+          handler(this, data);
         } catch (err) {}
 
         break;
