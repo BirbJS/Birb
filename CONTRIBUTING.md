@@ -15,8 +15,8 @@ You can now find the built version Birb.JS in `/dist`. This is what would be dis
 
 ## Coding style
 
-Everyone has their own coding style. However, this can become an issue when opening source code to contributions. As a general rule of thumb, you should try match the repository's coding style as much as possible. We ask that you take a few minutes to read over some of the files to get a sense of this.
-
+Everyone has their own coding style. However, this can become an issue when opening source code to contributions. To combat this, we employ [prettier](https://npm.im/prettier) to enforce a certain code style. After editing your code, please run `npm run format` in order to format your code so it adheres to our formatting specification.
+ 
 ## Dependencies
 
 As a general rule of thumb, you should ensure any dependencies you add are licensed openly. _Personally_, I don't see the GPL and AGPL licenses as open-source promoting licenses, so dependencies that use these should be avoided. This is one of the main reasons I stayed well away from licensing this project under any GNU license, and instead opted for Mozilla's very permissive license that ensures developers can use Birb.JS without bottlenecks.
