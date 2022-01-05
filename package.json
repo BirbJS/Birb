@@ -36,26 +36,26 @@
   },
   "homepage": "https://birb.js.org",
   "devDependencies": {
-    "@birbjs/devtools": "^1.1.24",
+    "@birbjs/devtools": "^1.1.25",
     "@types/node": "^16.11.11",
-    "@types/ws": "^8.2.1",
+    "@types/ws": "^8.2.2",
     "gen-esm-wrapper": "^1.1.3",
     "prettier": "^2.5.1",
     "typedoc": "^0.22.10",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "@sapphire/snowflake": "^3.0.0",
-    "discord-api-types": "^0.25.2",
+    "discord-api-types": "^0.26.1",
     "form-data": "^4.0.0",
     "petitio": "^1.4.0",
     "tslib": "^2.3.1",
-    "ws": "^8.3.0"
+    "ws": "^8.4.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.5",
-    "erlpack": "^0.1.3",
-    "utf-8-validate": "^5.0.7",
+    "bufferutil": "^4.0.6",
+    "erlpack": "^0.1.4",
+    "utf-8-validate": "^5.0.8",
     "zlib-sync": "^0.1.7"
   },
   "peerDependencies": {
