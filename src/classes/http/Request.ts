@@ -36,9 +36,7 @@ export default class Request {
       .timeout(5000)
       .header({
         Authorization: `Bot ${this.client.token}`,
-        'User-Agent': `DiscordBot (https://birb.js.org, ${require('../../../package.json').version}, ${
-          process.platform
-        })`
+        'User-Agent': `DiscordBot (https://birb.js.org, ${require('../../package.json').version}, ${process.platform})`
       });
 
     if (files && files.length > 0) {

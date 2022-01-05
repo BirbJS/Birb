@@ -6,18 +6,19 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
-    "require": "./dist/index.js",
-    "import": "./dist/index.mjs"
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.js"
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "ls",
-    "publish-the-awesomeness": "tsup && node test.js && npm publish --dry-run",
-    "publish-release": "tsup && npm publish",
-    "build": "tsup",
+    "publish-the-awesomeness": "tsc && npm run build:esm && node test.js && npm publish --dry-run",
+    "publish-release": "tsc && cd dist/ && npm publish",
     "format": "prettier --write ./src/**/*.ts",
+    "build:esm": "gen-esm-wrapper ./dist/index.js ./dist/index.mjs",
+    "build": "tsc && npm run build:esm",
     "docs": "typedoc && node node_modules/@birbjs/devtools/pack/Documentation.js"
   },
   "repository": {
@@ -38,8 +39,8 @@
     "@birbjs/devtools": "^1.1.25",
     "@types/node": "^16.11.11",
     "@types/ws": "^8.2.2",
+    "gen-esm-wrapper": "^1.1.3",
     "prettier": "^2.5.1",
-    "tsup": "^5.11.10",
     "typedoc": "^0.22.10",
     "typescript": "^4.5.4"
   },
@@ -48,6 +49,7 @@
     "discord-api-types": "^0.26.1",
     "form-data": "^4.0.0",
     "petitio": "^1.4.0",
+    "tslib": "^2.3.1",
     "ws": "^8.4.0"
   },
   "optionalDependencies": {

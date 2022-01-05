@@ -1,11 +1,11 @@
 {
-    "entryPoints": ["./src/index.ts"],
-    "entryPointStrategy": "resolve",
-    "excludeExternals": false,
-    "excludePrivate": true,
-    "excludeProtected": false,
-    "excludeInternal": true,
-    "json": "./docs.json",
-    "darkHighlightTheme": "github-dark-dimmed",
-    "lightHighlightTheme": "github-light"
+  "entryPoints": ["./src/index.ts"],
+  "entryPointStrategy": "resolve",
+  "excludeExternals": false,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "json": "./docs.json",
+  "darkHighlightTheme": "github-dark-dimmed",
+  "lightHighlightTheme": "github-light"
 }

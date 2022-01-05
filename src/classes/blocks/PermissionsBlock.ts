@@ -20,11 +20,6 @@ export default class PermissionsBlock {
   /**
    * The permissions bits.
    */
-  bits: Permissions = null!;
-
-  /**
-   * The permissions bits.
-   */
   permissions: Permissions = null!;
 
   /**

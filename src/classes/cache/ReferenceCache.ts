@@ -63,6 +63,17 @@ export default class ReferenceCache {
   }
 
   /**
+   * Filters the cache.
+   *
+   * @param {(value: any) => boolean} fn The function to use to filter the values.
+   * @returns {any} The values. An empty array if none are found.
+   */
+  filter(fn: (value: any) => boolean): any[] {
+    // @ts-ignore - this is really the only good way to do this
+    return this.array().filter(fn) ?? [];
+  }
+
+  /**
    * Set a value in the cache.
    *
    * @param {string} key The key to get the value for.
