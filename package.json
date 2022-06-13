@@ -50,7 +50,7 @@
     "form-data": "^4.0.0",
     "petitio": "^1.4.0",
     "tslib": "^2.3.1",
-    "ws": "^8.4.0"
+    "ws": "^8.6.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.6",
